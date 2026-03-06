@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Identity -->
+    <key>CFBundleDisplayName</key>
+    <string>Pulse Insurance</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.pulseinsurance.telematics</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleName</key>
+    <string>PulseInsurance</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+
+    <!-- Supported platforms -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+        <string>location-services</string>
+        <string>accelerometer</string>
+        <string>gyroscope</string>
+    </array>
+    <key>MinimumOSVersion</key>
+    <string>16.0</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+
+    <!-- Location permissions -->
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Pulse Insurance needs location access at all times to monitor your driving speed and route, even when the app is in the background.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Pulse Insurance monitors your driving speed and route in the background to calculate your telematics score accurately.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Pulse Insurance uses your location to track driving speed and detect speed-limit violations.</string>
+
+    <!-- Motion permissions -->
+    <key>NSMotionUsageDescription</key>
+    <string>Pulse Insurance uses the accelerometer and gyroscope to detect hard acceleration and harsh braking events.</string>
+
+    <!-- Background modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>processing</string>
+    </array>
+
+    <!-- App Transport Security -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+    </dict>
+
+    <!-- UI appearance -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>UIUserInterfaceStyle</key>
+    <string>Light</string>
+</dict>
+</plist>
