@@ -1,0 +1,19 @@
+'use client'
+
+import { Suspense } from 'react'
+import AITutorContent from './AITutorContent'
+
+export default function AITutorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4 animate-bounce">🤖</div>
+          <p className="text-xl font-bold text-gray-600">Loading AI Tutor...</p>
+        </div>
+      </div>
+    }>
+      <AITutorContent />
+    </Suspense>
+  )
+}
