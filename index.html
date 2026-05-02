@@ -867,6 +867,495 @@
   }
 
   console.log('MathMaster: visual components loaded');
+
+  /* ═══════════════════════════════════════════════════════════
+     APP MODULE
+  ═══════════════════════════════════════════════════════════ */
+
+  const App = {
+
+    /* ── STATE ──────────────────────────────────────────── */
+    state: {
+      grade:    'grade6',
+      moduleId: null,
+      topicId:  null,
+      view:     'lesson',   // 'lesson' | 'worked' | 'drill'
+      // worked examples
+      exIdx:    0,
+      stepsShown: 0,
+      // drag for ordering
+      dragSrc:  null,
+      // matching
+      matchSel: null,
+      matchMap: {},
+      // XP display
+      displayXP: 0,
+    },
+
+    /* ── PROGRESS (localStorage) ────────────────────────── */
+    progress: {
+      _KEY_P: 'mathmaster_progress',
+      _KEY_X: 'mathmaster_xp',
+      _KEY_S: 'mathmaster_streak',
+      data:   {},
+      xp:     0,
+      streak: 0,
+
+      load() {
+        try {
+          this.data   = JSON.parse(localStorage.getItem(this._KEY_P) || '{}');
+          this.xp     = parseInt(localStorage.getItem(this._KEY_X)  || '0', 10);
+          App.state.displayXP = this.xp;
+          const raw   = JSON.parse(localStorage.getItem(this._KEY_S) || '{"d":"","n":0}');
+          const today = new Date().toISOString().slice(0, 10);
+          const yday  = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+          if (raw.d === today) {
+            this.streak = raw.n;
+          } else if (raw.d === yday) {
+            this.streak = raw.n + 1;
+            localStorage.setItem(this._KEY_S, JSON.stringify({ d: today, n: this.streak }));
+          } else {
+            this.streak = raw.d ? 1 : 1;
+            localStorage.setItem(this._KEY_S, JSON.stringify({ d: today, n: 1 }));
+          }
+        } catch(e) { console.warn('Progress load error', e); }
+      },
+
+      save() {
+        try { localStorage.setItem(this._KEY_P, JSON.stringify(this.data)); } catch(e) {}
+      },
+
+      key(grade, modId, topicId) { return `${grade}.${modId}.${topicId}`; },
+
+      get(grade, modId, topicId) {
+        const k = this.key(grade, modId, topicId);
+        if (!this.data[k]) this.data[k] = { done: false, best: 0, tries: 0 };
+        return this.data[k];
+      },
+
+      isDone(grade, modId, topicId) { return this.get(grade, modId, topicId).done; },
+
+      recordDrill(grade, modId, topicId, score, total) {
+        const d  = this.get(grade, modId, topicId);
+        d.tries++;
+        const pct = Math.round((score / total) * 100);
+        if (pct > d.best) d.best = pct;
+        if (pct >= 60) d.done = true;
+        this.save();
+      },
+
+      addXP(amount) {
+        this.xp += amount;
+        localStorage.setItem(this._KEY_X, String(this.xp));
+        App.ui.animateXP(amount);
+        App.ui.xpPop(amount);
+      },
+
+      markLessonDone(grade, modId, topicId) {
+        const d = this.get(grade, modId, topicId);
+        d.lessonDone = true;
+        this.save();
+      },
+
+      modProgress(grade, modId) {
+        const mod = (curriculum[grade]?.modules || []).find(m => m.id === modId);
+        if (!mod) return { done: 0, total: 0 };
+        const done = mod.topics.filter(t => this.isDone(grade, modId, t.id)).length;
+        return { done, total: mod.topics.length };
+      },
+    },
+
+    /* ── UI HELPERS ─────────────────────────────────────── */
+    ui: {
+      setAccent(accent) {
+        document.documentElement.style.setProperty('--mod-accent', accent);
+      },
+
+      animateXP(amount) {
+        const el  = document.getElementById('xp-count');
+        if (!el) return;
+        const end = App.progress.xp;
+        const start = end - amount;
+        const dur   = 600;
+        const t0    = performance.now();
+        const tick  = now => {
+          const p = Math.min((now - t0) / dur, 1);
+          el.textContent = Math.round(start + p * amount);
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+
+      xpPop(amount) {
+        const el = document.createElement('div');
+        el.className = 'xp-pop';
+        el.textContent = `+${amount} XP`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1600);
+      },
+
+      flashFeedback(correct) {
+        const ov = document.getElementById('feedback-overlay');
+        ov.className = correct ? 'show correct' : 'show wrong';
+        ov.textContent = correct ? '✓' : '✗';
+        setTimeout(() => { ov.className = ''; ov.textContent = ''; }, 420);
+      },
+
+      updateTopBar() {
+        document.getElementById('streak-count').textContent = App.progress.streak;
+        document.getElementById('xp-count').textContent     = App.progress.xp;
+      },
+
+      buildGradeSelector() {
+        const grades = [
+          { id: 'grade3', label: 'G3' },
+          { id: 'grade4', label: 'G4' },
+          { id: 'grade5', label: 'G5' },
+          { id: 'grade6', label: 'G6' },
+          { id: 'grade7', label: 'G7' },
+        ];
+        const el = document.getElementById('grade-selector');
+        el.innerHTML = grades.map(g =>
+          `<button class="grade-btn${g.id === App.state.grade ? ' active' : ''}"
+            data-grade="${g.id}">${g.label}</button>`
+        ).join('');
+        el.addEventListener('click', e => {
+          const btn = e.target.closest('.grade-btn');
+          if (!btn) return;
+          App.switchGrade(btn.dataset.grade);
+        });
+      },
+    },
+
+    /* ── SIDEBAR ────────────────────────────────────────── */
+    buildSidebar() {
+      const grade = App.state.grade;
+      const gradeData = curriculum[grade];
+      const sb = document.getElementById('sidebar');
+      if (!gradeData) {
+        sb.innerHTML = `<div class="sidebar-label">No content for ${grade}</div>`;
+        return;
+      }
+      const gradeName = { grade3:'Grade 3', grade4:'Grade 4', grade5:'Grade 5', grade6:'Grade 6', grade7:'Grade 7' }[grade] || grade;
+      let html = `<div class="sidebar-label">${gradeName}</div>`;
+
+      gradeData.modules.forEach(mod => {
+        const { done, total } = App.progress.modProgress(grade, mod.id);
+        const pct    = total ? Math.round((done / total) * 100) : 0;
+        const ring   = VC.progressRing(pct, mod.accent);
+        const isOpen = mod.id === App.state.moduleId;
+        html += `
+          <div class="module-item${isOpen ? ' active' : ''}"
+               style="--mod-accent:${mod.accent}"
+               data-mod="${mod.id}">
+            <div class="module-header">
+              <span class="module-icon">${mod.icon}</span>
+              <div class="module-info">
+                <div class="module-name">${mod.label}</div>
+                <div class="module-sub">${done}/${total} topics</div>
+              </div>
+              <div class="module-ring">${ring}</div>
+            </div>
+            <div class="topic-list${isOpen ? ' open' : ''}">
+              ${mod.topics.map(t => {
+                const done = App.progress.isDone(grade, mod.id, t.id);
+                const active = t.id === App.state.topicId;
+                return `<div class="topic-item${active ? ' active' : ''}${done ? ' done' : ''}"
+                             data-mod="${mod.id}" data-topic="${t.id}">
+                          <span class="topic-check">${done ? '✓' : ''}</span>
+                          ${t.label}
+                        </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+      });
+
+      sb.innerHTML = html;
+
+      /* Module click → expand / collapse */
+      sb.querySelectorAll('.module-item').forEach(el => {
+        el.querySelector('.module-header').addEventListener('click', () => {
+          const modId = el.dataset.mod;
+          if (App.state.moduleId === modId) {
+            /* Already open: select first topic of this module */
+            const mod = (curriculum[App.state.grade]?.modules || []).find(m => m.id === modId);
+            if (mod?.topics?.length) App.selectTopic(modId, mod.topics[0].id);
+          } else {
+            const mod = (curriculum[App.state.grade]?.modules || []).find(m => m.id === modId);
+            if (mod?.topics?.length) App.selectTopic(modId, mod.topics[0].id);
+          }
+        });
+      });
+
+      /* Topic click */
+      sb.querySelectorAll('.topic-item').forEach(el => {
+        el.addEventListener('click', e => {
+          e.stopPropagation();
+          App.selectTopic(el.dataset.mod, el.dataset.topic);
+        });
+      });
+    },
+
+    /* ── NAVIGATION ─────────────────────────────────────── */
+    switchGrade(grade) {
+      App.state.grade    = grade;
+      App.state.moduleId = null;
+      App.state.topicId  = null;
+      /* Update grade buttons */
+      document.querySelectorAll('.grade-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.grade === grade);
+      });
+      /* Open first module/topic */
+      const gradeData = curriculum[grade];
+      if (gradeData?.modules?.length) {
+        const mod = gradeData.modules[0];
+        if (mod.topics?.length) {
+          App.selectTopic(mod.id, mod.topics[0].id);
+          return;
+        }
+      }
+      App.buildSidebar();
+      App.renderEmpty();
+    },
+
+    selectTopic(modId, topicId) {
+      App.state.moduleId  = modId;
+      App.state.topicId   = topicId;
+      App.state.view      = 'lesson';
+      App.state.exIdx     = 0;
+      App.state.stepsShown = 0;
+
+      const mod = App.currentModule();
+      if (mod) App.ui.setAccent(mod.accent);
+
+      App.buildSidebar();
+      App.buildTabStrip();
+      App.renderBreadcrumb();
+      App.renderView('lesson');
+    },
+
+    switchView(view) {
+      App.state.view = view;
+      App.state.exIdx = 0;
+      App.state.stepsShown = 0;
+      App.buildTabStrip();
+      App.renderView(view);
+    },
+
+    currentModule() {
+      return (curriculum[App.state.grade]?.modules || [])
+        .find(m => m.id === App.state.moduleId);
+    },
+
+    currentTopic() {
+      return (App.currentModule()?.topics || [])
+        .find(t => t.id === App.state.topicId);
+    },
+
+    /* ── TAB STRIP ──────────────────────────────────────── */
+    buildTabStrip() {
+      const tabs = [
+        { id: 'lesson',  icon: 'fa-book-open',   label: 'Lesson' },
+        { id: 'worked',  icon: 'fa-list-ol',      label: 'Worked Examples' },
+        { id: 'drill',   icon: 'fa-pen-to-square',label: 'Drill' },
+      ];
+      document.getElementById('tab-strip').innerHTML = tabs.map(t =>
+        `<button class="tab-btn${t.id === App.state.view ? ' active' : ''}" data-view="${t.id}">
+           <i class="fa-solid ${t.icon}"></i>${t.label}
+         </button>`
+      ).join('');
+      document.getElementById('tab-strip').addEventListener('click', e => {
+        const btn = e.target.closest('.tab-btn');
+        if (btn) App.switchView(btn.dataset.view);
+      }, { once: false });
+    },
+
+    /* ── BREADCRUMB ─────────────────────────────────────── */
+    renderBreadcrumb() {
+      const mod   = App.currentModule();
+      const topic = App.currentTopic();
+      document.getElementById('breadcrumb').innerHTML =
+        `<span>${mod?.label || ''}</span>
+         <span class="bc-sep"><i class="fa-solid fa-chevron-right" style="font-size:.6rem"></i></span>
+         <span class="bc-cur">${topic?.label || ''}</span>`;
+    },
+
+    /* ── VIEW ROUTER ────────────────────────────────────── */
+    renderView(view) {
+      const area = document.getElementById('content-area');
+      area.innerHTML = '';
+      const topic = App.currentTopic();
+      if (!topic) { App.renderEmpty(); return; }
+
+      area.classList.remove('slide-in');
+      void area.offsetWidth;  // reflow
+      area.classList.add('slide-in');
+
+      switch (view) {
+        case 'lesson': App.renderLesson(topic, area); break;
+        case 'worked': App.renderWorked(topic, area); break;
+        case 'drill':  App.renderDrillSetup(topic, area); break;
+      }
+    },
+
+    renderEmpty() {
+      document.getElementById('content-area').innerHTML =
+        `<div class="empty-state">
+           <i class="fa-solid fa-graduation-cap"></i>
+           <p>Select a topic from the sidebar to get started.</p>
+         </div>`;
+      document.getElementById('breadcrumb').innerHTML = '';
+      document.getElementById('tab-strip').innerHTML  = '';
+    },
+
+    /* ── LESSON VIEW ────────────────────────────────────── */
+    renderLesson(topic, area) {
+      const { lesson } = topic;
+      if (!lesson) { area.innerHTML = '<div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>No lesson content yet.</p></div>'; return; }
+
+      let html = `<p class="lesson-intro">${md(lesson.intro)}</p>`;
+
+      lesson.sections.forEach(sec => {
+        const vis = sec.visual ? VC.fromConfig(sec.visual) : '';
+        html += `<div class="lesson-section">
+          <h2>${sec.heading}</h2>
+          <div class="lesson-body">${md(sec.body)}</div>
+          ${vis}
+        </div>`;
+      });
+
+      if (lesson.keyFacts?.length) {
+        html += `<div class="key-facts">
+          <h3>Key Facts</h3>
+          <ul>${lesson.keyFacts.map(f => `<li>${md(f)}</li>`).join('')}</ul>
+        </div>`;
+      }
+
+      html += `<button class="btn-cta" id="btn-to-worked">
+        Worked Examples <i class="fa-solid fa-arrow-right"></i>
+      </button>`;
+
+      area.innerHTML = html;
+      mountCharts(area);
+
+      area.querySelector('#btn-to-worked').addEventListener('click', () => {
+        const mod   = App.currentModule();
+        const topic = App.currentTopic();
+        if (mod && topic && !App.progress.get(App.state.grade, mod.id, topic.id).lessonDone) {
+          App.progress.markLessonDone(App.state.grade, mod.id, topic.id);
+          App.progress.addXP(10);
+        }
+        App.switchView('worked');
+      });
+    },
+
+    /* ── WORKED EXAMPLES VIEW ───────────────────────────── */
+    renderWorked(topic, area) {
+      const examples = topic.workedExamples;
+      if (!examples?.length) {
+        area.innerHTML = '<div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>No worked examples yet.</p></div>';
+        return;
+      }
+      App.state.exIdx      = 0;
+      App.state.stepsShown = 0;
+      App.showExample(topic, area);
+    },
+
+    showExample(topic, area) {
+      const ex    = topic.workedExamples[App.state.exIdx];
+      const total = topic.workedExamples.length;
+      const shown = App.state.stepsShown;
+
+      let steps = ex.steps.map((s, i) => {
+        const vis = i < shown;
+        return `<div class="step-card${vis ? ' visible' : ''}" data-step="${i}">
+          <div class="step-head">${s.label}</div>
+          <div class="step-body">${md(s.explanation)}</div>
+          <div class="step-hl">${s.highlight}</div>
+        </div>`;
+      }).join('');
+
+      const ansVis = shown >= ex.steps.length;
+      const ansHtml = `<div class="answer-reveal${ansVis ? ' visible' : ''}">
+        <div class="ans-label">Answer</div>${ex.answer}
+      </div>`;
+
+      area.innerHTML = `<div class="we-wrap">
+        <div class="we-qbox">${md(ex.question)}</div>
+        <div class="steps-list">${steps}</div>
+        ${ansHtml}
+        <div class="we-controls">
+          <button class="btn-nav" id="btn-prev-ex" ${App.state.exIdx === 0 ? 'disabled' : ''}>
+            <i class="fa-solid fa-chevron-left"></i> Previous
+          </button>
+          <button class="btn-step" id="btn-show-step"
+            ${shown >= ex.steps.length ? 'disabled' : ''}>
+            ${shown === 0 ? 'Show first step' : 'Next step'} <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <button class="btn-nav" id="btn-next-ex" ${App.state.exIdx >= total - 1 ? 'disabled' : ''}>
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <span class="we-counter">${App.state.exIdx + 1} / ${total}</span>
+        </div>
+        <button class="btn-try" id="btn-to-drill" style="margin-top:12px">
+          <i class="fa-solid fa-pen-to-square"></i> Try it yourself
+        </button>
+      </div>`;
+
+      area.querySelector('#btn-show-step').addEventListener('click', () => {
+        App.state.stepsShown++;
+        App.showExample(topic, area);
+        // Scroll last revealed card into view
+        const cards = area.querySelectorAll('.step-card.visible');
+        if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+
+      area.querySelector('#btn-prev-ex').addEventListener('click', () => {
+        App.state.exIdx--;
+        App.state.stepsShown = 0;
+        App.showExample(topic, area);
+      });
+
+      area.querySelector('#btn-next-ex').addEventListener('click', () => {
+        App.state.exIdx++;
+        App.state.stepsShown = 0;
+        if (App.state.exIdx >= topic.workedExamples.length - 1) {
+          // Award XP for completing all examples
+          const mod = App.currentModule();
+          const p   = App.progress.get(App.state.grade, mod.id, topic.id);
+          if (!p.examplesDone) {
+            p.examplesDone = true;
+            App.progress.save();
+            App.progress.addXP(10);
+          }
+        }
+        App.showExample(topic, area);
+      });
+
+      area.querySelector('#btn-to-drill').addEventListener('click', () => App.switchView('drill'));
+    },
+
+    /* ── INIT ───────────────────────────────────────────── */
+    init() {
+      App.progress.load();
+      App.ui.buildGradeSelector();
+      App.ui.updateTopBar();
+
+      // Select default grade6, first module, first topic
+      const g = curriculum[App.state.grade];
+      if (g?.modules?.length) {
+        const mod = g.modules[0];
+        if (mod.topics?.length) {
+          App.selectTopic(mod.id, mod.topics[0].id);
+          return;
+        }
+      }
+      App.buildSidebar();
+      App.renderEmpty();
+    },
+  };
+
+  console.log('MathMaster: App module loaded');
   </script>
 
 </body>
