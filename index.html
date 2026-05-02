@@ -625,8 +625,248 @@
   <div id="feedback-overlay"></div>
 
   <script>
-    // JavaScript added in next steps
-    console.log('MathMaster shell loaded');
+  'use strict';
+
+  /* ═══════════════════════════════════════════════════════════
+     VISUAL COMPONENT LIBRARY
+     All functions return HTML strings ready for innerHTML.
+  ═══════════════════════════════════════════════════════════ */
+
+  const VC = {
+
+    /* Place-value chart for any integer up to 9 digits */
+    placeValueChart(number) {
+      const abs   = Math.abs(number);
+      const str   = String(abs);
+      const cols  = ['Billions','Hundred M','Ten M','Millions','H. Thou.','T. Thou.','Thousands','Hundreds','Tens','Units'];
+      const pad   = cols.length;
+      const padded = str.padStart(pad, ' ');
+      const digits = padded.split('');
+
+      // Only show columns from first significant digit onward
+      const firstSig = digits.findIndex(d => d !== ' ');
+      const visibleCols  = cols.slice(firstSig);
+      const visibleDigits = digits.slice(firstSig);
+
+      const ths = visibleCols.map(c  => `<th>${c}</th>`).join('');
+      const tds = visibleDigits.map(d => {
+        const val = d.trim();
+        const hl  = val !== '' && val !== '0' ? ' class="hl"' : '';
+        return `<td${hl}>${val || '&nbsp;'}</td>`;
+      }).join('');
+
+      return `<div class="visual-wrap">
+        <table class="pv-table"><thead><tr>${ths}</tr></thead>
+        <tbody><tr>${tds}</tr></tbody></table>
+      </div>`;
+    },
+
+    /* Horizontal number line (SVG) */
+    numberLine(min, max, points, highlight) {
+      // points = [{val, label}], highlight = [val,…] shown in accent colour
+      const W = 520, H = 64, padX = 28;
+      const range = max - min || 1;
+      const toX   = v => padX + ((v - min) / range) * (W - 2 * padX);
+
+      // Auto step so we don't draw more than ~15 ticks
+      const rawStep = Math.ceil((max - min) / 14);
+      const step    = rawStep < 1 ? 1 : rawStep;
+
+      let ticks = '';
+      for (let v = min; v <= max; v += step) {
+        const x  = toX(v);
+        const hl = highlight && highlight.includes(v);
+        ticks += `<line x1="${x}" y1="26" x2="${x}" y2="${hl ? 34 : 32}"
+                    stroke="${hl ? '#f59e0b' : '#94a3b8'}" stroke-width="${hl ? 2 : 1}"/>
+                  <text x="${x}" y="48" text-anchor="middle" font-size="11"
+                    fill="${hl ? '#0f172a' : '#94a3b8'}"
+                    font-weight="${hl ? 700 : 400}">${v}</text>`;
+      }
+
+      let dots = '';
+      if (points) {
+        points.forEach(p => {
+          const x = toX(p.val);
+          dots += `<circle cx="${x}" cy="30" r="6" fill="#6366f1" stroke="white" stroke-width="2"/>`;
+          if (p.label) {
+            dots += `<text x="${x}" y="18" text-anchor="middle" font-size="11"
+                       fill="#6366f1" font-weight="700">${p.label}</text>`;
+          }
+        });
+      }
+
+      return `<div class="visual-wrap">
+        <svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+          <line x1="${padX}" y1="30" x2="${W - padX}" y2="30" stroke="#94a3b8" stroke-width="2"/>
+          <polygon points="${W-padX},30 ${W-padX-8},26 ${W-padX-8},34" fill="#94a3b8"/>
+          ${ticks}${dots}
+        </svg>
+      </div>`;
+    },
+
+    /* Horizontal fraction bar */
+    fractionBar(numerator, denominator, label) {
+      let segs = '';
+      for (let i = 0; i < denominator; i++) {
+        segs += `<div class="fbar-seg ${i < numerator ? 'filled' : 'empty'}"></div>`;
+      }
+      const lbl = label ? ` — ${label}` : '';
+      return `<div class="visual-wrap">
+        <div class="fbar-wrap">
+          <div class="fbar-label"><strong>${numerator}/${denominator}</strong>${lbl}</div>
+          <div class="fbar">${segs}</div>
+        </div>
+      </div>`;
+    },
+
+    /* Pie-slice fraction circle (SVG) */
+    fractionCircle(numerator, denominator) {
+      const r = 70, cx = 80, cy = 80;
+      const angle = (2 * Math.PI) / denominator;
+      let paths = '';
+      for (let i = 0; i < denominator; i++) {
+        const a1 = i * angle - Math.PI / 2;
+        const a2 = (i + 1) * angle - Math.PI / 2;
+        const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+        const x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+        const lg = angle > Math.PI ? 1 : 0;
+        const fill = i < numerator ? '#10b981' : '#e5e7eb';
+        paths += `<path d="M${cx},${cy} L${x1.toFixed(2)},${y1.toFixed(2)}
+                    A${r},${r} 0 ${lg} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z"
+                   fill="${fill}" stroke="white" stroke-width="1.5"/>`;
+      }
+      return `<div class="visual-wrap">
+        <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          ${paths}
+          <text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14"
+            font-weight="700" fill="white" font-family="JetBrains Mono,monospace">
+            ${numerator}/${denominator}
+          </text>
+        </svg>
+      </div>`;
+    },
+
+    /* 4-quadrant coordinate grid (SVG) */
+    coordinateGrid(points, lines) {
+      const SIZE = 280, PAD = 28, UNITS = 5;   // ±5 on each axis
+      const STEP = (SIZE - 2 * PAD) / (UNITS * 2);
+      const toSX = x =>  PAD + (x + UNITS) * STEP;
+      const toSY = y =>  PAD + (UNITS - y) * STEP;
+
+      let grid = '';
+      for (let i = -UNITS; i <= UNITS; i++) {
+        const px = toSX(i), py = toSY(i);
+        const dim = i === 0 ? '#94a3b8' : '#e5e7eb';
+        grid += `<line x1="${px}" y1="${PAD}" x2="${px}" y2="${SIZE-PAD}" stroke="${dim}" stroke-width="1"/>
+                 <line x1="${PAD}" y1="${py}" x2="${SIZE-PAD}" y2="${py}" stroke="${dim}" stroke-width="1"/>`;
+        if (i !== 0) {
+          grid += `<text x="${px}" y="${toSY(0)+14}" text-anchor="middle" font-size="9" fill="#94a3b8">${i}</text>
+                   <text x="${toSX(0)-7}" y="${py+3}" text-anchor="end" font-size="9" fill="#94a3b8">${i}</text>`;
+        }
+      }
+      const axes = `
+        <line x1="${PAD}" y1="${toSY(0)}" x2="${SIZE-PAD}" y2="${toSY(0)}" stroke="#374151" stroke-width="1.5"/>
+        <line x1="${toSX(0)}" y1="${PAD}" x2="${toSX(0)}" y2="${SIZE-PAD}" stroke="#374151" stroke-width="1.5"/>
+        <text x="${SIZE-PAD+4}" y="${toSY(0)+4}" font-size="10" fill="#374151" font-weight="600">x</text>
+        <text x="${toSX(0)+4}" y="${PAD-4}" font-size="10" fill="#374151" font-weight="600">y</text>`;
+
+      let svgLines = '';
+      if (lines) {
+        lines.forEach(l => {
+          svgLines += `<line x1="${toSX(l[0][0])}" y1="${toSY(l[0][1])}"
+                            x2="${toSX(l[1][0])}" y2="${toSY(l[1][1])}"
+                            stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>`;
+        });
+      }
+
+      let dots = '';
+      if (points) {
+        points.forEach(([px, py]) => {
+          dots += `<circle cx="${toSX(px)}" cy="${toSY(py)}" r="5"
+                    fill="#6366f1" stroke="white" stroke-width="1.5"/>
+                  <text x="${toSX(px)+8}" y="${toSY(py)-4}" font-size="10"
+                    fill="#6366f1" font-weight="700">(${px},${py})</text>`;
+        });
+      }
+
+      return `<div class="visual-wrap">
+        <svg width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg">
+          ${grid}${axes}${svgLines}${dots}
+        </svg>
+      </div>`;
+    },
+
+    /* SVG progress ring (used in sidebar) */
+    progressRing(pct, accent) {
+      const r = 13, circ = +(2 * Math.PI * r).toFixed(2);
+      const offset = +(circ - (pct / 100) * circ).toFixed(2);
+      return `<svg class="ring-svg" width="32" height="32" viewBox="0 0 32 32"
+                   xmlns="http://www.w3.org/2000/svg">
+        <circle class="ring-bg"   cx="16" cy="16" r="${r}" stroke-width="3"/>
+        <circle class="ring-fill" cx="16" cy="16" r="${r}" stroke="${accent}"
+          stroke-width="3" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+      </svg>`;
+    },
+
+    /* Render a visual based on topic lesson visual config */
+    fromConfig(visual) {
+      if (!visual) return '';
+      const { type, data } = visual;
+      switch (type) {
+        case 'place-value-chart':
+          return VC.placeValueChart(data.number);
+        case 'number-line':
+          return VC.numberLine(data.min, data.max, data.points, data.highlight);
+        case 'fraction-bar':
+          return VC.fractionBar(data.numerator, data.denominator, data.label);
+        case 'fraction-circle':
+          return VC.fractionCircle(data.numerator, data.denominator);
+        case 'coordinate-grid':
+          return VC.coordinateGrid(data.points, data.lines);
+        case 'table': {
+          const hdr = data.headers.map(h => `<th>${h}</th>`).join('');
+          const rows = data.rows.map(r =>
+            `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`
+          ).join('');
+          return `<div class="visual-wrap">
+            <table class="pv-table"><thead><tr>${hdr}</tr></thead>
+            <tbody>${rows}</tbody></table>
+          </div>`;
+        }
+        case 'bar-chart':
+        case 'line-chart':
+        case 'pie-chart':
+          return `<div class="visual-wrap">
+            <div style="position:relative;max-width:480px;height:260px">
+              <canvas id="chart-${Date.now()}" data-cfg='${JSON.stringify(data)}'></canvas>
+            </div>
+          </div>`;
+        default:
+          return '';
+      }
+    }
+  };
+
+  /* Render Chart.js charts after inserting into DOM */
+  function mountCharts(container) {
+    container.querySelectorAll('canvas[data-cfg]').forEach(canvas => {
+      try {
+        const cfg = JSON.parse(canvas.dataset.cfg);
+        new Chart(canvas, cfg);
+      } catch(e) { console.warn('Chart render error', e); }
+    });
+  }
+
+  /* Simple markdown-lite parser (bold, italic, code, newlines) */
+  function md(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,     '<em>$1</em>')
+      .replace(/`(.+?)`/g,       '<code>$1</code>')
+      .replace(/\n/g,            '<br>');
+  }
+
+  console.log('MathMaster: visual components loaded');
   </script>
 
 </body>
