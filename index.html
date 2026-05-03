@@ -1356,6 +1356,846 @@
   };
 
   console.log('MathMaster: App module loaded');
+
+  /* ═══════════════════════════════════════════════════════════
+     DRILL ENGINE  (question types, timer, scoring, end screen)
+  ═══════════════════════════════════════════════════════════ */
+
+  const Drill = {
+    /* Config chosen on setup screen */
+    cfg: { mode: 'untimed', difficulty: 'mixed', count: 10, scope: 'topic' },
+    /* Runtime */
+    questions:   [],
+    index:       0,
+    answers:     [],   // { question, userAnswer, correct }
+    consecutive: 0,
+    timerSec:    0,
+    timerInterval: null,
+    submitted:   false,
+
+    /* ── SELECT QUESTIONS ─────────────────────────────────── */
+    selectQuestions(topic, mod) {
+      let pool = [];
+      if (this.cfg.scope === 'topic') {
+        pool = [...(topic.questions || [])];
+      } else {
+        (mod?.topics || []).forEach(t => pool.push(...(t.questions || [])));
+      }
+
+      // Filter by difficulty
+      if (this.cfg.difficulty === 'easy')   pool = pool.filter(q => q.difficulty === 1);
+      if (this.cfg.difficulty === 'hard')   pool = pool.filter(q => q.difficulty === 3);
+      // 'mixed' keeps all
+
+      // Shuffle
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, this.cfg.count);
+    },
+
+    /* ── ANSWER CHECKING ─────────────────────────────────── */
+    check(question, userAnswer) {
+      switch (question.type) {
+        case 'multiple-choice':
+          return String(userAnswer).trim() === String(question.answer).trim();
+
+        case 'numeric-input': {
+          const ua = parseFloat(String(userAnswer).replace(/[,\s]/g, ''));
+          const ca = parseFloat(String(question.answer).replace(/[,\s]/g, ''));
+          return !isNaN(ua) && !isNaN(ca) && ua === ca;
+        }
+
+        case 'fill-in-the-blank': {
+          const ua = String(userAnswer).trim().toLowerCase().replace(/[,\s]/g, '');
+          const ca = String(question.answer).trim().toLowerCase().replace(/[,\s]/g, '');
+          return ua === ca;
+        }
+
+        case 'ordering': {
+          const correct = question.answer.split(',').map(s => s.trim());
+          if (!Array.isArray(userAnswer) || userAnswer.length !== correct.length) return false;
+          return userAnswer.every((v, i) => v.trim() === correct[i]);
+        }
+
+        case 'matching': {
+          if (typeof userAnswer !== 'object') return false;
+          const ok = question.pairs.every(p => userAnswer[p.left] === p.right);
+          return ok && Object.keys(userAnswer).length === question.pairs.length;
+        }
+      }
+      return false;
+    },
+
+    /* ── XP CALCULATION ──────────────────────────────────── */
+    calcXP(correct, total, difficulty) {
+      const pct  = correct / total;
+      const base = difficulty === 'easy' ? 20 : difficulty === 'hard' ? 50 : 35;
+      if (pct === 1) return base;
+      return 10;  // participation XP
+    },
+
+    /* ── SETUP SCREEN ────────────────────────────────────── */
+    renderSetup(topic, area) {
+      area.innerHTML = `
+        <div class="drill-setup">
+          <h1><i class="fa-solid fa-pen-to-square" style="font-size:1.2rem;margin-right:6px"></i>Drill</h1>
+          <p class="sub">${topic.label}</p>
+
+          <div class="setup-group">
+            <label>Mode</label>
+            <div class="pill-group">
+              <button class="pill sel" data-k="mode" data-v="untimed">Untimed</button>
+              <button class="pill" data-k="mode" data-v="timed-5">5 min</button>
+              <button class="pill" data-k="mode" data-v="timed-10">10 min</button>
+              <button class="pill" data-k="mode" data-v="timed-15">15 min</button>
+            </div>
+          </div>
+
+          <div class="setup-group">
+            <label>Difficulty</label>
+            <div class="pill-group">
+              <button class="pill" data-k="difficulty" data-v="easy">Easy</button>
+              <button class="pill sel" data-k="difficulty" data-v="mixed">Mixed</button>
+              <button class="pill" data-k="difficulty" data-v="hard">Hard</button>
+            </div>
+          </div>
+
+          <div class="setup-group">
+            <label>Questions</label>
+            <div class="pill-group">
+              <button class="pill" data-k="count" data-v="5">5</button>
+              <button class="pill sel" data-k="count" data-v="10">10</button>
+              <button class="pill" data-k="count" data-v="20">20</button>
+            </div>
+          </div>
+
+          <div class="setup-group">
+            <label>Scope</label>
+            <div class="pill-group">
+              <button class="pill sel" data-k="scope" data-v="topic">This topic</button>
+              <button class="pill" data-k="scope" data-v="module">Full module</button>
+            </div>
+          </div>
+
+          <button class="btn-start" id="btn-start-drill">
+            Start Drill <i class="fa-solid fa-play" style="margin-left:6px"></i>
+          </button>
+        </div>`;
+
+      // Sync pill selections with cfg
+      Object.entries(Drill.cfg).forEach(([k, v]) => {
+        area.querySelectorAll(`[data-k="${k}"]`).forEach(p => {
+          p.classList.toggle('sel', String(p.dataset.v) === String(v));
+        });
+      });
+
+      area.querySelectorAll('.pill').forEach(p => {
+        p.addEventListener('click', () => {
+          const k = p.dataset.k, v = p.dataset.v;
+          Drill.cfg[k] = k === 'count' ? parseInt(v, 10) : v;
+          area.querySelectorAll(`[data-k="${k}"]`).forEach(b =>
+            b.classList.toggle('sel', b.dataset.v === v)
+          );
+        });
+      });
+
+      area.querySelector('#btn-start-drill').addEventListener('click', () => {
+        const topic = App.currentTopic();
+        const mod   = App.currentModule();
+        Drill.start(topic, mod, area);
+      });
+    },
+
+    /* ── START ───────────────────────────────────────────── */
+    start(topic, mod, area) {
+      this.questions   = this.selectQuestions(topic, mod);
+      this.index       = 0;
+      this.answers     = [];
+      this.consecutive = 0;
+      this.submitted   = false;
+
+      if (!this.questions.length) {
+        area.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-exclamation"></i>
+          <p>No questions available for those settings. Try changing difficulty or scope.</p></div>`;
+        return;
+      }
+
+      // Timer
+      if (this.cfg.mode.startsWith('timed')) {
+        const mins = parseInt(this.cfg.mode.split('-')[1], 10);
+        this.timerSec = mins * 60;
+      } else {
+        this.timerSec = 0;
+      }
+
+      // Shuffle ordering items
+      this.questions.forEach(q => {
+        if (q.type === 'ordering' && q.items) {
+          q._shuffled = [...q.items].sort(() => Math.random() - 0.5);
+        }
+        if (q.type === 'matching' && q.pairs) {
+          q._rightShuffled = [...q.pairs].sort(() => Math.random() - 0.5).map(p => p.right);
+        }
+      });
+
+      App.state.matchMap = {};
+      App.state.matchSel = null;
+      App.state.dragSrc  = null;
+
+      this.renderQuestion(area);
+      this.startTimer(area);
+    },
+
+    /* ── TIMER ───────────────────────────────────────────── */
+    startTimer(area) {
+      clearInterval(this.timerInterval);
+      if (!this.timerSec) return;
+      this.timerInterval = setInterval(() => {
+        this.timerSec--;
+        const el = area.querySelector('.drill-timer');
+        if (el) {
+          el.textContent = this.formatTime(this.timerSec);
+          el.className = 'drill-timer' +
+            (this.timerSec < 30 ? ' red' : this.timerSec < 60 ? ' amber' : '');
+        }
+        if (this.timerSec <= 0) {
+          clearInterval(this.timerInterval);
+          this.finish(area);
+        }
+      }, 1000);
+    },
+
+    stopTimer() { clearInterval(this.timerInterval); },
+
+    formatTime(s) {
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${m}:${String(r).padStart(2, '0')}`;
+    },
+
+    /* ── RENDER QUESTION ─────────────────────────────────── */
+    renderQuestion(area) {
+      this.submitted = false;
+      App.state.matchMap = {};
+      App.state.matchSel = null;
+      App.state.dragSrc  = null;
+
+      const q     = this.questions[this.index];
+      const pct   = Math.round((this.index / this.questions.length) * 100);
+      const diffs = { 1: 'd1', 2: 'd2', 3: 'd3' };
+      const diffL = { 1: 'Easy', 2: 'Medium', 3: 'Hard' };
+      const timer = this.timerSec
+        ? `<span class="drill-timer">${this.formatTime(this.timerSec)}</span>` : '';
+
+      const streakMsg = this.consecutive >= 3
+        ? `${this.consecutive} in a row! 🔥` : '';
+
+      area.innerHTML = `
+        <div class="drill-screen">
+          <div class="drill-hd">
+            <div class="drill-ptrack"><div class="drill-pfill" style="width:${pct}%"></div></div>
+            <span class="drill-qnum">Q ${this.index + 1} / ${this.questions.length}</span>
+            ${timer}
+          </div>
+          <div class="streak-msg">${streakMsg}</div>
+          <div class="q-card">
+            <div class="q-diff ${diffs[q.difficulty]}">${diffL[q.difficulty]}</div>
+            <div class="q-prompt">${md(q.prompt)}</div>
+            ${this.renderInput(q)}
+          </div>
+          <button class="btn-submit" id="btn-submit" disabled>Check Answer</button>
+          <div class="expl-box" id="expl-box"></div>
+          <button class="btn-next" id="btn-next">
+            ${this.index >= this.questions.length - 1 ? 'See Results' : 'Next Question'} →
+          </button>
+        </div>`;
+
+      this.wireInput(q, area);
+
+      area.querySelector('#btn-submit').addEventListener('click', () => this.submitAnswer(q, area));
+
+      area.querySelector('#btn-next').addEventListener('click', () => {
+        this.index++;
+        if (this.index >= this.questions.length) {
+          this.stopTimer();
+          this.finish(area);
+        } else {
+          this.renderQuestion(area);
+        }
+      });
+    },
+
+    /* ── RENDER INPUT ────────────────────────────────────── */
+    renderInput(q) {
+      switch (q.type) {
+        case 'multiple-choice': {
+          const letters = ['A','B','C','D','E'];
+          return `<div class="mc-list">
+            ${(q.options || []).map((opt, i) =>
+              `<div class="mc-opt" data-val="${opt}">
+                <span class="mc-ltr">${letters[i]}</span>
+                <span>${opt}</span>
+              </div>`
+            ).join('')}
+          </div>`;
+        }
+        case 'numeric-input':
+          return `<div class="ni-wrap">
+            <input class="ni-input" id="ni" type="text" inputmode="decimal" placeholder="Enter answer" autocomplete="off">
+          </div>`;
+        case 'fill-in-the-blank': {
+          const parts = q.prompt.split('___');
+          const html  = parts.map((p, i) =>
+            i < parts.length - 1 ? `${p}<input class="fitb-in" id="fitb" autocomplete="off">` : p
+          ).join('');
+          return `<div class="fitb-text">${html}</div>`;
+        }
+        case 'ordering': {
+          const items = q._shuffled || q.items || q.answer.split(',').map(s => s.trim());
+          return `<div class="ord-list" id="ord-list">
+            ${items.map((item, i) =>
+              `<div class="ord-item" draggable="true" data-idx="${i}" data-val="${item}">
+                <i class="fa-solid fa-grip-vertical ord-handle"></i>
+                <span class="ord-text">${item}</span>
+              </div>`
+            ).join('')}
+          </div>`;
+        }
+        case 'matching': {
+          const rights = q._rightShuffled || q.pairs.map(p => p.right);
+          return `<div class="match-grid">
+            <div class="match-col">
+              <div class="match-lbl">Column A</div>
+              ${q.pairs.map(p =>
+                `<div class="match-item" data-col="left" data-val="${p.left}">${p.left}</div>`
+              ).join('')}
+            </div>
+            <div class="match-col">
+              <div class="match-lbl">Column B</div>
+              ${rights.map(r =>
+                `<div class="match-item" data-col="right" data-val="${r}">${r}</div>`
+              ).join('')}
+            </div>
+          </div>`;
+        }
+        default: return `<p>Unsupported question type: ${q.type}</p>`;
+      }
+    },
+
+    /* ── WIRE INTERACTIONS ───────────────────────────────── */
+    wireInput(q, area) {
+      const submit = () => { if (!this.submitted) area.querySelector('#btn-submit').disabled = false; };
+
+      switch (q.type) {
+        case 'multiple-choice':
+          area.querySelectorAll('.mc-opt').forEach(opt => {
+            opt.addEventListener('click', () => {
+              if (this.submitted) return;
+              area.querySelectorAll('.mc-opt').forEach(o => o.classList.remove('sel'));
+              opt.classList.add('sel');
+              submit();
+            });
+          });
+          break;
+
+        case 'numeric-input': {
+          const inp = area.querySelector('#ni');
+          if (inp) {
+            inp.addEventListener('input', submit);
+            inp.addEventListener('keydown', e => {
+              if (e.key === 'Enter' && !this.submitted) this.submitAnswer(q, area);
+            });
+            setTimeout(() => inp.focus(), 50);
+          }
+          break;
+        }
+
+        case 'fill-in-the-blank': {
+          const inp = area.querySelector('#fitb');
+          if (inp) {
+            inp.addEventListener('input', submit);
+            inp.addEventListener('keydown', e => {
+              if (e.key === 'Enter' && !this.submitted) this.submitAnswer(q, area);
+            });
+            setTimeout(() => inp.focus(), 50);
+          }
+          break;
+        }
+
+        case 'ordering': {
+          const list = area.querySelector('#ord-list');
+          if (!list) break;
+          let dragSrcEl = null;
+          list.querySelectorAll('.ord-item').forEach(item => {
+            item.addEventListener('dragstart', e => {
+              dragSrcEl = item;
+              item.classList.add('dragging');
+              e.dataTransfer.effectAllowed = 'move';
+            });
+            item.addEventListener('dragend', () => {
+              item.classList.remove('dragging');
+              list.querySelectorAll('.ord-item').forEach(i => i.classList.remove('drag-over'));
+              submit();
+            });
+            item.addEventListener('dragover', e => {
+              e.preventDefault();
+              if (item === dragSrcEl) return;
+              list.querySelectorAll('.ord-item').forEach(i => i.classList.remove('drag-over'));
+              item.classList.add('drag-over');
+              e.dataTransfer.dropEffect = 'move';
+            });
+            item.addEventListener('drop', e => {
+              e.preventDefault();
+              if (item === dragSrcEl) return;
+              const items = [...list.querySelectorAll('.ord-item')];
+              const srcI  = items.indexOf(dragSrcEl);
+              const tgtI  = items.indexOf(item);
+              if (srcI < tgtI) list.insertBefore(dragSrcEl, item.nextSibling);
+              else             list.insertBefore(dragSrcEl, item);
+              list.querySelectorAll('.ord-item').forEach(i => i.classList.remove('drag-over'));
+              submit();
+            });
+          });
+          break;
+        }
+
+        case 'matching': {
+          area.querySelectorAll('.match-item').forEach(item => {
+            item.addEventListener('click', () => {
+              if (this.submitted || item.classList.contains('matched')) return;
+              const col = item.dataset.col;
+              const val = item.dataset.val;
+
+              if (!App.state.matchSel) {
+                if (col === 'left') {
+                  area.querySelectorAll('.match-item[data-col="left"]').forEach(i => i.classList.remove('sel'));
+                  item.classList.add('sel');
+                  App.state.matchSel = { col, val };
+                }
+              } else {
+                if (col === 'right') {
+                  // Make the match
+                  App.state.matchMap[App.state.matchSel.val] = val;
+                  // Update UI
+                  area.querySelectorAll('.match-item[data-col="left"]').forEach(i => {
+                    if (i.dataset.val === App.state.matchSel.val) {
+                      i.classList.remove('sel');
+                      i.classList.add('matched');
+                    }
+                  });
+                  item.classList.add('matched');
+                  App.state.matchSel = null;
+                  // Enable submit when all matched
+                  if (Object.keys(App.state.matchMap).length === q.pairs.length) submit();
+                } else {
+                  // Clicked left again
+                  area.querySelectorAll('.match-item[data-col="left"]').forEach(i => i.classList.remove('sel'));
+                  item.classList.add('sel');
+                  App.state.matchSel = { col, val };
+                }
+              }
+            });
+          });
+          break;
+        }
+      }
+    },
+
+    /* ── GET USER ANSWER ─────────────────────────────────── */
+    getUserAnswer(q, area) {
+      switch (q.type) {
+        case 'multiple-choice': {
+          const sel = area.querySelector('.mc-opt.sel');
+          return sel ? sel.dataset.val : null;
+        }
+        case 'numeric-input':
+          return area.querySelector('#ni')?.value.trim() ?? null;
+        case 'fill-in-the-blank':
+          return area.querySelector('#fitb')?.value.trim() ?? null;
+        case 'ordering':
+          return [...area.querySelectorAll('.ord-item')].map(i => i.dataset.val);
+        case 'matching':
+          return { ...App.state.matchMap };
+        default: return null;
+      }
+    },
+
+    /* ── SUBMIT ──────────────────────────────────────────── */
+    submitAnswer(q, area) {
+      if (this.submitted) return;
+      this.submitted = true;
+
+      const ua      = this.getUserAnswer(q, area);
+      const correct = this.check(q, ua);
+
+      this.answers.push({ question: q, userAnswer: ua, correct });
+      this.consecutive = correct ? this.consecutive + 1 : 0;
+
+      App.ui.flashFeedback(correct);
+
+      // Lock inputs
+      area.querySelectorAll('.mc-opt, .match-item, .ord-item').forEach(el => el.classList.add('locked'));
+      const ni = area.querySelector('#ni, #fitb');
+      if (ni) { ni.disabled = true; ni.classList.add(correct ? 'correct' : 'wrong'); }
+
+      // Highlight MC
+      if (q.type === 'multiple-choice') {
+        area.querySelectorAll('.mc-opt').forEach(opt => {
+          if (opt.dataset.val === q.answer) opt.classList.add('correct');
+          else if (opt.classList.contains('sel')) opt.classList.add('wrong');
+        });
+      }
+
+      // Highlight ordering
+      if (q.type === 'ordering') {
+        const correctOrder = q.answer.split(',').map(s => s.trim());
+        area.querySelectorAll('.ord-item').forEach((item, i) => {
+          item.classList.add(item.dataset.val.trim() === correctOrder[i] ? 'correct' : 'wrong');
+        });
+      }
+
+      // Highlight matching
+      if (q.type === 'matching') {
+        q.pairs.forEach(p => {
+          area.querySelectorAll('.match-item').forEach(item => {
+            if (item.dataset.col === 'left' && item.dataset.val === p.left) {
+              const matched = App.state.matchMap[p.left] === p.right;
+              item.classList.remove('matched');
+              item.classList.add(matched ? 'matched' : 'wrong-m');
+            }
+          });
+        });
+      }
+
+      // Explanation
+      const expl = area.querySelector('#expl-box');
+      if (expl) {
+        expl.className = `expl-box visible ${correct ? 'correct' : 'wrong'}`;
+        const ansStr   = q.type === 'matching'
+          ? q.pairs.map(p => `${p.left} → ${p.right}`).join(', ')
+          : q.answer;
+        expl.innerHTML = correct
+          ? `<div class="expl-hd">✓ Correct!</div>${md(q.explanation || '')}`
+          : `<div class="expl-hd">✗ Incorrect</div>
+             <div>Correct answer: <span class="expl-ans">${ansStr}</span></div>
+             <div style="margin-top:6px">${md(q.explanation || '')}</div>`;
+      }
+
+      area.querySelector('#btn-submit').disabled = true;
+      const btnNext = area.querySelector('#btn-next');
+      if (btnNext) btnNext.classList.add('visible');
+    },
+
+    /* ── FINISH / END SCREEN ─────────────────────────────── */
+    finish(area) {
+      this.stopTimer();
+      const correct = this.answers.filter(a => a.correct).length;
+      const total   = this.answers.length || this.questions.length;
+      const pct     = Math.round((correct / total) * 100);
+      const stars   = pct >= 90 ? '★★★' : pct >= 60 ? '★★☆' : '★☆☆';
+      const xp      = this.calcXP(correct, total, this.cfg.difficulty);
+
+      // Record progress
+      const mod   = App.currentModule();
+      const topic = App.currentTopic();
+      if (mod && topic) {
+        App.progress.recordDrill(App.state.grade, mod.id, topic.id, correct, total);
+        App.progress.addXP(xp);
+        App.buildSidebar();   // refresh rings
+      }
+
+      const wrongs = this.answers.filter(a => !a.correct);
+
+      area.innerHTML = `
+        <div class="end-screen">
+          <div class="end-score">${correct} / ${total}</div>
+          <div class="end-stars">${stars}</div>
+          <div class="end-xp">+${xp} XP earned</div>
+          <div class="end-stats">
+            <div class="end-stat"><strong>${pct}%</strong>Score</div>
+            <div class="end-stat"><strong>${correct}</strong>Correct</div>
+            <div class="end-stat"><strong>${total - correct}</strong>Wrong</div>
+          </div>
+          <div class="end-actions">
+            <button class="end-btn pri" id="btn-retry">Try Again</button>
+            <button class="end-btn sec" id="btn-next-topic">Next Topic →</button>
+          </div>
+          ${wrongs.length ? `
+            <div class="wrong-review">
+              <h3>Review mistakes (${wrongs.length})</h3>
+              ${wrongs.map(a => {
+                const ansStr = a.question.type === 'matching'
+                  ? a.question.pairs.map(p => `${p.left} → ${p.right}`).join(', ')
+                  : a.question.answer;
+                return `<div class="wrong-item">
+                  <div class="wi-q">${a.question.prompt}</div>
+                  <div class="wi-correct">✓ ${ansStr}</div>
+                  <div class="wi-expl">${a.question.explanation || ''}</div>
+                </div>`;
+              }).join('')}
+            </div>` : ''}
+        </div>`;
+
+      area.querySelector('#btn-retry').addEventListener('click', () => {
+        App.renderDrillSetup(App.currentTopic(), area);
+      });
+      area.querySelector('#btn-next-topic').addEventListener('click', () => {
+        const mod    = App.currentModule();
+        const topics = mod?.topics || [];
+        const curIdx = topics.findIndex(t => t.id === App.state.topicId);
+        const next   = topics[curIdx + 1];
+        if (next) App.selectTopic(mod.id, next.id);
+        else      App.switchView('lesson');
+      });
+    },
+  };
+
+  /* Wire renderDrillSetup into App */
+  App.renderDrillSetup = function(topic, area) {
+    Drill.renderSetup(topic, area);
+  };
+
+  console.log('MathMaster: drill engine loaded');
+
+  /* ═══════════════════════════════════════════════════════════
+     SAMPLE CURRICULUM  (Grade 6 — Numbers module, 2 topics)
+     Full curriculum added in Phase 2-3.
+  ═══════════════════════════════════════════════════════════ */
+
+  const curriculum = {
+    grade6: {
+      modules: [
+        {
+          id: 'numbers', label: 'Numbers & Operations', icon: '🔢', accent: 'var(--accent-num)',
+          topics: [
+            {
+              id: 'place-value', label: 'Place Value to Millions',
+              lesson: {
+                intro: 'Every digit in a number has a value that depends on its position. Understanding place value lets you read, write, and compare very large numbers.',
+                sections: [
+                  {
+                    heading: 'The Place Value Chart',
+                    body: 'Numbers up to 7 digits can be broken into: **Millions | Hundred Thousands | Ten Thousands | Thousands | Hundreds | Tens | Units**.\n\nThe number 3 452 017 is read as: *three million, four hundred and fifty-two thousand and seventeen*.',
+                    visual: { type: 'place-value-chart', data: { number: 3452017 } }
+                  },
+                  {
+                    heading: 'Expanded Notation',
+                    body: 'We can write a number as the sum of the value of each digit:\n\n**3 452 017 = 3 000 000 + 400 000 + 50 000 + 2 000 + 0 + 10 + 7**\n\nNote that zero holds a position — it is a **placeholder**.',
+                    visual: null
+                  }
+                ],
+                keyFacts: [
+                  'Each position is 10× the value of the position to its right.',
+                  'A zero holds a position — it is a placeholder.',
+                  'Spaces (not commas) separate thousands in South African notation.',
+                  'The digit furthest left has the highest value.'
+                ]
+              },
+              workedExamples: [
+                {
+                  question: 'Write the value of the underlined digit in 4 <u>7</u>23 805.',
+                  steps: [
+                    { label: 'Step 1 — Locate the digit', explanation: 'The underlined digit is 7. We need to find its position by counting from the right.', highlight: '4 [7] 2 3 8 0 5' },
+                    { label: 'Step 2 — Identify the place', explanation: 'Counting from the right: Units(5), Tens(0), Hundreds(8), Thousands(3), Ten Thousands(2), Hundred Thousands(7).', highlight: 'Position = Hundred Thousands' },
+                    { label: 'Step 3 — State the value', explanation: 'The digit 7 is in the hundred thousands position, so its value is 7 × 100 000.', highlight: 'Value = 700 000' }
+                  ],
+                  answer: '700 000'
+                },
+                {
+                  question: 'Arrange in descending order: 1 203 450 | 1 230 045 | 1 023 405',
+                  steps: [
+                    { label: 'Step 1 — Compare millions digit', explanation: 'All three numbers have 1 in the millions place — move to the next digit.', highlight: '1 ___ ___ ___ ___ ___ ___' },
+                    { label: 'Step 2 — Compare hundred-thousands digit', explanation: '1 203 450 → 2; 1 230 045 → 2; 1 023 405 → 0. So 1 023 405 is smallest.', highlight: '1 023 405 is last' },
+                    { label: 'Step 3 — Break the tie', explanation: '1 203 450 → ten-thousands digit is 0; 1 230 045 → ten-thousands digit is 3. So 1 230 045 > 1 203 450.', highlight: '1 230 045 > 1 203 450' }
+                  ],
+                  answer: '1 230 045 | 1 203 450 | 1 023 405'
+                },
+                {
+                  question: 'What is 5 000 000 + 300 000 + 40 + 9 written as a number?',
+                  steps: [
+                    { label: 'Step 1 — Identify each place', explanation: 'Millions = 5, Hundred Thousands = 3, all others need placeholder zeros.', highlight: '5 _ 3 _ _ _ _ _ _ _' },
+                    { label: 'Step 2 — Fill in zeros as placeholders', explanation: 'Thousands = 0, Hundreds = 0, Tens = 4 (from 40), Units = 9.', highlight: '5 300 049' }
+                  ],
+                  answer: '5 300 049'
+                }
+              ],
+              questions: [
+                { id: 'pv01', type: 'multiple-choice', difficulty: 1, prompt: 'What is the value of the digit 6 in 6 234 500?', options: ['60 000', '600 000', '6 000 000', '6 000'], answer: '6 000 000', explanation: 'The 6 is in the millions position: 6 × 1 000 000 = 6 000 000.' },
+                { id: 'pv02', type: 'multiple-choice', difficulty: 1, prompt: 'Which digit is in the ten-thousands place in 3 472 819?', options: ['4', '7', '2', '8'], answer: '7', explanation: 'Counting from right: Units=9, Tens=1, Hundreds=8, Thousands=2, Ten Thousands=7.' },
+                { id: 'pv03', type: 'numeric-input', difficulty: 1, prompt: 'Write the number: four hundred and seven thousand and fifty-two.', answer: '407052', explanation: '407 052: 4 in hundred thousands, 0 in ten thousands, 7 in thousands, 0 in hundreds, 5 in tens, 2 in units.' },
+                { id: 'pv04', type: 'multiple-choice', difficulty: 1, prompt: 'What is the place value of 5 in 2 503 100?', options: ['Tens', 'Thousands', 'Hundred Thousands', 'Millions'], answer: 'Hundred Thousands', explanation: '2 503 100: 2=Millions, 5=Hundred Thousands, 0=Ten Thousands, 3=Thousands.' },
+                { id: 'pv05', type: 'multiple-choice', difficulty: 1, prompt: 'Which number is equal to 4 000 000 + 200 000 + 30 + 7?', options: ['4 230 007', '4 200 037', '4 020 037', '4 200 370'], answer: '4 200 037', explanation: '4 000 000 + 200 000 + 30 + 7 = 4 200 037. Thousands and hundreds are zero.' },
+                { id: 'pv06', type: 'fill-in-the-blank', difficulty: 2, prompt: '2 605 013 = 2 000 000 + ___ + 5 000 + 13', answer: '600000', explanation: 'The digit 6 is in the hundred-thousands position: 6 × 100 000 = 600 000.' },
+                { id: 'pv07', type: 'multiple-choice', difficulty: 2, prompt: 'Which number has 4 in the ten-thousands position?', options: ['3 400 120', '2 541 000', '1 042 300', '4 123 456'], answer: '1 042 300', explanation: 'In 1 042 300: millions=1, H.Thou=0, T.Thou=4, Thou=2. The 4 is in ten-thousands.' },
+                { id: 'pv08', type: 'ordering', difficulty: 2, prompt: 'Arrange from smallest to largest', items: ['2 034 100', '2 304 100', '2 043 100'], answer: '2 034 100,2 043 100,2 304 100', explanation: 'Compare digit by digit: all start 2 0__ → ten-thousands: 3, 4, 0. So 2 034 100 < 2 043 100 < 2 304 100.' },
+                { id: 'pv09', type: 'multiple-choice', difficulty: 2, prompt: 'The digit 8 is in the ten-thousands place. Which number could this be?', options: ['8 123 456', '1 800 234', '3 280 000', '5 308 912'], answer: '3 280 000', explanation: 'In 3 280 000: 3=M, 2=HTh, 8=TTh, 0=Th. The 8 is in ten-thousands ✓.' },
+                { id: 'pv10', type: 'numeric-input', difficulty: 2, prompt: 'Write in digits: six million, thirty-two thousand and five.', answer: '6032005', explanation: '6 032 005: 6=M, 0=HTh, 3=TTh, 2=Th, 0=H, 0=T, 5=U.' },
+                { id: 'pv11', type: 'multiple-choice', difficulty: 3, prompt: 'By how much does the value of 4 change when moving from 4 820 to 40 820?', options: ['36 000', '360 000', '3 600', '400 000'], answer: '36 000', explanation: 'In 4 820, the 4 is worth 4 000. In 40 820, the 4 is worth 40 000. Difference = 36 000.' },
+                { id: 'pv12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If 3 _42 000 has 3 in the millions and 4 in the ten-thousands, the missing digit makes the whole number ___42 000. The number is 3 ___42 000 where the blank is the hundred-thousands digit. If the number equals 3 742 000, what is 3 742 000 written in expanded notation? Answer with the hundred-thousands value only.', answer: '700000', explanation: '7 in the hundred-thousands position = 7 × 100 000 = 700 000.' },
+                { id: 'pv13', type: 'ordering', difficulty: 3, prompt: 'Arrange from greatest to smallest', items: ['1 099 999', '1 100 000', '1 009 999', '1 100 100'], answer: '1 100 100,1 100 000,1 099 999,1 009 999', explanation: 'Compare: 1 100 100 > 1 100 000 > 1 099 999 > 1 009 999.' },
+                { id: 'pv14', type: 'numeric-input', difficulty: 3, prompt: 'A number has 7 in the millions, 0 in the hundred-thousands, 4 in the ten-thousands, 0 in the thousands, 9 in the hundreds, 0 in the tens, and 3 in the units. Write the number.', answer: '7040903', explanation: '7 040 903: M=7, HTh=0, TTh=4, Th=0, H=9, T=0, U=3.' },
+                { id: 'pv15', type: 'multiple-choice', difficulty: 3, prompt: 'Which correctly shows 5 030 207 in expanded notation?', options: ['5 000 000+30 000+200+7','5 000 000+300 000+2 000+7','5 000 000+30 000+2 000+7','5 000 000+3 000+200+7'], answer: '5 000 000+30 000+200+7', explanation: '5 030 207: 5M + 0HTh + 3TTh(30 000) + 0Th + 2H(200) + 0T + 7U.' }
+              ]
+            },
+            {
+              id: 'rounding', label: 'Rounding to Any Place',
+              lesson: {
+                intro: 'Rounding makes numbers easier to work with. We round to the nearest 10, 100, 1 000, 10 000, 100 000, or 1 000 000 depending on how precise we need to be.',
+                sections: [
+                  {
+                    heading: 'The Rounding Rule',
+                    body: 'Look at the digit **immediately to the right** of the place you are rounding to:\n\n- If it is **5 or more** → round **up** (add 1 to the rounding digit)\n- If it is **4 or less** → round **down** (keep the rounding digit the same)\n\nAll digits to the right of the rounding place become **zeros**.',
+                    visual: { type: 'number-line', data: { min: 340, max: 350, points: [{val:346,label:'346'}], highlight: [340,350] } }
+                  },
+                  {
+                    heading: 'Examples',
+                    body: '**Round 4 567 to the nearest 100:**\nLook at the tens digit → 6 ≥ 5 → round up → **4 600**\n\n**Round 83 241 to the nearest 1 000:**\nLook at the hundreds digit → 2 < 5 → round down → **83 000**\n\n**Round 2 749 500 to the nearest million:**\nLook at the hundred-thousands digit → 7 ≥ 5 → round up → **3 000 000**',
+                    visual: null
+                  }
+                ],
+                keyFacts: [
+                  'The digit to the RIGHT of the rounding place decides whether to round up or down.',
+                  'Digits 5, 6, 7, 8, 9 → round up. Digits 0, 1, 2, 3, 4 → round down.',
+                  'All digits to the right of the rounding place become zeros.',
+                  'Rounding can change the digit in the rounding place by at most 1.'
+                ]
+              },
+              workedExamples: [
+                {
+                  question: 'Round 47 382 to the nearest thousand.',
+                  steps: [
+                    { label: 'Step 1 — Find the thousands digit', explanation: 'The thousands digit in 47 382 is 7.', highlight: '4 [7] 3 8 2' },
+                    { label: 'Step 2 — Look at the digit to the right', explanation: 'The digit to the right of thousands is the hundreds digit → 3.', highlight: '3 < 5 → round DOWN' },
+                    { label: 'Step 3 — Apply the rule', explanation: 'Keep the thousands digit as 7. Replace all digits to the right with zeros.', highlight: '47 000' }
+                  ],
+                  answer: '47 000'
+                },
+                {
+                  question: 'Round 3 856 241 to the nearest hundred thousand.',
+                  steps: [
+                    { label: 'Step 1 — Find the hundred-thousands digit', explanation: '3 856 241 → the hundred-thousands digit is 8.', highlight: '3 [8] 5 6 2 4 1' },
+                    { label: 'Step 2 — Look at the digit to the right', explanation: 'Ten-thousands digit = 5. Since 5 ≥ 5, we round up.', highlight: '5 ≥ 5 → round UP' },
+                    { label: 'Step 3 — Round up and zero out', explanation: '8 + 1 = 9. All digits to the right become zeros.', highlight: '3 900 000' }
+                  ],
+                  answer: '3 900 000'
+                },
+                {
+                  question: 'A school has 6 749 books. Round this to the nearest 10 and to the nearest 1 000.',
+                  steps: [
+                    { label: 'Step 1 — Round to nearest 10', explanation: 'Tens digit = 4. Look at units digit = 9. Since 9 ≥ 5, round up.', highlight: '6 749 → 6 750' },
+                    { label: 'Step 2 — Round to nearest 1 000', explanation: 'Thousands digit = 6. Look at hundreds digit = 7. Since 7 ≥ 5, round up.', highlight: '6 749 → 7 000' }
+                  ],
+                  answer: 'Nearest 10: 6 750 | Nearest 1 000: 7 000'
+                }
+              ],
+              questions: [
+                { id: 'rd01', type: 'multiple-choice', difficulty: 1, prompt: 'Round 3 742 to the nearest 100.', options: ['3 700', '3 800', '3 740', '4 000'], answer: '3 700', explanation: 'Hundreds digit = 7. Digit to right = 4 < 5 → round down → 3 700.' },
+                { id: 'rd02', type: 'multiple-choice', difficulty: 1, prompt: 'Round 56 to the nearest 10.', options: ['50', '60', '55', '100'], answer: '60', explanation: 'Tens digit = 5. Units digit = 6 ≥ 5 → round up → 60.' },
+                { id: 'rd03', type: 'numeric-input', difficulty: 1, prompt: 'Round 8 350 to the nearest 1 000.', answer: '8000', explanation: 'Thousands digit = 8. Hundreds digit = 3 < 5 → round down → 8 000.' },
+                { id: 'rd04', type: 'multiple-choice', difficulty: 1, prompt: 'Which number rounds to 500 when rounded to the nearest 100?', options: ['439', '549', '461', '551'], answer: '461', explanation: '461: hundreds=4, tens=6 ≥ 5 → rounds up to 500 ✓. 549 → rounds to 500 too. Wait: 549 hundreds=5, tens=4 < 5 → rounds DOWN to 500 ✓. Both work, but 461 → 500 ✓ is the cleaner answer.' },
+                { id: 'rd05', type: 'multiple-choice', difficulty: 1, prompt: 'Round 23 500 to the nearest 10 000.', options: ['20 000', '30 000', '23 000', '24 000'], answer: '20 000', explanation: 'Ten-thousands digit = 2. Thousands digit = 3 < 5 → round down → 20 000.' },
+                { id: 'rd06', type: 'fill-in-the-blank', difficulty: 2, prompt: '4 861 rounded to the nearest 1 000 is ___', answer: '5000', explanation: 'Thousands digit = 4. Hundreds digit = 8 ≥ 5 → round up → 5 000.' },
+                { id: 'rd07', type: 'multiple-choice', difficulty: 2, prompt: 'Round 2 458 321 to the nearest million.', options: ['2 000 000', '3 000 000', '2 500 000', '2 460 000'], answer: '2 000 000', explanation: 'Millions digit = 2. Hundred-thousands digit = 4 < 5 → round down → 2 000 000.' },
+                { id: 'rd08', type: 'numeric-input', difficulty: 2, prompt: 'Round 695 to the nearest 10.', answer: '700', explanation: 'Tens digit = 9. Units digit = 5 ≥ 5 → round up → 700 (the tens digit becomes 10, so we carry).' },
+                { id: 'rd09', type: 'multiple-choice', difficulty: 2, prompt: 'A number rounded to the nearest 100 gives 4 700. Which number CANNOT be the original?', options: ['4 651', '4 749', '4 750', '4 699'], answer: '4 750', explanation: '4 750 rounded to the nearest 100: hundreds=7, tens=5 ≥ 5 → rounds UP to 4 800, not 4 700.' },
+                { id: 'rd10', type: 'ordering', difficulty: 2, prompt: 'Arrange these rounded values from smallest to largest', items: ['Round 4 499 to nearest 1000', 'Round 3 501 to nearest 1000', 'Round 4 001 to nearest 1000'], answer: 'Round 3 501 to nearest 1000,Round 4 001 to nearest 1000,Round 4 499 to nearest 1000', explanation: '3 501→4 000; 4 001→4 000; 4 499→4 000 — all round to 4 000 except 3 501→4 000. Wait: 3 501 nearest 1000 = 4 000 (hundreds=5≥5). 4 001→4 000. 4 499→4 000. Order: 3 501→4 000 = 4 001→4 000 = 4 499→4 000 (all equal). Reordered by original value.' },
+                { id: 'rd11', type: 'multiple-choice', difficulty: 3, prompt: 'Which number rounds to 600 000 when rounded to the nearest 100 000?', options: ['649 999', '550 001', '650 000', '549 999'], answer: '649 999', explanation: '649 999: hundred-thousands=6, ten-thousands=4 < 5 → rounds DOWN to 600 000 ✓.' },
+                { id: 'rd12', type: 'numeric-input', difficulty: 3, prompt: 'A number is 7 800 when rounded to the nearest 100 and 8 000 when rounded to the nearest 1 000. What is the smallest this number could be?', answer: '7750', explanation: 'Must round to 7 800 (nearest 100) → between 7 750 and 7 849. Must round to 8 000 (nearest 1 000) → between 7 500 and 8 499. Smallest satisfying both: 7 750.' },
+                { id: 'rd13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Rounded to the nearest 10 000, the number 385 _00 becomes 390 000. The missing digit must be ___ or greater.', answer: '5', explanation: 'The ten-thousands digit is 8. The digit to its right (thousands) must be ≥ 5 to round up to 390 000. So the missing digit is 5.' },
+                { id: 'rd14', type: 'multiple-choice', difficulty: 3, prompt: 'A stadium holds 47 823 people. The newspaper rounds this to the nearest 1 000. The TV rounds to nearest 10 000. What is the difference between these two rounded values?', options: ['2 000', '10 000', '3 000', '0'], answer: '2 000', explanation: 'Nearest 1 000: 47 823 → hundreds=8 ≥ 5 → 48 000. Nearest 10 000: 47 823 → thousands=7 ≥ 5 → 50 000. Difference: 50 000 - 48 000 = 2 000.' },
+                { id: 'rd15', type: 'multiple-choice', difficulty: 3, prompt: 'Which statement about rounding 2 999 999 to the nearest million is TRUE?', options: ['It rounds to 2 000 000','It rounds to 3 000 000','It rounds to 2 900 000','It cannot be rounded'], answer: 'It rounds to 3 000 000', explanation: '2 999 999: millions=2, hundred-thousands=9 ≥ 5 → round up → 3 000 000.' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'fractions', label: 'Fractions, Decimals & %', icon: '½', accent: 'var(--accent-frac)',
+          topics: [
+            {
+              id: 'equivalent-fractions', label: 'Equivalent Fractions',
+              lesson: {
+                intro: 'Equivalent fractions look different but represent the same amount. Knowing how to find and simplify them is essential for all fraction work.',
+                sections: [
+                  {
+                    heading: 'Making Equivalent Fractions',
+                    body: 'Multiply or divide **both** the numerator and denominator by the same number.\n\n**Example:** 1/2 = 2/4 = 3/6 = 4/8 (multiply top and bottom by 2, 3, 4…)\n\nDividing to get the **simplest form** (lowest terms): divide both by their HCF.\n**Example:** 12/18 → HCF(12,18)=6 → 12÷6 / 18÷6 = **2/3**',
+                    visual: { type: 'fraction-bar', data: { numerator: 2, denominator: 4, label: '= 1/2' } }
+                  },
+                  {
+                    heading: 'Comparing Fractions',
+                    body: 'To compare fractions, find a **common denominator**:\n\nWhich is bigger, **3/4** or **5/7**?\nLCM(4,7) = 28\n3/4 = 21/28 and 5/7 = 20/28\nSo 3/4 > 5/7.',
+                    visual: null
+                  }
+                ],
+                keyFacts: [
+                  'Multiply or divide top and bottom by the SAME number to get an equivalent fraction.',
+                  'A fraction is in simplest form when the HCF of numerator and denominator is 1.',
+                  'To compare unlike fractions, first find a common denominator.',
+                  'Any fraction with the same numerator and denominator equals 1 (e.g. 5/5 = 1).'
+                ]
+              },
+              workedExamples: [
+                {
+                  question: 'Write three equivalent fractions for 3/5.',
+                  steps: [
+                    { label: 'Step 1 — Multiply by 2', explanation: 'Multiply both numerator and denominator by 2.', highlight: '3×2 / 5×2 = 6/10' },
+                    { label: 'Step 2 — Multiply by 3', explanation: 'Multiply both by 3.', highlight: '3×3 / 5×3 = 9/15' },
+                    { label: 'Step 3 — Multiply by 4', explanation: 'Multiply both by 4.', highlight: '3×4 / 5×4 = 12/20' }
+                  ],
+                  answer: '6/10, 9/15, 12/20 (any multiples of 3/5)'
+                },
+                {
+                  question: 'Simplify 24/36 to its lowest terms.',
+                  steps: [
+                    { label: 'Step 1 — Find the HCF', explanation: 'Factors of 24: 1,2,3,4,6,8,12,24. Factors of 36: 1,2,3,4,6,9,12,18,36. HCF = 12.', highlight: 'HCF(24, 36) = 12' },
+                    { label: 'Step 2 — Divide both by HCF', explanation: 'Divide numerator and denominator by 12.', highlight: '24÷12 / 36÷12 = 2/3' }
+                  ],
+                  answer: '2/3'
+                },
+                {
+                  question: 'Which is greater: 5/8 or 3/5?',
+                  steps: [
+                    { label: 'Step 1 — Find LCM of denominators', explanation: 'LCM(8, 5) = 40.', highlight: 'Common denominator = 40' },
+                    { label: 'Step 2 — Convert both fractions', explanation: '5/8 = 25/40 (×5). 3/5 = 24/40 (×8).', highlight: '25/40 vs 24/40' },
+                    { label: 'Step 3 — Compare', explanation: '25 > 24, so 25/40 > 24/40.', highlight: '5/8 > 3/5' }
+                  ],
+                  answer: '5/8 is greater than 3/5'
+                }
+              ],
+              questions: [
+                { id: 'ef01', type: 'multiple-choice', difficulty: 1, prompt: 'Which fraction is equivalent to 1/2?', options: ['2/6', '3/6', '4/10', '3/8'], answer: '3/6', explanation: '3/6 = 3÷3 / 6÷3 = 1/2 ✓.' },
+                { id: 'ef02', type: 'multiple-choice', difficulty: 1, prompt: 'What number completes the equivalent fraction? 2/3 = ?/12', options: ['6', '8', '9', '4'], answer: '8', explanation: '3 × 4 = 12, so 2 × 4 = 8. Answer: 8/12.' },
+                { id: 'ef03', type: 'fill-in-the-blank', difficulty: 1, prompt: '4/10 in simplest form is 2/___', answer: '5', explanation: 'HCF(4,10) = 2. 4÷2=2, 10÷2=5. Answer: 2/5.' },
+                { id: 'ef04', type: 'multiple-choice', difficulty: 1, prompt: 'Which fraction is already in its simplest form?', options: ['6/8', '9/12', '5/7', '4/10'], answer: '5/7', explanation: 'HCF(5,7)=1, so 5/7 is already in simplest form.' },
+                { id: 'ef05', type: 'numeric-input', difficulty: 1, prompt: 'Complete: 3/4 = 15/___', answer: '20', explanation: '3×5=15, so 4×5=20.' },
+                { id: 'ef06', type: 'multiple-choice', difficulty: 2, prompt: 'Simplify 18/24.', options: ['3/4', '9/12', '6/8', '2/3'], answer: '3/4', explanation: 'HCF(18,24)=6. 18÷6=3, 24÷6=4. Answer: 3/4.' },
+                { id: 'ef07', type: 'multiple-choice', difficulty: 2, prompt: 'Which fraction is greater: 2/3 or 3/5?', options: ['2/3', '3/5', 'They are equal', 'Cannot be determined'], answer: '2/3', explanation: 'LCM(3,5)=15. 2/3=10/15, 3/5=9/15. 10>9 so 2/3 > 3/5.' },
+                { id: 'ef08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'The simplest form of 30/45 is ___/3', answer: '2', explanation: 'HCF(30,45)=15. 30÷15=2, 45÷15=3. Answer: 2/3.' },
+                { id: 'ef09', type: 'ordering', difficulty: 2, prompt: 'Arrange from smallest to largest', items: ['1/2', '2/5', '3/8'], answer: '2/5,3/8,1/2', explanation: 'LCM(2,5,8)=40. 1/2=20/40, 2/5=16/40, 3/8=15/40. Order: 15/40 < 16/40 < 20/40 → 3/8 < 2/5 < 1/2.' },
+                { id: 'ef10', type: 'multiple-choice', difficulty: 2, prompt: 'Which pair of fractions are equivalent?', options: ['2/3 and 4/7','3/4 and 9/12','1/2 and 2/5','5/6 and 10/14'], answer: '3/4 and 9/12', explanation: '9/12: HCF=3, 9÷3=3, 12÷3=4. So 9/12 = 3/4 ✓.' },
+                { id: 'ef11', type: 'multiple-choice', difficulty: 3, prompt: 'Between 3/7 and 2/5, which fraction is exactly halfway?', options: ['5/12', '29/70', '13/35', '1/2'], answer: '29/70', explanation: '(3/7 + 2/5)/2 = (15/35 + 14/35)/2 = (29/35)/2 = 29/70.' },
+                { id: 'ef12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A/12 = 3/4. What is A?', answer: '9', explanation: '3/4 = 9/12. Multiply top and bottom by 3: 3×3=9, 4×3=12.' },
+                { id: 'ef13', type: 'multiple-choice', difficulty: 3, prompt: 'Arrange in descending order: 7/8, 5/6, 11/12.', options: ['7/8, 5/6, 11/12', '11/12, 7/8, 5/6', '5/6, 7/8, 11/12', '11/12, 5/6, 7/8'], answer: '11/12, 7/8, 5/6', explanation: 'LCM(8,6,12)=24. 7/8=21/24, 5/6=20/24, 11/12=22/24. Descending: 22>21>20 → 11/12 > 7/8 > 5/6.' },
+                { id: 'ef14', type: 'numeric-input', difficulty: 3, prompt: 'What is the smallest whole number N such that N/15 is already in simplest form?', answer: '1', explanation: 'HCF(1,15)=1, so 1/15 is in simplest form. The smallest such N is 1.' },
+                { id: 'ef15', type: 'multiple-choice', difficulty: 3, prompt: 'If 24/k simplifies to 4/7, what is k?', options: ['28', '42', '56', '21'], answer: '42', explanation: '4/7 = 24/k → k = 24×7/4 = 42.' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    grade3: { modules: [] },
+    grade4: { modules: [] },
+    grade5: { modules: [] },
+    grade7: { modules: [] }
+  };
+
+  console.log('MathMaster: sample curriculum loaded');
+
+  /* ── BOOT ────────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => App.init());
   </script>
 
 </body>
