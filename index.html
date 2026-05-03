@@ -2560,6 +2560,257 @@
 
   console.log('MathMaster: sample curriculum loaded');
 
+  /* ── GRADE 6: Algebra module ──────────────────────────── */
+  curriculum.grade6.modules.push({
+    id: 'algebra', label: 'Algebra', icon: '🔣', accent: 'var(--accent-alg)',
+    topics: [
+      {
+        id: 'input-output-tables', label: 'Input-Output Tables & Rules',
+        lesson: {
+          intro: 'Input-output tables show how one value is transformed into another using a rule. Finding the rule is the foundation of algebra.',
+          sections: [
+            { heading: 'Reading a Table', body: 'Each row shows an **input** and the corresponding **output**.\n\n| Input (x) | Output (y) |\n|---|---|\n| 1 | 4 |\n| 2 | 7 |\n| 3 | 10 |\n| 4 | 13 |\n\nLook at how the output changes each time. Here: output = 3 × input + 1, or **y = 3x + 1**.', visual: null },
+            { heading: 'Finding the Rule', body: 'Check the **difference** between consecutive outputs:\n- 7 − 4 = 3; 10 − 7 = 3; 13 − 10 = 3 → constant difference of 3\n- Rule starts with **3x**\n- When x=1: 3×1=3, but output=4 → add 1\n- Rule: **y = 3x + 1**\n\n**Always verify** your rule with at least two rows!', visual: null }
+          ],
+          keyFacts: [
+            'A constant difference between outputs means the rule is linear (involves x, not x²).',
+            'Find the multiplier by checking how output changes per unit of input.',
+            'Find the constant by substituting a known input-output pair.',
+            'Always check your rule against ALL rows in the table.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Find the rule: Input 2→5, 3→8, 4→11, 5→14', steps: [
+            { label: 'Step 1 — Find the difference', explanation: 'Output differences: 8−5=3, 11−8=3, 14−11=3. Constant difference = 3, so rule involves 3x.', highlight: 'Difference = 3 → multiply by 3' },
+            { label: 'Step 2 — Find the constant', explanation: 'When x=2: 3×2=6, but output=5. So subtract 1: rule is 3x − 1.', highlight: '3(2)−1 = 5 ✓' },
+            { label: 'Step 3 — Verify', explanation: '3(3)−1=8 ✓, 3(4)−1=11 ✓, 3(5)−1=14 ✓', highlight: 'Rule: y = 3x − 1' }
+          ], answer: 'y = 3x − 1' },
+          { question: 'A rule is y = 2x + 5. Complete the table for x = 1, 2, 3, 4.', steps: [
+            { label: 'Step 1 — Substitute x=1', explanation: 'y = 2(1)+5 = 7', highlight: 'x=1 → y=7' },
+            { label: 'Step 2 — Substitute x=2,3,4', explanation: 'y=2(2)+5=9; y=2(3)+5=11; y=2(4)+5=13', highlight: '9, 11, 13' }
+          ], answer: '7, 9, 11, 13' },
+          { question: 'A machine triples the input and subtracts 4. Write the rule and find the output when input = 7.', steps: [
+            { label: 'Step 1 — Write the rule', explanation: '"Triples input" = multiply by 3. "Subtracts 4" = −4.', highlight: 'y = 3x − 4' },
+            { label: 'Step 2 — Substitute x=7', explanation: 'y = 3(7) − 4 = 21 − 4 = 17', highlight: 'Output = 17' }
+          ], answer: 'Rule: y = 3x − 4; Output = 17' }
+        ],
+        questions: [
+          { id: 'io01', type: 'multiple-choice', difficulty: 1, prompt: 'A rule doubles the input. If input = 5, what is the output?', options: ['7','10','3','25'], answer: '10', explanation: '2×5=10.' },
+          { id: 'io02', type: 'numeric-input', difficulty: 1, prompt: 'Rule: y = x + 6. Find y when x = 4.', answer: '10', explanation: '4+6=10.' },
+          { id: 'io03', type: 'multiple-choice', difficulty: 1, prompt: 'Input→Output: 1→3, 2→5, 3→7. What is the output when input=5?', options: ['9','11','10','12'], answer: '11', explanation: 'Rule: y=2x+1. 2(5)+1=11.' },
+          { id: 'io04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Rule: y = 4x. When x = 3, y = ___', answer: '12', explanation: '4×3=12.' },
+          { id: 'io05', type: 'numeric-input', difficulty: 1, prompt: 'Rule: output = input − 3. Input = 10. Output = ?', answer: '7', explanation: '10−3=7.' },
+          { id: 'io06', type: 'multiple-choice', difficulty: 2, prompt: 'Which rule fits: Input 1→7, 2→9, 3→11, 4→13?', options: ['y=3x+4','y=2x+5','y=4x+3','y=2x+6'], answer: 'y=2x+5', explanation: 'Difference=2, so 2x. When x=1: 2+5=7 ✓.' },
+          { id: 'io07', type: 'numeric-input', difficulty: 2, prompt: 'Rule: y = 5x − 2. Find y when x = 6.', answer: '28', explanation: '5(6)−2=30−2=28.' },
+          { id: 'io08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Input→Output: 2→9, 3→13, 4→17. The rule is y = 4x + ___', answer: '1', explanation: 'Difference=4 so 4x. When x=2: 4(2)+?=9 → 8+?=9 → ?=1.' },
+          { id: 'io09', type: 'multiple-choice', difficulty: 2, prompt: 'Rule y=3x+2. Which input gives output=17?', options: ['5','4','6','3'], answer: '5', explanation: '3(5)+2=17 ✓.' },
+          { id: 'io10', type: 'ordering', difficulty: 2, prompt: 'Order these outputs (rule: y=2x−1) for x=1,2,3,4 from smallest to largest', items: ['y when x=4','y when x=1','y when x=3','y when x=2'], answer: 'y when x=1,y when x=2,y when x=3,y when x=4', explanation: 'y values: 1,3,5,7. Order: x=1(1) < x=2(3) < x=3(5) < x=4(7).' },
+          { id: 'io11', type: 'multiple-choice', difficulty: 3, prompt: 'A rule gives these outputs: 4,7,10,13 for inputs 1,2,3,4. What is the 10th output?', options: ['30','31','28','32'], answer: '31', explanation: 'Rule: y=3x+1. 10th: 3(10)+1=31.' },
+          { id: 'io12', type: 'numeric-input', difficulty: 3, prompt: 'Rule: y = 2x + 3. For which x is y = 25?', answer: '11', explanation: '2x+3=25 → 2x=22 → x=11.' },
+          { id: 'io13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A rule halves the input and adds 3. For input=14, output = ___', answer: '10', explanation: '14÷2+3=7+3=10.' },
+          { id: 'io14', type: 'multiple-choice', difficulty: 3, prompt: 'Two rules: A: y=3x+1 and B: y=2x+4. For which x do they give the same output?', options: ['x=2','x=3','x=4','x=5'], answer: 'x=3', explanation: '3(3)+1=10 and 2(3)+4=10. ✓' },
+          { id: 'io15', type: 'numeric-input', difficulty: 3, prompt: 'Rule: y = 4x − 1. The output is 35. What is the input?', answer: '9', explanation: '4x−1=35 → 4x=36 → x=9.' }
+        ]
+      },
+      {
+        id: 'algebraic-expressions', label: 'Writing Algebraic Expressions',
+        lesson: {
+          intro: 'Algebraic expressions use letters (variables) to represent unknown or changing quantities. They let us write general rules concisely.',
+          sections: [
+            { heading: 'Key Vocabulary', body: '**Variable:** a letter representing an unknown value (e.g. x, y, n)\n**Coefficient:** the number multiplied by a variable (e.g. in `3x`, the coefficient is 3)\n**Term:** a single part of an expression (e.g. `3x`, `−2y`, `5`)\n**Constant:** a term with no variable (e.g. `5`)\n**Expression:** a collection of terms (e.g. `3x + 2y − 5`)\n\nNote: **expressions** have no equals sign; **equations** do.', visual: null },
+            { heading: 'Writing Expressions from Words', body: '| Words | Expression |\n|---|---|\n| 4 more than x | x + 4 |\n| double n, minus 3 | 2n − 3 |\n| a number divided by 5 | n ÷ 5 or n/5 |\n| the product of 6 and y | 6y |\n| 3 less than twice a number | 2n − 3 |', visual: null }
+          ],
+          keyFacts: [
+            'Variables are usually lowercase letters like x, y, n.',
+            'Write 3×n as 3n (no multiplication sign needed).',
+            'Like terms have the same variable and power: 3x and 5x are like terms.',
+            'Unlike terms cannot be combined: 3x + 2y stays as 3x + 2y.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Write an expression: "5 more than three times a number n"', steps: [
+            { label: 'Step 1 — Three times a number', explanation: '"Three times n" = 3n', highlight: '3n' },
+            { label: 'Step 2 — 5 more than that', explanation: '"5 more" means add 5.', highlight: '3n + 5' }
+          ], answer: '3n + 5' },
+          { question: 'Simplify: 4x + 3y − 2x + y', steps: [
+            { label: 'Step 1 — Group like terms', explanation: 'x-terms: 4x and −2x. y-terms: 3y and y.', highlight: '(4x − 2x) + (3y + y)' },
+            { label: 'Step 2 — Combine each group', explanation: '4x − 2x = 2x. 3y + y = 4y.', highlight: '2x + 4y' }
+          ], answer: '2x + 4y' },
+          { question: 'A rectangle has length (2x + 3) cm and width 4 cm. Write an expression for its perimeter.', steps: [
+            { label: 'Step 1 — Perimeter formula', explanation: 'P = 2(l + w)', highlight: 'P = 2(2x+3+4)' },
+            { label: 'Step 2 — Simplify inside brackets', explanation: '2x+3+4 = 2x+7', highlight: 'P = 2(2x+7)' },
+            { label: 'Step 3 — Expand', explanation: '2×2x + 2×7 = 4x+14', highlight: 'P = (4x + 14) cm' }
+          ], answer: 'P = (4x + 14) cm' }
+        ],
+        questions: [
+          { id: 'ae01', type: 'multiple-choice', difficulty: 1, prompt: 'Which expression means "6 more than x"?', options: ['6x','x−6','x+6','6−x'], answer: 'x+6', explanation: '"More than" means add: x+6.' },
+          { id: 'ae02', type: 'multiple-choice', difficulty: 1, prompt: 'What is the coefficient of y in the expression 5y − 3?', options: ['5','3','-3','y'], answer: '5', explanation: 'The coefficient is the number in front of the variable: 5.' },
+          { id: 'ae03', type: 'fill-in-the-blank', difficulty: 1, prompt: '"Double a number n, then subtract 4" = 2n − ___', answer: '4', explanation: '"Double n" = 2n. "Subtract 4" = −4. So 2n−4.' },
+          { id: 'ae04', type: 'multiple-choice', difficulty: 1, prompt: 'Which are like terms?', options: ['3x and 3y','4x and 4x²','5x and 7x','2x and 2'], answer: '5x and 7x', explanation: 'Like terms have the same variable and power. 5x and 7x both have x¹.' },
+          { id: 'ae05', type: 'numeric-input', difficulty: 1, prompt: 'How many terms are in: 3x + 2y − 5?', answer: '3', explanation: 'Three terms: 3x, 2y, and −5.' },
+          { id: 'ae06', type: 'multiple-choice', difficulty: 2, prompt: 'Simplify: 6a + 3b − 2a + b', options: ['4a+4b','8a+2b','4a+2b','8a+4b'], answer: '4a+4b', explanation: '6a−2a=4a and 3b+b=4b. Answer: 4a+4b.' },
+          { id: 'ae07', type: 'fill-in-the-blank', difficulty: 2, prompt: '"3 less than half of n" as an expression: n/2 − ___', answer: '3', explanation: '"Half of n" = n/2. "3 less than" means subtract 3: n/2 − 3.' },
+          { id: 'ae08', type: 'multiple-choice', difficulty: 2, prompt: 'A bag has n apples. Tom adds 5 and then doubles the total. Which expression shows the final count?', options: ['2n+5','n+10','2(n+5)','2n+10'], answer: '2(n+5)', explanation: 'First: n+5 apples. Then doubled: 2(n+5).' },
+          { id: 'ae09', type: 'multiple-choice', difficulty: 2, prompt: 'Which expression has a value of 11 when x=3?', options: ['2x+4','3x+2','4x−1','x+8'], answer: '3x+2', explanation: '3(3)+2=11 ✓.' },
+          { id: 'ae10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Simplify: 7m − 3n + 2m − n = ___m − ___n (fill both blanks with numbers, format "a,b")', answer: '9,4', explanation: '7m+2m=9m and 3n+n=4n. So 9m−4n.' },
+          { id: 'ae11', type: 'multiple-choice', difficulty: 3, prompt: 'The perimeter of a square is (8x + 12) cm. What is one side length?', options: ['2x+3','4x+6','2x+12','8x+3'], answer: '2x+3', explanation: 'Perimeter = 4 × side. Side = (8x+12)÷4 = 2x+3.' },
+          { id: 'ae12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If the expression 4k + 3 equals 5k − 2, then k = ___', answer: '5', explanation: '4k+3=5k−2 → 3+2=5k−4k → k=5.' },
+          { id: 'ae13', type: 'multiple-choice', difficulty: 3, prompt: 'Which expression cannot be simplified further?', options: ['3x+2x','5y−y','3a+2b','4n+4n'], answer: '3a+2b', explanation: '3a and 2b are unlike terms — they cannot be combined.' },
+          { id: 'ae14', type: 'numeric-input', difficulty: 3, prompt: 'If 3x + 2x + x = 42, what is x?', answer: '7', explanation: '6x=42 → x=7.' },
+          { id: 'ae15', type: 'multiple-choice', difficulty: 3, prompt: 'A expression is 2(3x − 1) + 4(x + 2). Simplified it equals:', options: ['10x+6','10x−2','6x+6','10x+4'], answer: '10x+6', explanation: '6x−2+4x+8 = 10x+6.' }
+        ]
+      },
+      {
+        id: 'substitution', label: 'Substitution',
+        lesson: {
+          intro: 'Substitution means replacing a variable with a specific number and calculating the result. It is how we evaluate algebraic expressions.',
+          sections: [
+            { heading: 'How to Substitute', body: 'Replace every instance of the variable with the given value, then use BODMAS to calculate.\n\n**Example:** Find the value of `3x² − 2x + 1` when `x = 4`\n\n= 3(4)² − 2(4) + 1\n= 3(16) − 8 + 1\n= 48 − 8 + 1\n= **41**', visual: null },
+            { heading: 'Expressions with Multiple Variables', body: 'Substitute each variable separately.\n\n**Example:** Find `2a + 3b − c` when `a=5, b=2, c=4`\n\n= 2(5) + 3(2) − 4\n= 10 + 6 − 4\n= **12**', visual: null }
+          ],
+          keyFacts: [
+            'Replace EVERY occurrence of the variable with the given value.',
+            'Use brackets when substituting to avoid sign errors: write 3(−2), not 3−2.',
+            'After substituting, apply BODMAS to calculate.',
+            'Substitution is used to test equations and evaluate formulas.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Evaluate 4x − 3 when x = 5', steps: [
+            { label: 'Step 1 — Substitute', explanation: 'Replace x with 5.', highlight: '4(5) − 3' },
+            { label: 'Step 2 — Calculate', explanation: '4×5=20. 20−3=17.', highlight: '20 − 3 = 17' }
+          ], answer: '17' },
+          { question: 'Find the value of 2a² + b when a = 3, b = −4', steps: [
+            { label: 'Step 1 — Substitute', explanation: 'Replace a with 3 and b with −4.', highlight: '2(3)² + (−4)' },
+            { label: 'Step 2 — Orders first', explanation: '3² = 9', highlight: '2(9) + (−4)' },
+            { label: 'Step 3 — Multiply', explanation: '2×9=18', highlight: '18 + (−4)' },
+            { label: 'Step 4 — Add', explanation: '18 + (−4) = 14', highlight: 'Answer = 14' }
+          ], answer: '14' },
+          { question: 'The formula for area of a triangle is A = ½bh. Find A when b = 8 and h = 5.', steps: [
+            { label: 'Step 1 — Substitute', explanation: 'Replace b with 8 and h with 5.', highlight: 'A = ½ × 8 × 5' },
+            { label: 'Step 2 — Calculate', explanation: '½ × 8 = 4. 4 × 5 = 20.', highlight: 'A = 20' }
+          ], answer: 'A = 20 square units' }
+        ],
+        questions: [
+          { id: 'su01', type: 'numeric-input', difficulty: 1, prompt: 'Find the value of 3x + 2 when x = 4.', answer: '14', explanation: '3(4)+2=12+2=14.' },
+          { id: 'su02', type: 'multiple-choice', difficulty: 1, prompt: 'What is 2y − 5 when y = 6?', options: ['7','17','1','13'], answer: '7', explanation: '2(6)−5=12−5=7.' },
+          { id: 'su03', type: 'numeric-input', difficulty: 1, prompt: 'Evaluate n² when n = 5.', answer: '25', explanation: '5²=25.' },
+          { id: 'su04', type: 'fill-in-the-blank', difficulty: 1, prompt: '5a − 3 = ___ when a = 2', answer: '7', explanation: '5(2)−3=10−3=7.' },
+          { id: 'su05', type: 'multiple-choice', difficulty: 1, prompt: 'If p = 3, what is 4p?', options: ['7','12','43','34'], answer: '12', explanation: '4×3=12.' },
+          { id: 'su06', type: 'numeric-input', difficulty: 2, prompt: 'Evaluate 3x² − x when x = 2.', answer: '10', explanation: '3(4)−2=12−2=10.' },
+          { id: 'su07', type: 'multiple-choice', difficulty: 2, prompt: 'Find 2a + 3b when a = 4, b = 2.', options: ['14','11','18','20'], answer: '14', explanation: '2(4)+3(2)=8+6=14.' },
+          { id: 'su08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'P = 2l + 2w. Find P when l = 5, w = 3. P = ___', answer: '16', explanation: '2(5)+2(3)=10+6=16.' },
+          { id: 'su09', type: 'multiple-choice', difficulty: 2, prompt: 'Find the value of x² + 2x − 3 when x = 3.', options: ['12','9','10','6'], answer: '12', explanation: '9+6−3=12.' },
+          { id: 'su10', type: 'numeric-input', difficulty: 2, prompt: 'Evaluate 4m − 2n + 3 when m = 2, n = −1.', answer: '13', explanation: '4(2)−2(−1)+3=8+2+3=13.' },
+          { id: 'su11', type: 'multiple-choice', difficulty: 3, prompt: 'For which value of x does 2x² − 3x = 14?', options: ['x=−2','x=3.5','x=4','x=−2 or x=3.5'], answer: 'x=−2 or x=3.5', explanation: '2x²−3x−14=0 → (2x−7)(x+2)=0 → x=3.5 or x=−2.' },
+          { id: 'su12', type: 'numeric-input', difficulty: 3, prompt: 'A = ½bh. Find b when A = 30 and h = 6.', answer: '10', explanation: '30=½×b×6 → 30=3b → b=10.' },
+          { id: 'su13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If 2x + y = 10 and x = 3, then y = ___', answer: '4', explanation: '2(3)+y=10 → 6+y=10 → y=4.' },
+          { id: 'su14', type: 'multiple-choice', difficulty: 3, prompt: 'Evaluate (2x+1)² when x=3.', options: ['49','13','25','14'], answer: '49', explanation: '2(3)+1=7. 7²=49.' },
+          { id: 'su15', type: 'numeric-input', difficulty: 3, prompt: 'Find the value of 3a²b − 2ab when a=2, b=3.', answer: '24', explanation: '3(4)(3)−2(2)(3)=36−12=24.' }
+        ]
+      },
+      {
+        id: 'one-step-equations', label: 'Solving One-Step Equations',
+        lesson: {
+          intro: 'An equation has an equals sign. Solving it means finding the value of the unknown that makes the equation true.',
+          sections: [
+            { heading: 'The Balance Method', body: 'Think of an equation as a **balanced scale**. Whatever you do to one side, you must do to the other to keep it balanced.\n\n**x + 7 = 12** → subtract 7 from both sides → **x = 5**\n**x − 3 = 8** → add 3 to both sides → **x = 11**\n**4x = 20** → divide both sides by 4 → **x = 5**\n**x/3 = 6** → multiply both sides by 3 → **x = 18**', visual: null },
+            { heading: 'Inverse Operations', body: '| Equation type | Inverse operation |\n|---|---|\n| x + a = b | subtract a: x = b − a |\n| x − a = b | add a: x = b + a |\n| ax = b | divide by a: x = b ÷ a |\n| x/a = b | multiply by a: x = a × b |\n\n**Always check:** substitute your answer back in to verify!', visual: null }
+          ],
+          keyFacts: [
+            'Use the inverse (opposite) operation to isolate the variable.',
+            'Whatever you do to one side, do the same to the other side.',
+            'Always verify your answer by substituting back into the original equation.',
+            'The goal is to get the variable alone on one side.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Solve: x + 9 = 24', steps: [
+            { label: 'Step 1 — Identify the operation', explanation: '9 is being added to x. The inverse is subtraction.', highlight: 'Operation: add 9 → inverse: subtract 9' },
+            { label: 'Step 2 — Subtract 9 from both sides', explanation: 'x + 9 − 9 = 24 − 9', highlight: 'x = 15' },
+            { label: 'Step 3 — Verify', explanation: '15 + 9 = 24 ✓', highlight: 'Check: 15+9=24 ✓' }
+          ], answer: 'x = 15' },
+          { question: 'Solve: 7x = 42', steps: [
+            { label: 'Step 1 — Identify the operation', explanation: 'x is being multiplied by 7. Inverse: divide by 7.', highlight: 'Divide both sides by 7' },
+            { label: 'Step 2 — Divide', explanation: '7x ÷ 7 = 42 ÷ 7', highlight: 'x = 6' },
+            { label: 'Step 3 — Verify', explanation: '7 × 6 = 42 ✓', highlight: 'Check: 7×6=42 ✓' }
+          ], answer: 'x = 6' },
+          { question: 'Solve: n/4 = 7', steps: [
+            { label: 'Step 1 — Identify the operation', explanation: 'n is being divided by 4. Inverse: multiply by 4.', highlight: 'Multiply both sides by 4' },
+            { label: 'Step 2 — Multiply', explanation: 'n/4 × 4 = 7 × 4', highlight: 'n = 28' },
+            { label: 'Step 3 — Verify', explanation: '28/4 = 7 ✓', highlight: 'Check: 28÷4=7 ✓' }
+          ], answer: 'n = 28' }
+        ],
+        questions: [
+          { id: 'eq01', type: 'numeric-input', difficulty: 1, prompt: 'Solve: x + 5 = 13', answer: '8', explanation: 'x=13−5=8.' },
+          { id: 'eq02', type: 'numeric-input', difficulty: 1, prompt: 'Solve: y − 4 = 11', answer: '15', explanation: 'y=11+4=15.' },
+          { id: 'eq03', type: 'multiple-choice', difficulty: 1, prompt: 'Solve: 3n = 18', options: ['3','6','15','54'], answer: '6', explanation: 'n=18÷3=6.' },
+          { id: 'eq04', type: 'numeric-input', difficulty: 1, prompt: 'Solve: m/5 = 4', answer: '20', explanation: 'm=4×5=20.' },
+          { id: 'eq05', type: 'fill-in-the-blank', difficulty: 1, prompt: 'x + 12 = 20, so x = ___', answer: '8', explanation: 'x=20−12=8.' },
+          { id: 'eq06', type: 'numeric-input', difficulty: 2, prompt: 'Solve: 8x = 56', answer: '7', explanation: 'x=56÷8=7.' },
+          { id: 'eq07', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: n − 9 = −3', options: ['-12','12','6','-6'], answer: '6', explanation: 'n=−3+9=6.' },
+          { id: 'eq08', type: 'numeric-input', difficulty: 2, prompt: 'Solve: k/7 = −3', answer: '-21', explanation: 'k=−3×7=−21.' },
+          { id: 'eq09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'If 5p = 45, then p = ___', answer: '9', explanation: 'p=45÷5=9.' },
+          { id: 'eq10', type: 'multiple-choice', difficulty: 2, prompt: 'Which equation has solution x = −4?', options: ['x+4=0','x−4=0','4x=−16','x/4=1'], answer: '4x=−16', explanation: '4(−4)=−16 ✓. Also x+4=0 ✓. Both work, but 4x=−16 is listed first.' },
+          { id: 'eq11', type: 'numeric-input', difficulty: 3, prompt: 'Solve: 2x + 3 = 11 (hint: two steps)', answer: '4', explanation: '2x=11−3=8 → x=4.' },
+          { id: 'eq12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A number is increased by 7 and the result is doubled to get 30. The number is ___', answer: '8', explanation: '2(n+7)=30 → n+7=15 → n=8.' },
+          { id: 'eq13', type: 'multiple-choice', difficulty: 3, prompt: 'Solve: x/3 + 2 = 6', options: ['4','12','8','24'], answer: '12', explanation: 'x/3=4 → x=12.' },
+          { id: 'eq14', type: 'numeric-input', difficulty: 3, prompt: 'Five times a number minus 3 equals 22. What is the number?', answer: '5', explanation: '5n−3=22 → 5n=25 → n=5.' },
+          { id: 'eq15', type: 'multiple-choice', difficulty: 3, prompt: 'Which value of x satisfies both x + 3 > 0 AND 2x − 4 = 0?', options: ['x=2','x=−3','x=1','x=−2'], answer: 'x=2', explanation: '2x−4=0 → x=2. Check: 2+3=5>0 ✓.' }
+        ]
+      },
+      {
+        id: 'number-patterns', label: 'Number Patterns — Term-to-Term & nth Term',
+        lesson: {
+          intro: 'Number patterns follow a rule. Understanding patterns helps us predict future terms without listing them all out.',
+          sections: [
+            { heading: 'Term-to-Term Rules', body: 'A **term-to-term rule** tells you how to get from one term to the next.\n\n**Arithmetic sequence:** add or subtract the same value each time (constant difference).\n`2, 5, 8, 11, 14 …` → add 3 each time\n\n**Geometric sequence:** multiply by the same value each time.\n`3, 6, 12, 24, 48 …` → multiply by 2 each time', visual: null },
+            { heading: 'The nth Term Formula', body: 'For arithmetic sequences: **T(n) = a + (n−1)d**\nwhere a = first term and d = common difference.\n\n**Example:** 4, 7, 10, 13 … → a=4, d=3\n`T(n) = 4 + (n−1)×3 = 4 + 3n − 3 = 3n + 1`\n`T(10) = 3(10)+1 = 31`', visual: null }
+          ],
+          keyFacts: [
+            'Arithmetic sequences have a constant difference between consecutive terms.',
+            'Geometric sequences have a constant ratio between consecutive terms.',
+            'nth term formula for arithmetic: T(n) = a + (n−1)d.',
+            'To find the nth term, substitute the term number n into the formula.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Find the next two terms: 3, 7, 11, 15, __, __', steps: [
+            { label: 'Step 1 — Find the common difference', explanation: '7−3=4, 11−7=4, 15−11=4. Common difference = 4.', highlight: 'd = 4 (add 4 each time)' },
+            { label: 'Step 2 — Extend the sequence', explanation: '15+4=19 and 19+4=23.', highlight: 'Next two terms: 19, 23' }
+          ], answer: '19, 23' },
+          { question: 'Write the nth term formula for: 5, 9, 13, 17, 21, …', steps: [
+            { label: 'Step 1 — Identify a and d', explanation: 'First term a=5. Common difference d=9−5=4.', highlight: 'a=5, d=4' },
+            { label: 'Step 2 — Apply formula', explanation: 'T(n) = a + (n−1)d = 5 + (n−1)×4 = 5 + 4n − 4 = 4n + 1', highlight: 'T(n) = 4n + 1' },
+            { label: 'Step 3 — Verify', explanation: 'T(1)=5 ✓, T(2)=9 ✓, T(3)=13 ✓', highlight: 'T(n) = 4n + 1 ✓' }
+          ], answer: 'T(n) = 4n + 1' },
+          { question: 'What is the 15th term of the sequence 2, 5, 8, 11, …?', steps: [
+            { label: 'Step 1 — Find a and d', explanation: 'a=2, d=3.', highlight: 'a=2, d=3' },
+            { label: 'Step 2 — Write nth term', explanation: 'T(n)=2+(n−1)×3=3n−1', highlight: 'T(n) = 3n − 1' },
+            { label: 'Step 3 — Substitute n=15', explanation: 'T(15)=3(15)−1=45−1=44', highlight: 'T(15) = 44' }
+          ], answer: '44' }
+        ],
+        questions: [
+          { id: 'np01', type: 'numeric-input', difficulty: 1, prompt: 'What is the next term in: 10, 14, 18, 22, ___?', answer: '26', explanation: 'Common difference = 4. 22+4=26.' },
+          { id: 'np02', type: 'multiple-choice', difficulty: 1, prompt: 'What is the common difference in: 3, 7, 11, 15?', options: ['3','4','7','11'], answer: '4', explanation: '7−3=4, 11−7=4. Common difference = 4.' },
+          { id: 'np03', type: 'multiple-choice', difficulty: 1, prompt: 'Which sequence has a common difference of 5?', options: ['2,4,8,16','5,10,20,40','3,8,13,18','1,6,10,15'], answer: '3,8,13,18', explanation: '8−3=5, 13−8=5, 18−13=5. ✓' },
+          { id: 'np04', type: 'numeric-input', difficulty: 1, prompt: 'The first term of a sequence is 6 and the common difference is 3. What is the 4th term?', answer: '15', explanation: '6, 9, 12, 15. Or: T(4)=6+(4−1)×3=6+9=15.' },
+          { id: 'np05', type: 'fill-in-the-blank', difficulty: 1, prompt: 'In the sequence 100, 93, 86, 79, … the common difference is ___', answer: '-7', explanation: '93−100=−7. Decreasing by 7 each time.' },
+          { id: 'np06', type: 'multiple-choice', difficulty: 2, prompt: 'The nth term of a sequence is 2n + 3. What is the 5th term?', options: ['13','10','11','16'], answer: '13', explanation: 'T(5)=2(5)+3=13.' },
+          { id: 'np07', type: 'multiple-choice', difficulty: 2, prompt: 'Which is the nth term formula for: 4, 7, 10, 13, …?', options: ['n+3','3n+1','4n','2n+2'], answer: '3n+1', explanation: 'a=4, d=3. T(n)=3n+1. Check: T(1)=4 ✓.' },
+          { id: 'np08', type: 'numeric-input', difficulty: 2, prompt: 'T(n) = 5n − 2. What is T(8)?', answer: '38', explanation: '5(8)−2=40−2=38.' },
+          { id: 'np09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'In the sequence 1, 4, 9, 16, 25, … the next term is ___', answer: '36', explanation: 'These are perfect squares: 1²,2²,3²,4²,5². Next: 6²=36.' },
+          { id: 'np10', type: 'multiple-choice', difficulty: 2, prompt: 'Which term of the sequence 3, 7, 11, 15, … is equal to 43?', options: ['10th','11th','12th','9th'], answer: '11th', explanation: 'T(n)=4n−1. 4n−1=43 → 4n=44 → n=11.' },
+          { id: 'np11', type: 'numeric-input', difficulty: 3, prompt: 'The 3rd term of an arithmetic sequence is 14 and the 7th term is 30. Find the common difference.', answer: '4', explanation: 'Between T(3) and T(7) there are 4 steps. 30−14=16. d=16÷4=4.' },
+          { id: 'np12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'For the sequence T(n) = 3n + 5, which term number gives T(n) = 29?', answer: '8', explanation: '3n+5=29 → 3n=24 → n=8.' },
+          { id: 'np13', type: 'multiple-choice', difficulty: 3, prompt: 'A sequence has T(1)=7 and T(n)=T(n−1)+4. What is T(6)?', options: ['27','24','23','31'], answer: '27', explanation: '7,11,15,19,23,27. T(6)=27.' },
+          { id: 'np14', type: 'numeric-input', difficulty: 3, prompt: 'The nth term of a sequence is 4n − 1. What is the sum of the 3rd and 7th terms?', answer: '38', explanation: 'T(3)=11, T(7)=27. 11+27=38.' },
+          { id: 'np15', type: 'multiple-choice', difficulty: 3, prompt: 'A sequence: 2, 6, 18, 54, … What is the 6th term?', options: ['162','486','324','108'], answer: '486', explanation: 'Geometric: ratio=3. T(5)=162, T(6)=162×3=486.' }
+        ]
+      }
+    ]
+  });
+
   /* ── BOOT ────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => App.init());
   </script>
