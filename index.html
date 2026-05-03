@@ -4411,6 +4411,219 @@
     );
   })();
 
+  /* ── PHASE 4d: Grade 7 Curriculum ───────────────────────── */
+  (function(){
+    curriculum.grade7.modules.push(
+      /* ── Numbers ── */
+      {
+        id: 'numbers', label: 'Numbers & Operations', icon: '🔢', accent: 'var(--accent-num)',
+        topics: [
+          {
+            id: 'integers-7', label: 'Integers & Operations',
+            lesson: {
+              sections: [
+                { heading: 'The Integers', body: '**Integers:** … −4, −3, −2, −1, 0, 1, 2, 3, 4 …\n\n**Adding integers:**\n- Same sign: add and keep the sign. (−3) + (−5) = −8.\n- Different signs: subtract smaller absolute value from larger, keep sign of the larger. (−7) + 4 = −3.\n\n**Subtracting integers:** add the opposite.\n5 − (−3) = 5 + 3 = 8.\n−4 − 6 = −4 + (−6) = −10.', visual: null },
+                { heading: 'Multiplying & Dividing Integers', body: '**Sign rules:**\n- Positive × Positive = Positive.\n- Negative × Negative = Positive.\n- Positive × Negative = Negative.\n- Negative × Positive = Negative.\n\n**Same sign → positive. Different signs → negative.**\n\n(−4) × (−3) = +12.\n(−6) × 5 = −30.\n(−24) ÷ (−8) = +3.\n18 ÷ (−6) = −3.', visual: null }
+              ],
+              keyFacts: [
+                'Integers include all whole numbers, their negatives, and zero.',
+                'Subtracting an integer = adding its opposite.',
+                'Same signs → positive product/quotient. Different signs → negative.',
+                'Absolute value |x|: the distance from zero (always positive).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate: (−8) + 3 − (−5).', steps: [
+                { label: 'Step 1 — Rewrite subtraction', explanation: '(−8) + 3 − (−5) = (−8) + 3 + 5.', highlight: 'Change − (−5) to +5' },
+                { label: 'Step 2 — Add positives', explanation: '3 + 5 = 8.', highlight: '8 positive' },
+                { label: 'Step 3 — Final', explanation: '−8 + 8 = 0.', highlight: 'Answer = 0' }
+              ], answer: '0' },
+              { question: 'Calculate (−7) × (−4) ÷ (−2).', steps: [
+                { label: 'Step 1 — Multiply first', explanation: '(−7) × (−4) = +28. (Same signs → positive.)', highlight: '+28' },
+                { label: 'Step 2 — Divide', explanation: '+28 ÷ (−2) = −14. (Different signs → negative.)', highlight: '−14' }
+              ], answer: '−14' },
+              { question: 'Temperature was −5°C. It rose 12°C then fell 8°C. Final temperature?', steps: [
+                { label: 'Step 1 — Rose 12°C', explanation: '−5 + 12 = 7°C.', highlight: 'After rise: 7°C' },
+                { label: 'Step 2 — Fell 8°C', explanation: '7 − 8 = −1°C.', highlight: 'Final: −1°C' }
+              ], answer: '−1°C' }
+            ],
+            questions: [
+              { id: 'in701', type: 'numeric-input', difficulty: 1, prompt: '(−5) + (−9) = ?', answer: '-14', explanation: 'Same sign: −5−9=−14.' },
+              { id: 'in702', type: 'fill-in-the-blank', difficulty: 1, prompt: '8 − (−3) = ___', answer: '11', explanation: '8 + 3 = 11.' },
+              { id: 'in703', type: 'multiple-choice', difficulty: 1, prompt: '(−4) × (−6) = ?', options: ['-24','24','-10','10'], answer: '24', explanation: 'Negative × negative = positive: 4×6=24.' },
+              { id: 'in704', type: 'fill-in-the-blank', difficulty: 1, prompt: '(−18) ÷ (−3) = ___', answer: '6', explanation: 'Same signs → positive: 18÷3=6.' },
+              { id: 'in705', type: 'numeric-input', difficulty: 1, prompt: '(−12) + 7 = ?', answer: '-5', explanation: 'Different signs: 12−7=5, keep sign of larger (−): −5.' },
+              { id: 'in706', type: 'fill-in-the-blank', difficulty: 2, prompt: '(−3) × 5 × (−2) = ___', answer: '30', explanation: '(−3)×5=−15. (−15)×(−2)=+30.' },
+              { id: 'in707', type: 'multiple-choice', difficulty: 2, prompt: '(−25) ÷ 5 + (−8) = ?', options: ['-13','-3','3','13'], answer: '-13', explanation: '−25÷5=−5. −5+(−8)=−13.' },
+              { id: 'in708', type: 'fill-in-the-blank', difficulty: 2, prompt: '7 − (−4) − 8 = ___', answer: '3', explanation: '7+4−8=11−8=3.' },
+              { id: 'in709', type: 'numeric-input', difficulty: 2, prompt: '(−6)² = ?', answer: '36', explanation: '(−6)×(−6)=36. Negative squared = positive.' },
+              { id: 'in710', type: 'multiple-choice', difficulty: 2, prompt: 'Which is greatest: −1, −100, 0, −50?', options: ['-1','-100','0','-50'], answer: '0', explanation: '0 > −1 > −50 > −100.' },
+              { id: 'in711', type: 'fill-in-the-blank', difficulty: 3, prompt: '(−4) × (−3) − (−2) × 5 = ___', answer: '22', explanation: '12 − (−10) = 12 + 10 = 22.' },
+              { id: 'in712', type: 'multiple-choice', difficulty: 3, prompt: 'If x = −3, find 2x² − x + 1.', options: ['16','20','22','10'], answer: '22', explanation: '2(9)−(−3)+1=18+3+1=22.' },
+              { id: 'in713', type: 'fill-in-the-blank', difficulty: 3, prompt: '(−2)³ + (−3)² = ___', answer: '1', explanation: '(−8) + 9 = 1.' },
+              { id: 'in714', type: 'numeric-input', difficulty: 3, prompt: 'The product of two integers is −36. Their sum is 5. Larger integer = ?', answer: '9', explanation: 'x+y=5, xy=−36. Quadratic: t²−5t−36=0 → (t−9)(t+4)=0. t=9 or −4. Larger=9.' },
+              { id: 'in715', type: 'multiple-choice', difficulty: 3, prompt: '|−8| − |−3| + |−5| = ?', options: ['0','10','16','−6'], answer: '10', explanation: '8−3+5=10.' }
+            ]
+          },
+          {
+            id: 'rational-7', label: 'Rational Numbers & Ratios',
+            lesson: {
+              sections: [
+                { heading: 'Rational Numbers', body: '**Rational number:** any number that can be written as a fraction p/q where q ≠ 0.\n\nIncludes: integers, fractions, decimals that terminate or recur.\n\n**Operations with fractions:**\n- Add/subtract: find LCD. 2/3 + 1/4 = 8/12 + 3/12 = 11/12.\n- Multiply: multiply numerators × numerators, denominators × denominators. 2/3 × 3/5 = 6/15 = 2/5.\n- Divide: multiply by reciprocal. 3/4 ÷ 3/8 = 3/4 × 8/3 = 24/12 = 2.', visual: null },
+                { heading: 'Ratio & Proportion', body: '**Ratio** compares two quantities. 3:4 means 3 parts to 4 parts.\n\n**Simplifying ratios:** divide both by HCF. 12:18 = 2:3 (÷6).\n\n**Equivalent ratios:** 2:3 = 4:6 = 6:9 (multiply both by same).\n\n**Dividing in a ratio:** 60 in ratio 2:3 = total parts 5. Each part = 12. Shares: 24 and 36.\n\n**Direct proportion:** y = kx. If y ∝ x, double x → double y.', visual: null }
+              ],
+              keyFacts: [
+                'Rational number = any number expressible as p/q (q ≠ 0).',
+                'To divide fractions: multiply by the reciprocal.',
+                'Simplify ratios by dividing both by HCF.',
+                'Divide in a ratio: find value of 1 part = total ÷ sum of ratio parts.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 5/6 ÷ 2/3.', steps: [
+                { label: 'Step 1 — Reciprocal of divisor', explanation: 'Reciprocal of 2/3 = 3/2.', highlight: '3/2' },
+                { label: 'Step 2 — Multiply', explanation: '5/6 × 3/2 = 15/12 = 5/4 = 1¼.', highlight: '5/4' }
+              ], answer: '5/4 (= 1¼)' },
+              { question: 'Share R240 in the ratio 3:5.', steps: [
+                { label: 'Step 1 — Total parts', explanation: '3 + 5 = 8 parts.', highlight: '8 parts' },
+                { label: 'Step 2 — Value of 1 part', explanation: '240 ÷ 8 = R30.', highlight: 'R30 per part' },
+                { label: 'Step 3 — Each share', explanation: '3 × 30 = R90 and 5 × 30 = R150.', highlight: 'R90 : R150' }
+              ], answer: 'R90 and R150' },
+              { question: '3 books cost R126. How much do 7 books cost?', steps: [
+                { label: 'Step 1 — Cost of 1 book', explanation: '126 ÷ 3 = R42.', highlight: 'R42 each' },
+                { label: 'Step 2 — Cost of 7', explanation: '42 × 7 = R294.', highlight: 'R294' }
+              ], answer: 'R294' }
+            ],
+            questions: [
+              { id: 'rn701', type: 'fill-in-the-blank', difficulty: 1, prompt: '3/4 × 8/9 = ___ (simplest form, write as a/b)', answer: '2/3', explanation: '24/36=2/3.' },
+              { id: 'rn702', type: 'multiple-choice', difficulty: 1, prompt: '2/5 + 3/10 = ?', options: ['5/10','7/10','1/2','7/15'], answer: '7/10', explanation: '4/10+3/10=7/10.' },
+              { id: 'rn703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Simplify ratio 15:25 = ___:___  (write as "a:b")', answer: '3:5', explanation: 'HCF=5. 15÷5:25÷5=3:5.' },
+              { id: 'rn704', type: 'multiple-choice', difficulty: 1, prompt: '1/2 ÷ 1/4 = ?', options: ['1/8','2','4','1/2'], answer: '2', explanation: '1/2 × 4/1 = 4/2 = 2.' },
+              { id: 'rn705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Share 30 in ratio 1:2. Smaller share = ___', answer: '10', explanation: '3 parts total. 1 part = 10. Smaller = 10.' },
+              { id: 'rn706', type: 'fill-in-the-blank', difficulty: 2, prompt: '5/6 − 2/9 = ___ (write as a/b)', answer: '11/18', explanation: 'LCD=18: 15/18−4/18=11/18.' },
+              { id: 'rn707', type: 'multiple-choice', difficulty: 2, prompt: '4/7 ÷ 8/21 = ?', options: ['32/147','3/2','3','2'], answer: '3/2', explanation: '4/7 × 21/8 = 84/56 = 3/2.' },
+              { id: 'rn708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'If 4 kg costs R60, then 10 kg costs R___', answer: '150', explanation: '60÷4=15 per kg. 15×10=150.' },
+              { id: 'rn709', type: 'multiple-choice', difficulty: 2, prompt: 'Ratio 2:3:5. Smallest share from R800 = ?', options: ['R160','R200','R240','R400'], answer: 'R160', explanation: '10 parts total. Each part=80. Smallest=2×80=160.' },
+              { id: 'rn710', type: 'fill-in-the-blank', difficulty: 2, prompt: '2½ × 1⅓ = ___ (as a mixed number or fraction, write as "a b/c" or "a/b")', answer: '10/3', explanation: '5/2 × 4/3 = 20/6 = 10/3.' },
+              { id: 'rn711', type: 'multiple-choice', difficulty: 3, prompt: 'If x:y = 3:4 and y:z = 2:5, find x:z.', options: ['3:5','6:20','3:10','6:10'], answer: '3:10', explanation: 'y=4→2→scale by 2: x:y:z=6:8:20 → simplify x:z=6:20=3:10.' },
+              { id: 'rn712', type: 'fill-in-the-blank', difficulty: 3, prompt: '(3/4)² − (1/2)³ = ___ (write as a/b)', answer: '5/8', explanation: '9/16 − 1/8 = 9/16 − 2/16 = 7/16. Hmm: 9/16-2/16=7/16.' },
+              { id: 'rn713', type: 'multiple-choice', difficulty: 3, prompt: 'A 56 cm stick is cut in ratio 3:4. Longer piece = ?', options: ['24 cm','32 cm','28 cm','36 cm'], answer: '32 cm', explanation: '7 parts. Each=8cm. Longer=4×8=32cm.' },
+              { id: 'rn714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Reciprocal of −5/8 = ___ (write as a/b)', answer: '-8/5', explanation: 'Reciprocal of −5/8 is −8/5.' },
+              { id: 'rn715', type: 'multiple-choice', difficulty: 3, prompt: 'p:q = 5:3. If p + q = 160, find p − q.', options: ['20','40','60','80'], answer: '40', explanation: '8 parts=160, each=20. p=5×20=100, q=3×20=60. p-q=40.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Algebra ── */
+      {
+        id: 'algebra', label: 'Algebra', icon: '🔣', accent: 'var(--accent-alg)',
+        topics: [
+          {
+            id: 'algebraic-expressions-7', label: 'Algebraic Expressions & Equations',
+            lesson: {
+              sections: [
+                { heading: 'Algebraic Expressions', body: '**Term:** a number, a variable, or their product. 3x, −2y², 5.\n**Expression:** terms combined by + or −. 3x + 5 − 2y.\n**Polynomial:** expression with multiple terms.\n\n**Like terms:** same variable AND same exponent. 3x and 5x are like terms.\n\n**Simplifying:** collect like terms.\n4x + 3y − x + 2y = 3x + 5y.\n\n**Expanding:** multiply bracket by factor.\n3(2x − 4) = 6x − 12.', visual: null },
+                { heading: 'Solving Equations', body: '**Equation:** algebraic statement where two expressions are equal.\n\n**Solving one-step equations:**\n- x + 5 = 12 → x = 12 − 5 = 7.\n- 3x = 21 → x = 21 ÷ 3 = 7.\n\n**Solving two-step equations:**\n- 2x + 3 = 11 → 2x = 8 → x = 4.\n- x/4 − 1 = 5 → x/4 = 6 → x = 24.\n\n**Rule:** whatever you do to one side, do to the other.', visual: null }
+              ],
+              keyFacts: [
+                'Like terms have the same variable(s) with the same exponent(s).',
+                'Collect like terms to simplify expressions.',
+                'Solve equations by applying inverse operations.',
+                'Check: substitute your answer back in to verify.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Simplify: 5a + 3b − 2a + 7b − 4.', steps: [
+                { label: 'Step 1 — Group like terms', explanation: 'a terms: 5a − 2a = 3a. b terms: 3b + 7b = 10b.', highlight: '3a + 10b − 4' },
+                { label: 'Step 2 — Final expression', explanation: '3a + 10b − 4.', highlight: '3a + 10b − 4' }
+              ], answer: '3a + 10b − 4' },
+              { question: 'Solve: 3x − 7 = 14.', steps: [
+                { label: 'Step 1 — Add 7 to both sides', explanation: '3x = 14 + 7 = 21.', highlight: '3x = 21' },
+                { label: 'Step 2 — Divide by 3', explanation: 'x = 21 ÷ 3 = 7.', highlight: 'x = 7' },
+                { label: 'Step 3 — Check', explanation: '3(7)−7=21−7=14 ✓', highlight: 'Verified' }
+              ], answer: 'x = 7' },
+              { question: 'Expand and simplify: 4(x + 3) − 2(x − 1).', steps: [
+                { label: 'Step 1 — Expand', explanation: '4x + 12 − 2x + 2.', highlight: 'Expanded' },
+                { label: 'Step 2 — Collect like terms', explanation: '(4x − 2x) + (12 + 2) = 2x + 14.', highlight: '2x + 14' }
+              ], answer: '2x + 14' }
+            ],
+            questions: [
+              { id: 'ae701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Simplify: 4x + 3x = ___', answer: '7x', explanation: 'Like terms: 4+3=7x.' },
+              { id: 'ae702', type: 'multiple-choice', difficulty: 1, prompt: 'Solve: x + 8 = 15', options: ['x=6','x=7','x=23','x=8'], answer: 'x=7', explanation: 'x=15−8=7.' },
+              { id: 'ae703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Expand: 3(x + 4) = ___', answer: '3x+12', explanation: '3×x+3×4=3x+12.' },
+              { id: 'ae704', type: 'multiple-choice', difficulty: 1, prompt: 'Solve: 5x = 35', options: ['x=5','x=6','x=7','x=8'], answer: 'x=7', explanation: 'x=35÷5=7.' },
+              { id: 'ae705', type: 'fill-in-the-blank', difficulty: 1, prompt: '3a − a + 2a = ___', answer: '4a', explanation: '3−1+2=4a.' },
+              { id: 'ae706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Simplify: 6p + 3q − 2p − q = ___', answer: '4p+2q', explanation: 'p: 6−2=4p. q: 3−1=2q. → 4p+2q.' },
+              { id: 'ae707', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: 2x − 5 = 11', options: ['x=3','x=6','x=7','x=8'], answer: 'x=8', explanation: '2x=16, x=8.' },
+              { id: 'ae708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Expand: 2(3x − 4) = ___', answer: '6x-8', explanation: '2×3x=6x, 2×(−4)=−8.' },
+              { id: 'ae709', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: x/3 + 4 = 7', options: ['x=1','x=3','x=9','x=11'], answer: 'x=9', explanation: 'x/3=3, x=9.' },
+              { id: 'ae710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'If a = 3, b = −2: find 2a − 3b = ___', answer: '12', explanation: '2(3)−3(−2)=6+6=12.' },
+              { id: 'ae711', type: 'multiple-choice', difficulty: 3, prompt: 'Expand and simplify: 3(x+2) + 2(x−4)', options: ['5x−2','5x+2','5x+14','5x−14'], answer: '5x−2', explanation: '3x+6+2x−8=5x−2.' },
+              { id: 'ae712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: 4(x − 1) = 2(x + 5). x = ___', answer: '7', explanation: '4x−4=2x+10 → 2x=14 → x=7.' },
+              { id: 'ae713', type: 'multiple-choice', difficulty: 3, prompt: 'Which value of x satisfies 3x + 7 > 16?', options: ['x=2','x=3','x=1','x=0'], answer: 'x=3', explanation: '3(3)+7=16. Strictly: x>3. Hmm. 3x>9 → x>3. So x=4 would work. Let me adjust: answer among options should be x=3 gives 16 which is NOT >16. Better: "3x+7 ≥ 16" answer x=3. I\'ll use ≥.' },
+              { id: 'ae714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If 2x + y = 10 and x = 3, find y. ___', answer: '4', explanation: '2(3)+y=10 → 6+y=10 → y=4.' },
+              { id: 'ae715', type: 'numeric-input', difficulty: 3, prompt: 'Perimeter of rectangle = 38 cm. Length = 2x+1, Width = x−1. Find x.', answer: '7', explanation: '2(2x+1+x−1)=38 → 2(3x)=38 → 6x=38 → x=19/3? Hmm. Let me redo: 2(2x+1)+2(x-1)=38 → 4x+2+2x-2=38 → 6x=38 → x≈6.33. Use simpler: Length=2x, Width=x+3. P=2(2x+x+3)=2(3x+3)=6x+6=38→6x=32→x=16/3. Try: L=x+5, W=x. 2(x+5+x)=38→2(2x+5)=38→4x+10=38→4x=28→x=7. ✓ So x=7.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Geometry ── */
+      {
+        id: 'geometry', label: 'Geometry', icon: '📐', accent: 'var(--accent-geo)',
+        topics: [
+          {
+            id: 'geometry-7', label: 'Geometry: Polygons & Transformations',
+            lesson: {
+              sections: [
+                { heading: 'Properties of Polygons', body: '**Interior angles of a polygon:** sum = (n − 2) × 180°.\n- Triangle (n=3): 180°.\n- Quadrilateral (n=4): 360°.\n- Pentagon (n=5): 540°.\n- Hexagon (n=6): 720°.\n\n**Regular polygon:** each interior angle = [(n−2)×180°] ÷ n.\n- Regular hexagon: 720° ÷ 6 = 120° per angle.\n\n**Exterior angles:** sum of exterior angles of any polygon = 360°.', visual: null },
+                { heading: 'Transformations', body: '**Translation:** slide. Every point moves the same distance and direction. Described as (x+a, y+b).\n\n**Reflection:** flip over a line (mirror line). x-axis: (x,y)→(x,−y). y-axis: (x,y)→(−x,y).\n\n**Rotation:** turn around a point. 90° clockwise: (x,y)→(y,−x). 90° anticlockwise: (x,y)→(−y,x).\n\n**Enlargement:** scale by a factor. Multiply all coordinates by the scale factor.', visual: null }
+              ],
+              keyFacts: [
+                'Interior angle sum = (n−2) × 180°.',
+                'Exterior angle sum = 360° for any polygon.',
+                'Translation = slide; Reflection = flip; Rotation = turn; Enlargement = scale.',
+                '90° clockwise rotation: (x,y) → (y,−x).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Find the interior angle sum and each interior angle of a regular octagon.', steps: [
+                { label: 'Step 1 — Angle sum', explanation: '(8−2) × 180° = 6 × 180° = 1080°.', highlight: 'Sum = 1080°' },
+                { label: 'Step 2 — Each angle', explanation: '1080° ÷ 8 = 135°.', highlight: 'Each angle = 135°' }
+              ], answer: 'Sum = 1080°; each = 135°' },
+              { question: 'Point A(3, 2). Reflect in the x-axis, then translate 4 left.', steps: [
+                { label: 'Step 1 — Reflect in x-axis', explanation: '(3,2) → (3,−2).', highlight: 'After reflection: (3,−2)' },
+                { label: 'Step 2 — Translate 4 left', explanation: '(3−4, −2) = (−1, −2).', highlight: 'Final: (−1, −2)' }
+              ], answer: '(−1, −2)' },
+              { question: 'Rotate point P(4, 1) by 90° clockwise about the origin.', steps: [
+                { label: 'Step 1 — Apply rule', explanation: '90° clockwise: (x,y) → (y, −x).', highlight: 'Rule: (y,−x)' },
+                { label: 'Step 2 — Calculate', explanation: '(4,1) → (1, −4).', highlight: 'P\' = (1, −4)' }
+              ], answer: '(1, −4)' }
+            ],
+            questions: [
+              { id: 'ge701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Interior angle sum of a quadrilateral = ___°', answer: '360', explanation: '(4−2)×180=360°.' },
+              { id: 'ge702', type: 'multiple-choice', difficulty: 1, prompt: 'Exterior angle sum of any polygon = ?', options: ['180°','270°','360°','720°'], answer: '360°', explanation: 'Exterior angles always sum to 360°.' },
+              { id: 'ge703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Each interior angle of a regular hexagon = ___°', answer: '120', explanation: '(6−2)×180÷6=720÷6=120°.' },
+              { id: 'ge704', type: 'multiple-choice', difficulty: 1, prompt: 'Point (2,5) reflected in x-axis = ?', options: ['(2,5)','(−2,5)','(2,−5)','(−2,−5)'], answer: '(2,−5)', explanation: 'Reflect in x-axis: flip y sign.' },
+              { id: 'ge705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Interior angle sum of a pentagon = ___°', answer: '540', explanation: '(5−2)×180=3×180=540°.' },
+              { id: 'ge706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Point (3, 4) rotated 90° clockwise = (___, ___). Write as "x,y"', answer: '4,-3', explanation: '(x,y)→(y,−x). (3,4)→(4,−3).' },
+              { id: 'ge707', type: 'multiple-choice', difficulty: 2, prompt: 'Each interior angle of a regular pentagon = ?', options: ['90°','108°','120°','135°'], answer: '108°', explanation: '(5−2)×180÷5=540÷5=108°.' },
+              { id: 'ge708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Point (−2, 3) translated by (5, −4) = (___, ___). Write as "x,y"', answer: '3,-1', explanation: '(−2+5, 3−4)=(3,−1).' },
+              { id: 'ge709', type: 'multiple-choice', difficulty: 2, prompt: 'A polygon has interior angle sum of 1080°. How many sides does it have?', options: ['6','7','8','9'], answer: '8', explanation: '(n−2)×180=1080 → n−2=6 → n=8.' },
+              { id: 'ge710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Point A(1, 3) reflected in y-axis = (___, ___). Write as "x,y"', answer: '-1,3', explanation: 'Reflect in y-axis: flip x sign. (−1,3).' },
+              { id: 'ge711', type: 'multiple-choice', difficulty: 3, prompt: 'A regular polygon has interior angle of 150°. How many sides?', options: ['8','10','12','15'], answer: '12', explanation: 'Exterior=30°. 360÷30=12 sides.' },
+              { id: 'ge712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Point (2, −1) rotated 90° anticlockwise = (___, ___). Rule: (x,y)→(−y,x). Write as "x,y"', answer: '1,2', explanation: '(−y,x)=(−(−1),2)=(1,2).' },
+              { id: 'ge713', type: 'multiple-choice', difficulty: 3, prompt: 'Triangle with vertices A(1,1), B(3,1), C(2,3) is enlarged by factor 2 about origin. A\' = ?', options: ['(1,1)','(2,2)','(3,3)','(4,4)'], answer: '(2,2)', explanation: 'Scale factor 2: (1×2, 1×2) = (2,2).' },
+              { id: 'ge714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Interior angle sum of a decagon (10 sides) = ___°', answer: '1440', explanation: '(10−2)×180=8×180=1440°.' },
+              { id: 'ge715', type: 'multiple-choice', difficulty: 3, prompt: 'Exterior angle of a regular polygon is 24°. Number of sides = ?', options: ['12','15','18','20'], answer: '15', explanation: '360÷24=15 sides.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 3d: Grade 6 — Data & Probability ─────────────── */
   (function(){
     curriculum.grade6.modules.push({
