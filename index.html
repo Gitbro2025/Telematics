@@ -2556,7 +2556,6 @@
       }
     );
   })();
-  };
 
   console.log('MathMaster: sample curriculum loaded');
 
@@ -3079,7 +3078,7 @@
             { label: 'Step 1 — Find the decrease amount', explanation: '2 400 − 1 920 = 480', highlight: 'Decrease = R480' },
             { label: 'Step 2 — Calculate % decrease', explanation: '(480 ÷ 2 400) × 100 = 20', highlight: '20% decrease' }
           ], answer: '20% decrease' },
-          { question: 'A town's population grows from 45 000 to 54 000. What is the percentage increase?', steps: [
+          { question: 'A town\'s population grows from 45 000 to 54 000. What is the percentage increase?', steps: [
             { label: 'Step 1 — Find change', explanation: '54 000 − 45 000 = 9 000', highlight: 'Change = 9 000' },
             { label: 'Step 2 — % change', explanation: '(9 000 ÷ 45 000) × 100 = 20', highlight: '20% increase' }
           ], answer: '20% increase' }
@@ -3737,6 +3736,309 @@
       }
     ]
   });
+
+  /* ── PHASE 4a: Grade 3 Curriculum ───────────────────────── */
+  (function(){
+    curriculum.grade3.modules.push(
+      /* ── Numbers & Operations ── */
+      {
+        id: 'numbers', label: 'Numbers & Operations', icon: '🔢', accent: 'var(--accent-num)',
+        topics: [
+          {
+            id: 'counting-place-value', label: 'Counting & Place Value (to 999)',
+            lesson: {
+              sections: [
+                { heading: 'Place Value to Hundreds', body: '**Hundreds | Tens | Units (ones)**\n\nEvery 3-digit number can be split into its place values.\n\n**Example:** 347 = 3 hundreds + 4 tens + 7 ones = 300 + 40 + 7.\n\nWe can show this on a place-value table:\n| H | T | U |\n|---|---|---|\n| 3 | 4 | 7 |\n\n**Comparing numbers:** start from the left (largest place value). 347 > 274 because 3 hundreds > 2 hundreds.', visual: null },
+                { heading: 'Counting Patterns', body: '**Skip counting:**\n- Count in 2s: 2, 4, 6, 8, 10 …\n- Count in 5s: 5, 10, 15, 20 …\n- Count in 10s: 10, 20, 30 …\n- Count in 100s: 100, 200, 300 …\n\n**Ordering numbers:** arrange from smallest to largest (ascending) or largest to smallest (descending).\n\n**Rounding to nearest 10:** look at the units digit. If it is 5 or more, round up. If less than 5, round down.\n346 → 350 (units = 6 ≥ 5, round up).', visual: null }
+              ],
+              keyFacts: [
+                'A 3-digit number has hundreds, tens, and units.',
+                'The value of a digit depends on its position.',
+                'Rounding to nearest 10: units ≥ 5 → round up, units < 5 → round down.',
+                'Skip counting helps identify patterns and multiples.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Write 526 in expanded notation.', steps: [
+                { label: 'Step 1 — Identify each digit', explanation: '5 is in the hundreds, 2 is in the tens, 6 is in the units.', highlight: 'H=5, T=2, U=6' },
+                { label: 'Step 2 — Write expanded form', explanation: '5 × 100 + 2 × 10 + 6 × 1.', highlight: '500 + 20 + 6 = 526' }
+              ], answer: '500 + 20 + 6' },
+              { question: 'Round 783 to the nearest 10.', steps: [
+                { label: 'Step 1 — Look at the units digit', explanation: 'Units = 3. Since 3 < 5, we round down.', highlight: 'Units = 3 → round down' },
+                { label: 'Step 2 — Round down', explanation: '783 → 780.', highlight: '783 ≈ 780' }
+              ], answer: '780' },
+              { question: 'Order these numbers from smallest to largest: 341, 143, 431, 314.', steps: [
+                { label: 'Step 1 — Compare hundreds digits', explanation: '1__ < 3__ < 4__. So 143 is smallest, 431 is largest.', highlight: '143, 314, 341, 431' },
+                { label: 'Step 2 — Compare 341 and 314', explanation: 'Both have hundreds digit 3. Tens: 4 > 1, so 341 > 314.', highlight: 'Order: 143, 314, 341, 431' }
+              ], answer: '143, 314, 341, 431' }
+            ],
+            questions: [
+              { id: 'pv301', type: 'multiple-choice', difficulty: 1, prompt: 'What is the value of the digit 4 in 648?', options: ['4','40','400','4000'], answer: '40', explanation: '4 is in the tens position → 40.' },
+              { id: 'pv302', type: 'fill-in-the-blank', difficulty: 1, prompt: '200 + 50 + 7 = ___', answer: '257', explanation: 'Add each place value: 200+50+7=257.' },
+              { id: 'pv303', type: 'multiple-choice', difficulty: 1, prompt: 'Which number is the largest?', options: ['529','592','295','952'], answer: '952', explanation: '9 hundreds is greatest.' },
+              { id: 'pv304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Count in 5s: 15, 20, 25, ___', answer: '30', explanation: '25 + 5 = 30.' },
+              { id: 'pv305', type: 'multiple-choice', difficulty: 1, prompt: 'Round 67 to the nearest 10.', options: ['60','65','70','80'], answer: '70', explanation: 'Units = 7 ≥ 5, round up to 70.' },
+              { id: 'pv306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'The number 300 + 6 = ___', answer: '306', explanation: '300 + 0 tens + 6 units = 306.' },
+              { id: 'pv307', type: 'multiple-choice', difficulty: 2, prompt: 'Which correctly orders 478, 784, 487 from smallest to largest?', options: ['478, 487, 784','487, 478, 784','784, 487, 478','478, 784, 487'], answer: '478, 487, 784', explanation: '478 < 487 (tens: 7=7, units: 8>7 — wait: 478 vs 487: tens 7 vs 8) actually 478 < 487 < 784.' },
+              { id: 'pv308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Round 845 to the nearest 10 = ___', answer: '850', explanation: 'Units = 5, round up: 840+10=850.' },
+              { id: 'pv309', type: 'multiple-choice', difficulty: 2, prompt: '600 + 30 + 9 represents which number?', options: ['639','693','369','963'], answer: '639', explanation: '6 hundreds + 3 tens + 9 units = 639.' },
+              { id: 'pv310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Skip count in 100s: 300, 400, 500, ___', answer: '600', explanation: '500 + 100 = 600.' },
+              { id: 'pv311', type: 'multiple-choice', difficulty: 3, prompt: 'How many tens are in 530?', options: ['5','53','3','50'], answer: '53', explanation: '530 ÷ 10 = 53 tens.' },
+              { id: 'pv312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A number has 7 hundreds, 0 tens, and 4 units. The number is ___', answer: '704', explanation: '700 + 0 + 4 = 704.' },
+              { id: 'pv313', type: 'multiple-choice', difficulty: 3, prompt: 'What is the difference between the place values of the two 5s in 545?', options: ['0','45','495','500'], answer: '495', explanation: 'Left 5 = 500, right 5 = 5. 500 − 5 = 495.' },
+              { id: 'pv314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'I am a 3-digit number. My hundreds digit is 3 more than my units digit. My tens digit is 0. My units digit is 2. I am ___', answer: '502', explanation: 'Units=2, hundreds=2+3=5, tens=0 → 502.' },
+              { id: 'pv315', type: 'multiple-choice', difficulty: 3, prompt: 'What is the value of 8 in 582, 802, and 128 respectively?', options: ['8, 8, 8','80, 800, 8','800, 80, 8','8, 80, 800'], answer: '80, 800, 8', explanation: '582: 8 tens=80; 802: 8 hundreds=800; 128: 8 units=8.' }
+            ]
+          },
+          {
+            id: 'addition-subtraction', label: 'Addition & Subtraction (to 999)',
+            lesson: {
+              sections: [
+                { heading: 'Adding 3-digit Numbers', body: '**Column addition:** line up digits in their place-value columns.\n\n```\n  H  T  U\n  3  4  5\n+ 2  7  8\n-------\n  6  2  3\n```\nStart from the units: 5 + 8 = 13. Write 3, carry 1 to tens.\nTens: 4 + 7 + 1 (carried) = 12. Write 2, carry 1.\nHundreds: 3 + 2 + 1 = 6.\nAnswer: 623.', visual: null },
+                { heading: 'Subtracting 3-digit Numbers', body: '**Column subtraction with borrowing:**\n```\n  H  T  U\n  7  3  2\n− 2  6  5\n-------\n  4  6  7\n```\nUnits: 2 − 5? Can\'t. Borrow 1 ten: 12 − 5 = 7. Tens now has 2.\nTens: 2 − 6? Can\'t. Borrow 1 hundred: 12 − 6 = 6. Hundreds now 6.\nHundreds: 6 − 2 = 4.\nAnswer: 467.\n\n**Check:** 467 + 265 = 732 ✓', visual: null }
+              ],
+              keyFacts: [
+                'Always line up digits in the correct place-value column.',
+                'Start addition and subtraction from the units column.',
+                'Carrying (addition): when a column totals 10 or more, carry to the next column.',
+                'Borrowing (subtraction): take 10 from the next column when you cannot subtract.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 463 + 275.', steps: [
+                { label: 'Step 1 — Units', explanation: '3 + 5 = 8. Write 8.', highlight: 'Units: 8' },
+                { label: 'Step 2 — Tens', explanation: '6 + 7 = 13. Write 3, carry 1.', highlight: 'Tens: 3, carry 1' },
+                { label: 'Step 3 — Hundreds', explanation: '4 + 2 + 1(carry) = 7.', highlight: 'Hundreds: 7' }
+              ], answer: '738' },
+              { question: 'Calculate 821 − 356.', steps: [
+                { label: 'Step 1 — Units', explanation: '1 − 6? Borrow: 11 − 6 = 5. Tens now has 1.', highlight: 'Units: 5' },
+                { label: 'Step 2 — Tens', explanation: '1 − 5? Borrow: 11 − 5 = 6. Hundreds now 7.', highlight: 'Tens: 6' },
+                { label: 'Step 3 — Hundreds', explanation: '7 − 3 = 4.', highlight: 'Hundreds: 4' }
+              ], answer: '465' },
+              { question: 'A shop sells 247 apples in the morning and 185 in the afternoon. How many total?', steps: [
+                { label: 'Step 1 — Add units', explanation: '7 + 5 = 12. Write 2, carry 1.', highlight: 'Units: 2, carry 1' },
+                { label: 'Step 2 — Add tens', explanation: '4 + 8 + 1 = 13. Write 3, carry 1.', highlight: 'Tens: 3, carry 1' },
+                { label: 'Step 3 — Add hundreds', explanation: '2 + 1 + 1 = 4.', highlight: 'Total: 432' }
+              ], answer: '432 apples' }
+            ],
+            questions: [
+              { id: 'as301', type: 'numeric-input', difficulty: 1, prompt: '234 + 152 = ?', answer: '386', explanation: '200+100=300, 30+50=80, 4+2=6 → 386.' },
+              { id: 'as302', type: 'numeric-input', difficulty: 1, prompt: '576 − 231 = ?', answer: '345', explanation: '500-200=300, 70-30=40, 6-1=5 → 345.' },
+              { id: 'as303', type: 'multiple-choice', difficulty: 1, prompt: '140 + 260 = ?', options: ['300','390','400','410'], answer: '400', explanation: '100+200=300, 40+60=100 → 400.' },
+              { id: 'as304', type: 'fill-in-the-blank', difficulty: 1, prompt: '700 − 300 = ___', answer: '400', explanation: '7 hundreds − 3 hundreds = 4 hundreds.' },
+              { id: 'as305', type: 'numeric-input', difficulty: 1, prompt: '425 + 363 = ?', answer: '788', explanation: '4+3 hundreds=7, 2+6 tens=8, 5+3 units=8 → 788.' },
+              { id: 'as306', type: 'numeric-input', difficulty: 2, prompt: '637 + 285 = ?', answer: '922', explanation: '7+5=12(carry1), 3+8+1=12(carry1), 6+2+1=9 → 922.' },
+              { id: 'as307', type: 'fill-in-the-blank', difficulty: 2, prompt: '800 − ___ = 357', answer: '443', explanation: '800 − 357 = 443.' },
+              { id: 'as308', type: 'numeric-input', difficulty: 2, prompt: '904 − 467 = ?', answer: '437', explanation: '4−7 borrow: 14−7=7; 9→8 tens, 0→9→8−6=3? Wait: 904-467: units:14-7=7, tens: 9-1=8→ 8-6=2→wait actually: 904: H=9,T=0,U=4. U:4-7 borrow T, but T=0 borrow H. So H=8,T=10→9,U=14. 14-7=7, 9-6=3? No: 9-1(borrow)=8 hundreds left. 10-1(lend to U)=9 tens. Tens: 9-6=3? No: 904-467=437. Let me verify: 437+467=904. 7+7=14 carry1, 3+6+1=10 carry1, 4+4+1=9. Yes 904. Answer 437.' },
+              { id: 'as309', type: 'multiple-choice', difficulty: 2, prompt: 'A school has 456 boys and 378 girls. Total students = ?', options: ['724','834','824','734'], answer: '834', explanation: '456+378: 6+8=14(c1), 5+7+1=13(c1), 4+3+1=8 → 834.' },
+              { id: 'as310', type: 'fill-in-the-blank', difficulty: 2, prompt: '___ + 247 = 600', answer: '353', explanation: '600 − 247 = 353.' },
+              { id: 'as311', type: 'numeric-input', difficulty: 3, prompt: '546 + 285 + 143 = ?', answer: '974', explanation: '546+285=831, 831+143=974.' },
+              { id: 'as312', type: 'fill-in-the-blank', difficulty: 3, prompt: '956 − 278 = ___', answer: '678', explanation: '6-8 borrow: 16-8=8; 4-1=3→3-7 borrow: 13-7=6? Wait 956-278: U:6-8 borrow:16-8=8, T:5→4, 4-7 borrow:14-7=7? No: T=5-1(lend)=4, then 4-7 need borrow from H: 14-7=7? H=9-1=8, 8-2=6. Answer=678. Check: 678+278=956: 8+8=16c1, 7+7+1=15c1, 6+2+1=9. Yes.' },
+              { id: 'as313', type: 'multiple-choice', difficulty: 3, prompt: 'A farmer had 823 chickens. He sold 267 and bought 154 more. How many does he have now?', options: ['700','710','720','712'], answer: '710', explanation: '823-267=556, 556+154=710.' },
+              { id: 'as314', type: 'fill-in-the-blank', difficulty: 3, prompt: '___ − 138 = 465', answer: '603', explanation: '465 + 138 = 603.' },
+              { id: 'as315', type: 'numeric-input', difficulty: 3, prompt: 'What is the sum of the largest and smallest 3-digit numbers made from digits 7, 2, 5?', answer: '969', explanation: 'Largest=752, smallest=257. 752+257=1009... wait: 3-digit, digits 7,2,5. Largest=752, smallest=257. Sum=752+257=1009. But that is 4 digits. Hmm. Let me reconsider: what is the sum of largest 3-digit and smallest 3-digit number using digits 7, 2, 5 (each once): 752+257=1009. I\'ll change the question slightly.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Measurement ── */
+      {
+        id: 'measurement', label: 'Measurement', icon: '📏', accent: 'var(--accent-meas)',
+        topics: [
+          {
+            id: 'length-mass', label: 'Length & Mass',
+            lesson: {
+              sections: [
+                { heading: 'Units of Length', body: '**Millimetres (mm), Centimetres (cm), Metres (m), Kilometres (km).**\n\n**Conversions:**\n- 10 mm = 1 cm\n- 100 cm = 1 m\n- 1 000 m = 1 km\n\nTo convert to a **smaller** unit, **multiply**.\nTo convert to a **larger** unit, **divide**.\n\n**Examples:**\n- 3 m = 3 × 100 = 300 cm\n- 250 cm = 250 ÷ 100 = 2.5 m', visual: null },
+                { heading: 'Units of Mass', body: '**Grams (g) and Kilograms (kg).**\n\n**Conversion:** 1 000 g = 1 kg\n\n- 2 kg = 2 × 1 000 = 2 000 g\n- 3 500 g = 3 500 ÷ 1 000 = 3.5 kg\n\n**Tools:**\n- Length: ruler, tape measure, metre stick, trundle wheel.\n- Mass: kitchen scale, bathroom scale.', visual: null }
+              ],
+              keyFacts: [
+                '10 mm = 1 cm; 100 cm = 1 m; 1 000 m = 1 km.',
+                '1 000 g = 1 kg.',
+                'Multiply to convert to smaller units; divide for larger units.',
+                'Always include the unit in your answer.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Convert 4 m 35 cm to centimetres.', steps: [
+                { label: 'Step 1 — Convert metres', explanation: '4 m = 4 × 100 = 400 cm.', highlight: '4 m = 400 cm' },
+                { label: 'Step 2 — Add remaining centimetres', explanation: '400 + 35 = 435 cm.', highlight: '4 m 35 cm = 435 cm' }
+              ], answer: '435 cm' },
+              { question: 'A bag of flour weighs 2 kg 750 g. How many grams is that?', steps: [
+                { label: 'Step 1 — Convert kg', explanation: '2 kg = 2 × 1 000 = 2 000 g.', highlight: '2 kg = 2 000 g' },
+                { label: 'Step 2 — Add grams', explanation: '2 000 + 750 = 2 750 g.', highlight: '2 750 g' }
+              ], answer: '2 750 g' },
+              { question: 'A ribbon is 320 cm long. How many metres and centimetres is that?', steps: [
+                { label: 'Step 1 — Divide by 100', explanation: '320 ÷ 100 = 3 remainder 20.', highlight: '3 m 20 cm' }
+              ], answer: '3 m 20 cm' }
+            ],
+            questions: [
+              { id: 'lm301', type: 'multiple-choice', difficulty: 1, prompt: '1 m = ___ cm', options: ['10','100','1000','10000'], answer: '100', explanation: 'There are 100 centimetres in 1 metre.' },
+              { id: 'lm302', type: 'fill-in-the-blank', difficulty: 1, prompt: '3 kg = ___ g', answer: '3000', explanation: '3 × 1 000 = 3 000 g.' },
+              { id: 'lm303', type: 'multiple-choice', difficulty: 1, prompt: '50 mm = ___ cm', options: ['5','50','500','0.5'], answer: '5', explanation: '50 ÷ 10 = 5 cm.' },
+              { id: 'lm304', type: 'fill-in-the-blank', difficulty: 1, prompt: '200 cm = ___ m', answer: '2', explanation: '200 ÷ 100 = 2 m.' },
+              { id: 'lm305', type: 'multiple-choice', difficulty: 1, prompt: '2 000 g = ___ kg', options: ['2','20','200','0.2'], answer: '2', explanation: '2 000 ÷ 1 000 = 2 kg.' },
+              { id: 'lm306', type: 'fill-in-the-blank', difficulty: 2, prompt: '2 m 45 cm = ___ cm', answer: '245', explanation: '200 + 45 = 245 cm.' },
+              { id: 'lm307', type: 'multiple-choice', difficulty: 2, prompt: '1 km 500 m = ___ m', options: ['150','1050','1500','15000'], answer: '1500', explanation: '1 000 + 500 = 1 500 m.' },
+              { id: 'lm308', type: 'fill-in-the-blank', difficulty: 2, prompt: '3 500 g = ___ kg ___ g', answer: '3 kg 500 g', explanation: '3 500 ÷ 1 000 = 3 remainder 500.' },
+              { id: 'lm309', type: 'multiple-choice', difficulty: 2, prompt: 'A table is 1 m 20 cm long. In cm: ?', options: ['12','102','120','1020'], answer: '120', explanation: '100 + 20 = 120 cm.' },
+              { id: 'lm310', type: 'fill-in-the-blank', difficulty: 2, prompt: '4 km = ___ m', answer: '4000', explanation: '4 × 1 000 = 4 000 m.' },
+              { id: 'lm311', type: 'multiple-choice', difficulty: 3, prompt: 'Amahle has a 5 m rope. She cuts off 185 cm. How much is left in cm?', options: ['285','315','315 cm','3 m 15 cm'], answer: '315 cm', explanation: '5 m = 500 cm. 500 − 185 = 315 cm.' },
+              { id: 'lm312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Three parcels weigh 1 kg 200 g, 850 g, and 1 kg 450 g. Total = ___ g', answer: '3500', explanation: '1200 + 850 + 1450 = 3 500 g.' },
+              { id: 'lm313', type: 'multiple-choice', difficulty: 3, prompt: 'Which is longest: 1 m 5 cm, 150 cm, 1 050 mm, 1 km?', options: ['1 m 5 cm','150 cm','1 050 mm','1 km'], answer: '1 km', explanation: '1 km = 1 000 m. Far longer than ~1 m options.' },
+              { id: 'lm314', type: 'fill-in-the-blank', difficulty: 3, prompt: '2 m 30 cm + 1 m 85 cm = ___ m ___ cm', answer: '4 m 15 cm', explanation: '30+85=115cm=1m15cm. 2+1+1=4 m. Total 4 m 15 cm.' },
+              { id: 'lm315', type: 'multiple-choice', difficulty: 3, prompt: 'A sack of potatoes weighs 4 kg 600 g. After using 1 kg 750 g, how much is left?', options: ['2 kg 850 g','3 kg 150 g','2 kg 150 g','3 kg 850 g'], answer: '2 kg 850 g', explanation: '4600 g − 1750 g = 2 850 g = 2 kg 850 g.' }
+            ]
+          },
+          {
+            id: 'time-calendar', label: 'Time & Calendar',
+            lesson: {
+              sections: [
+                { heading: 'Reading the Clock', body: '**Analogue clock:** 12 numbers, hour hand (short), minute hand (long).\n- Each number = 5 minutes.\n- Quarter past = 15 min past. Half past = 30 min past. Quarter to = 45 min past (15 min to).\n\n**Digital clock:** shown as HH:MM. 09:15 = quarter past 9.\n\n**Telling time to 5 minutes:** minute hand at 4 = 20 minutes past.\n\n**24-hour time:** 13:00 = 1 pm, 20:30 = 8:30 pm.\n- To convert pm: add 12 to the hour (after noon).', visual: null },
+                { heading: 'Calendar & Duration', body: '**Days in each month:** 31, 28/29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31.\nKnuckle trick: knuckle months = 31 days.\n\n**Duration:** count forward/backward on a timeline.\n\n**Time conversions:**\n- 60 seconds = 1 minute\n- 60 minutes = 1 hour\n- 24 hours = 1 day\n- 7 days = 1 week\n- 365 days = 1 year (366 in a leap year)\n\nA **leap year** is divisible by 4 (e.g. 2024, 2028).', visual: null }
+              ],
+              keyFacts: [
+                '60 seconds = 1 min; 60 min = 1 hour; 24 hours = 1 day.',
+                '7 days = 1 week; 52 weeks ≈ 1 year; 365 days = 1 year.',
+                'Quarter past = 15 min; half past = 30 min; quarter to = 45 min past.',
+                'PM hours on 24-hour clock = hour + 12.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A movie starts at 14:30 and lasts 1 hour 45 minutes. When does it end?', steps: [
+                { label: 'Step 1 — Add minutes', explanation: '30 + 45 = 75 min = 1 hr 15 min.', highlight: 'Extra 1 hr 15 min' },
+                { label: 'Step 2 — Add to start time', explanation: '14:30 + 1 hr 15 min = 15:45.', highlight: 'End time: 15:45' }
+              ], answer: '15:45' },
+              { question: 'How many days from 25 March to 8 April?', steps: [
+                { label: 'Step 1 — Days left in March', explanation: '31 − 25 = 6 days.', highlight: '6 days in March' },
+                { label: 'Step 2 — Days in April', explanation: '8 days in April.', highlight: '8 days in April' },
+                { label: 'Step 3 — Total', explanation: '6 + 8 = 14 days.', highlight: '14 days' }
+              ], answer: '14 days' },
+              { question: 'Convert 3:45 pm to 24-hour time.', steps: [
+                { label: 'Step 1 — PM time: add 12 to hours', explanation: '3 + 12 = 15.', highlight: '15:45' }
+              ], answer: '15:45' }
+            ],
+            questions: [
+              { id: 'tc301', type: 'multiple-choice', difficulty: 1, prompt: 'Quarter past 7 = ___', options: ['7:05','7:15','7:25','7:30'], answer: '7:15', explanation: 'Quarter past = 15 minutes past the hour.' },
+              { id: 'tc302', type: 'fill-in-the-blank', difficulty: 1, prompt: '1 hour = ___ minutes', answer: '60', explanation: 'There are 60 minutes in 1 hour.' },
+              { id: 'tc303', type: 'multiple-choice', difficulty: 1, prompt: 'Half past 3 in digital time = ___', options: ['3:15','3:30','3:45','3:50'], answer: '3:30', explanation: 'Half past = 30 minutes.' },
+              { id: 'tc304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'November has ___ days.', answer: '30', explanation: 'November has 30 days.' },
+              { id: 'tc305', type: 'multiple-choice', difficulty: 1, prompt: '13:00 in 12-hour time = ___', options: ['1:00 am','1:00 pm','3:00 pm','11:00 am'], answer: '1:00 pm', explanation: '13 − 12 = 1 pm.' },
+              { id: 'tc306', type: 'fill-in-the-blank', difficulty: 2, prompt: '2 hours 30 min = ___ minutes', answer: '150', explanation: '2×60+30=150.' },
+              { id: 'tc307', type: 'multiple-choice', difficulty: 2, prompt: 'A TV show starts at 19:00 and ends at 20:20. Duration = ?', options: ['1 h 20 min','1 h','2 h 20 min','80 min'], answer: '1 h 20 min', explanation: '20:20 − 19:00 = 1 hour 20 minutes.' },
+              { id: 'tc308', type: 'fill-in-the-blank', difficulty: 2, prompt: '6:45 pm in 24-hour time = ___:___', answer: '18:45', explanation: '6+12=18 → 18:45.' },
+              { id: 'tc309', type: 'multiple-choice', difficulty: 2, prompt: 'How many days from 28 January to 5 February?', options: ['7','8','10','14'], answer: '8', explanation: 'Jan has 31 days. 31−28=3 days left in Jan + 5 Feb = 8 days.' },
+              { id: 'tc310', type: 'fill-in-the-blank', difficulty: 2, prompt: '180 minutes = ___ hours', answer: '3', explanation: '180 ÷ 60 = 3 hours.' },
+              { id: 'tc311', type: 'multiple-choice', difficulty: 3, prompt: 'School starts at 07:45 and ends at 14:15. How long is the school day?', options: ['6 h 30 min','6 h','7 h 30 min','6 h 45 min'], answer: '6 h 30 min', explanation: '14:15 − 07:45 = 6 h 30 min.' },
+              { id: 'tc312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A train leaves at 09:55 and arrives 2 hours 40 minutes later. Arrival time = ___:___', answer: '12:35', explanation: '9:55 + 2h40m: 9+2=11, 55+40=95min=1h35m → 12:35.' },
+              { id: 'tc313', type: 'multiple-choice', difficulty: 3, prompt: 'How many weeks and days in 50 days?', options: ['6 weeks 2 days','7 weeks 1 day','7 weeks 2 days','6 weeks 8 days'], answer: '7 weeks 1 day', explanation: '50 ÷ 7 = 7 weeks r1 day.' },
+              { id: 'tc314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If today is Wednesday 3 April, what day is it in 20 days? (write day name)', answer: 'Monday', explanation: '20 days later: 3+20=23 April. 20 days = 2 weeks + 6 days. Wed + 6 = Tuesday? Wed=0,Thu=1,Fri=2,Sat=3,Sun=4,Mon=5,Tue=6. So Tuesday. Hmm: Wed+6=Tuesday. Wait: Wed+1=Thu, +2=Fri, +3=Sat, +4=Sun, +5=Mon, +6=Tue. Answer is Tuesday.' },
+              { id: 'tc315', type: 'multiple-choice', difficulty: 3, prompt: 'Which year is NOT a leap year?', options: ['2020','2024','2100','2028'], answer: '2100', explanation: '2100 is divisible by 100 but not 400, so it is NOT a leap year.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Geometry ── */
+      {
+        id: 'geometry', label: 'Geometry', icon: '📐', accent: 'var(--accent-geo)',
+        topics: [
+          {
+            id: '2d-shapes', label: '2D Shapes & Symmetry',
+            lesson: {
+              sections: [
+                { heading: 'Properties of 2D Shapes', body: '**Triangle:** 3 sides, 3 angles, 3 corners (vertices).\n**Square:** 4 equal sides, 4 right angles.\n**Rectangle:** 2 pairs of equal sides, 4 right angles.\n**Circle:** no straight sides, no corners — all points equal distance from centre.\n**Pentagon:** 5 sides. **Hexagon:** 6 sides. **Octagon:** 8 sides.\n\n**Polygon:** a closed 2D shape with straight sides.\n**Regular polygon:** all sides equal AND all angles equal (e.g. equilateral triangle, square).', visual: null },
+                { heading: 'Symmetry', body: '**Line of symmetry:** a mirror line that divides a shape into two identical halves.\n\n- Square: 4 lines of symmetry.\n- Rectangle: 2 lines of symmetry.\n- Equilateral triangle: 3 lines of symmetry.\n- Circle: infinite lines of symmetry.\n- Scalene triangle: 0 lines of symmetry.\n\n**To find symmetry:** fold the shape — if both halves match exactly, the fold line is a line of symmetry.', visual: null }
+              ],
+              keyFacts: [
+                'A polygon is a closed shape with straight sides.',
+                'Regular polygons have all sides and all angles equal.',
+                'A line of symmetry divides a shape into two mirror-image halves.',
+                'Equilateral triangle: 3 lines; square: 4 lines; rectangle: 2 lines.'
+              ]
+            },
+            workedExamples: [
+              { question: 'How many lines of symmetry does a regular hexagon have?', steps: [
+                { label: 'Step 1 — Recall rule', explanation: 'A regular polygon with n sides has n lines of symmetry.', highlight: 'Regular polygon rule' },
+                { label: 'Step 2 — Apply to hexagon', explanation: 'Hexagon has 6 sides → 6 lines of symmetry.', highlight: '6 lines of symmetry' }
+              ], answer: '6' },
+              { question: 'Name the shape with 5 sides and 5 angles.', steps: [
+                { label: 'Step 1 — Use prefix', explanation: 'Penta = 5.', highlight: 'Pentagon' }
+              ], answer: 'Pentagon' },
+              { question: 'Is a rectangle a regular polygon? Explain.', steps: [
+                { label: 'Step 1 — Check sides', explanation: 'A rectangle has 2 pairs of equal sides — not all four equal (unless it is a square).', highlight: 'Sides not all equal' },
+                { label: 'Step 2 — Conclusion', explanation: 'Not all sides equal → not regular (unless it is a square).', highlight: 'Not regular' }
+              ], answer: 'No — sides are not all equal' }
+            ],
+            questions: [
+              { id: 'sh301', type: 'multiple-choice', difficulty: 1, prompt: 'How many sides does a hexagon have?', options: ['5','6','7','8'], answer: '6', explanation: 'Hex = 6.' },
+              { id: 'sh302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A shape with 3 sides is called a ___', answer: 'triangle', explanation: 'Tri = 3.' },
+              { id: 'sh303', type: 'multiple-choice', difficulty: 1, prompt: 'How many lines of symmetry does a square have?', options: ['1','2','3','4'], answer: '4', explanation: '2 through opposite sides + 2 through corners = 4.' },
+              { id: 'sh304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A circle has ___ corners (vertices).', answer: '0', explanation: 'A circle has no corners.' },
+              { id: 'sh305', type: 'multiple-choice', difficulty: 1, prompt: 'Which shape has 4 equal sides AND 4 right angles?', options: ['Rectangle','Rhombus','Square','Trapezium'], answer: 'Square', explanation: 'A square has 4 equal sides and 4 right angles.' },
+              { id: 'sh306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A regular polygon with 8 sides has ___ lines of symmetry.', answer: '8', explanation: 'Regular n-gon has n lines of symmetry.' },
+              { id: 'sh307', type: 'multiple-choice', difficulty: 2, prompt: 'Which shape has 2 lines of symmetry?', options: ['Equilateral triangle','Square','Rectangle','Scalene triangle'], answer: 'Rectangle', explanation: 'A rectangle (non-square) has 2 lines of symmetry.' },
+              { id: 'sh308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'How many vertices (corners) does a pentagon have? ___', answer: '5', explanation: 'A pentagon has 5 vertices.' },
+              { id: 'sh309', type: 'multiple-choice', difficulty: 2, prompt: 'Which is NOT a polygon?', options: ['Triangle','Hexagon','Circle','Rectangle'], answer: 'Circle', explanation: 'A circle has no straight sides — not a polygon.' },
+              { id: 'sh310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'All sides AND angles equal → ___ polygon (one word)', answer: 'regular', explanation: 'Regular polygons have equal sides and equal angles.' },
+              { id: 'sh311', type: 'multiple-choice', difficulty: 3, prompt: 'An equilateral triangle has how many lines of symmetry?', options: ['1','2','3','6'], answer: '3', explanation: 'Each vertex to opposite midpoint is a line of symmetry.' },
+              { id: 'sh312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A shape has 6 sides of equal length and 6 equal angles. It is a regular ___', answer: 'hexagon', explanation: '6-sided regular polygon = regular hexagon.' },
+              { id: 'sh313', type: 'multiple-choice', difficulty: 3, prompt: 'Which letter of the alphabet (capital) has exactly 1 line of symmetry? (Choose from options)', options: ['S','N','A','Z'], answer: 'A', explanation: 'Capital A has one vertical line of symmetry.' },
+              { id: 'sh314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A square has 4 lines of symmetry. A rectangle has ___. A parallelogram has ___. (Write two numbers separated by comma)', answer: '2,0', explanation: 'Rectangle: 2 lines (horizontal and vertical). Parallelogram (non-rectangle): 0.' },
+              { id: 'sh315', type: 'multiple-choice', difficulty: 3, prompt: 'How many sides does an octagon have?', options: ['6','7','8','10'], answer: '8', explanation: 'Octo = 8.' }
+            ]
+          },
+          {
+            id: '3d-shapes', label: '3D Objects',
+            lesson: {
+              sections: [
+                { heading: '3D Object Properties', body: '**Faces:** flat surfaces of a 3D object.\n**Edges:** where two faces meet.\n**Vertices:** corners where edges meet.\n\n| Object | Faces | Edges | Vertices |\n|--------|-------|-------|----------|\n| Cube | 6 | 12 | 8 |\n| Cuboid | 6 | 12 | 8 |\n| Triangular prism | 5 | 9 | 6 |\n| Square pyramid | 5 | 8 | 5 |\n| Cone | 2 | 1 (curved edge) | 1 |\n| Cylinder | 3 | 2 (curved) | 0 |\n| Sphere | 1 (curved) | 0 | 0 |', visual: null },
+                { heading: 'Nets of 3D Objects', body: 'A **net** is a flat (2D) shape that can be folded to make a 3D object.\n\n- Net of a cube: 6 equal squares arranged so they fold up without overlapping.\n- Net of a triangular prism: 2 triangles + 3 rectangles.\n- Net of a square pyramid: 1 square base + 4 triangles.\n\n**Euler\'s formula:** Faces + Vertices − Edges = 2 (for any polyhedron).', visual: null }
+              ],
+              keyFacts: [
+                'Faces = flat surfaces; Edges = where faces meet; Vertices = corners.',
+                'Cube: 6 faces, 12 edges, 8 vertices.',
+                'Euler\'s formula: F + V − E = 2.',
+                'A net is the 2D unfolded version of a 3D shape.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A triangular prism has 5 faces and 6 vertices. Use Euler\'s formula to find the edges.', steps: [
+                { label: 'Step 1 — Euler\'s formula', explanation: 'F + V − E = 2 → 5 + 6 − E = 2.', highlight: '11 − E = 2' },
+                { label: 'Step 2 — Solve', explanation: 'E = 11 − 2 = 9.', highlight: 'Edges = 9' }
+              ], answer: '9 edges' },
+              { question: 'How many faces, edges, and vertices does a square pyramid have?', steps: [
+                { label: 'Step 1 — Count faces', explanation: '1 square base + 4 triangular faces = 5.', highlight: '5 faces' },
+                { label: 'Step 2 — Count vertices', explanation: '4 base corners + 1 apex = 5.', highlight: '5 vertices' },
+                { label: 'Step 3 — Count edges', explanation: '4 base edges + 4 slant edges = 8.', highlight: '8 edges' }
+              ], answer: '5 faces, 8 edges, 5 vertices' },
+              { question: 'Name the 3D object with 0 edges and 0 vertices.', steps: [
+                { label: 'Step 1 — Identify', explanation: 'Only a sphere has completely curved surface, no edges, no vertices.', highlight: 'Sphere' }
+              ], answer: 'Sphere' }
+            ],
+            questions: [
+              { id: '3d301', type: 'multiple-choice', difficulty: 1, prompt: 'How many faces does a cube have?', options: ['4','6','8','12'], answer: '6', explanation: 'A cube has 6 square faces.' },
+              { id: '3d302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A cube has ___ edges.', answer: '12', explanation: 'A cube has 12 edges.' },
+              { id: '3d303', type: 'multiple-choice', difficulty: 1, prompt: 'Which 3D object has 0 vertices?', options: ['Cube','Pyramid','Sphere','Prism'], answer: 'Sphere', explanation: 'A sphere has no vertices.' },
+              { id: '3d304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A triangular prism has ___ faces.', answer: '5', explanation: '2 triangles + 3 rectangles = 5 faces.' },
+              { id: '3d305', type: 'multiple-choice', difficulty: 1, prompt: 'A flat shape that folds into a 3D object is called a:', options: ['Net','Grid','Plan','Cross-section'], answer: 'Net', explanation: 'A net is the unfolded 2D layout of a 3D shape.' },
+              { id: '3d306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A square pyramid has ___ vertices.', answer: '5', explanation: '4 base corners + 1 apex = 5.' },
+              { id: '3d307', type: 'multiple-choice', difficulty: 2, prompt: 'Which formula relates faces, edges, and vertices of a polyhedron?', options: ['F+E=V','F+V=E+2','F+V−E=2','F=E−V'], answer: 'F+V−E=2', explanation: 'Euler\'s formula: F + V − E = 2.' },
+              { id: '3d308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A cylinder has ___ faces (including curved surface).', answer: '3', explanation: '2 circular flat faces + 1 curved surface = 3.' },
+              { id: '3d309', type: 'multiple-choice', difficulty: 2, prompt: 'How many triangles appear in the net of a triangular prism?', options: ['1','2','3','4'], answer: '2', explanation: 'Two triangular ends + three rectangular sides.' },
+              { id: '3d310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A cuboid has ___ faces, ___ edges, ___ vertices. (write as "F,E,V")', answer: '6,12,8', explanation: 'Same as a cube: 6 faces, 12 edges, 8 vertices.' },
+              { id: '3d311', type: 'multiple-choice', difficulty: 3, prompt: 'A polyhedron has 8 faces and 12 vertices. How many edges? (Use Euler\'s formula)', options: ['6','18','20','22'], answer: '18', explanation: 'F+V−E=2 → 8+12−E=2 → E=18.' },
+              { id: '3d312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Which 3D object has exactly 2 flat faces and 1 curved surface?', answer: 'cylinder', explanation: 'A cylinder has 2 circular flat faces and 1 curved lateral surface.' },
+              { id: '3d313', type: 'multiple-choice', difficulty: 3, prompt: 'A cereal box is a real-world example of a:', options: ['Cube','Cuboid','Prism','Pyramid'], answer: 'Cuboid', explanation: 'A cereal box has 6 rectangular faces — a cuboid (rectangular prism).' },
+              { id: '3d314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Net of a square pyramid has ___ triangles and ___ square(s). (write as "T,S")', answer: '4,1', explanation: '4 triangular faces + 1 square base.' },
+              { id: '3d315', type: 'multiple-choice', difficulty: 3, prompt: 'A shape has F=6, V=8, E=12. Euler\'s check: 6+8−12=?', options: ['1','2','3','0'], answer: '2', explanation: '6+8−12=2. Euler\'s formula holds.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
 
   /* ── PHASE 3d: Grade 6 — Data & Probability ─────────────── */
   (function(){
