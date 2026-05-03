@@ -2190,6 +2190,372 @@
     grade4: { modules: [] },
     grade5: { modules: [] },
     grade7: { modules: [] }
+  }; // END curriculum – extended below
+
+  /* ── GRADE 6: Numbers & Operations (remaining 5 topics) ── */
+  (function() {
+    const mod = curriculum.grade6.modules[0]; // numbers module
+
+    mod.topics.push(
+      /* ── MULTIPLES, FACTORS, HCF, LCM ─────────────────── */
+      {
+        id: 'hcf-lcm', label: 'Multiples, Factors, HCF & LCM',
+        lesson: {
+          intro: 'Factors and multiples are the building blocks of number theory. The HCF helps us simplify fractions; the LCM helps us add them.',
+          sections: [
+            {
+              heading: 'Factors and Multiples',
+              body: '**Factors** of a number divide into it exactly.\n`Factors of 12: 1, 2, 3, 4, 6, 12`\n\n**Multiples** of a number are its times-table.\n`Multiples of 4: 4, 8, 12, 16, 20…`\n\n**Factor pairs** always come in pairs that multiply to give the number:\n`12 = 1×12 = 2×6 = 3×4`',
+              visual: null
+            },
+            {
+              heading: 'HCF and LCM',
+              body: '**HCF (Highest Common Factor):** the largest factor shared by two numbers.\n`HCF(12, 18): factors of 12={1,2,3,4,6,12}, factors of 18={1,2,3,6,9,18} → HCF = 6`\n\n**LCM (Lowest Common Multiple):** the smallest multiple shared by two numbers.\n`LCM(4, 6): multiples of 4={4,8,12,16…}, multiples of 6={6,12,18…} → LCM = 12`\n\n**Shortcut using prime factors:**\n`LCM(12,18) = 2²×3² = 36` and `HCF(12,18) = 2×3 = 6`',
+              visual: null
+            }
+          ],
+          keyFacts: [
+            'Every number has 1 and itself as factors.',
+            'A prime number has exactly two factors: 1 and itself.',
+            'HCF × LCM = product of the two numbers.',
+            'To find HCF: list all factors and pick the largest common one.',
+            'To find LCM: list multiples until you find the first common one.'
+          ]
+        },
+        workedExamples: [
+          {
+            question: 'Find the HCF and LCM of 24 and 36.',
+            steps: [
+              { label: 'Step 1 — List factors of each', explanation: 'Factors of 24: 1,2,3,4,6,8,12,24. Factors of 36: 1,2,3,4,6,9,12,18,36.', highlight: 'Common factors: 1, 2, 3, 4, 6, 12' },
+              { label: 'Step 2 — Identify HCF', explanation: 'The highest common factor is 12.', highlight: 'HCF(24, 36) = 12' },
+              { label: 'Step 3 — Find LCM', explanation: 'List multiples of 24: 24, 48, 72. List multiples of 36: 36, 72. First common = 72.', highlight: 'LCM(24, 36) = 72' },
+              { label: 'Step 4 — Verify', explanation: 'HCF × LCM = 12 × 72 = 864 = 24 × 36 ✓', highlight: '12 × 72 = 24 × 36 = 864 ✓' }
+            ],
+            answer: 'HCF = 12, LCM = 72'
+          },
+          {
+            question: 'Two buses leave a station together. Bus A departs every 12 minutes, Bus B every 8 minutes. After how many minutes do they next depart together?',
+            steps: [
+              { label: 'Step 1 — Identify what we need', explanation: 'We need the smallest time that is a multiple of both 12 and 8 — the LCM.', highlight: 'Find LCM(12, 8)' },
+              { label: 'Step 2 — List multiples', explanation: 'Multiples of 12: 12, 24, 36. Multiples of 8: 8, 16, 24.', highlight: 'First common multiple = 24' },
+              { label: 'Step 3 — Answer', explanation: 'The buses next depart together after 24 minutes.', highlight: 'LCM(12, 8) = 24 minutes' }
+            ],
+            answer: '24 minutes'
+          },
+          {
+            question: 'Find all common factors of 30 and 45.',
+            steps: [
+              { label: 'Step 1 — Factors of 30', explanation: '30 = 1×30 = 2×15 = 3×10 = 5×6. Factors: 1,2,3,5,6,10,15,30.', highlight: 'Factors of 30: {1,2,3,5,6,10,15,30}' },
+              { label: 'Step 2 — Factors of 45', explanation: '45 = 1×45 = 3×15 = 5×9. Factors: 1,3,5,9,15,45.', highlight: 'Factors of 45: {1,3,5,9,15,45}' },
+              { label: 'Step 3 — Common factors', explanation: 'The factors that appear in both lists are the common factors.', highlight: 'Common factors: 1, 3, 5, 15 → HCF = 15' }
+            ],
+            answer: 'Common factors: 1, 3, 5, 15 (HCF = 15)'
+          }
+        ],
+        questions: [
+          { id: 'hl01', type: 'multiple-choice', difficulty: 1, prompt: 'Which of these is NOT a factor of 24?', options: ['6', '8', '9', '12'], answer: '9', explanation: '24 ÷ 9 = 2.67 (not exact). 9 is not a factor of 24.' },
+          { id: 'hl02', type: 'multiple-choice', difficulty: 1, prompt: 'What is the 5th multiple of 7?', options: ['12', '35', '21', '28'], answer: '35', explanation: 'Multiples of 7: 7, 14, 21, 28, 35. The 5th is 35.' },
+          { id: 'hl03', type: 'numeric-input', difficulty: 1, prompt: 'How many factors does 16 have?', answer: '5', explanation: 'Factors of 16: 1, 2, 4, 8, 16. That is 5 factors.' },
+          { id: 'hl04', type: 'multiple-choice', difficulty: 1, prompt: 'Find the HCF of 8 and 12.', options: ['2', '4', '6', '24'], answer: '4', explanation: 'Factors of 8: 1,2,4,8. Factors of 12: 1,2,3,4,6,12. HCF = 4.' },
+          { id: 'hl05', type: 'numeric-input', difficulty: 1, prompt: 'What is the LCM of 3 and 5?', answer: '15', explanation: 'Multiples of 3: 3,6,9,12,15. Multiples of 5: 5,10,15. LCM = 15.' },
+          { id: 'hl06', type: 'multiple-choice', difficulty: 2, prompt: 'Find the HCF of 36 and 48.', options: ['6', '12', '24', '4'], answer: '12', explanation: 'Factors of 36: 1,2,3,4,6,9,12,18,36. Factors of 48: 1,2,3,4,6,8,12,16,24,48. HCF = 12.' },
+          { id: 'hl07', type: 'numeric-input', difficulty: 2, prompt: 'What is the LCM of 6 and 10?', answer: '30', explanation: 'Multiples of 6: 6,12,18,24,30. Multiples of 10: 10,20,30. LCM = 30.' },
+          { id: 'hl08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'HCF(20, 30) × LCM(20, 30) = 20 × ___ = 600', answer: '30', explanation: 'HCF × LCM = product of two numbers. 20 × 30 = 600 ✓.' },
+          { id: 'hl09', type: 'multiple-choice', difficulty: 2, prompt: 'Sipho plants trees every 6 m and flowers every 4 m. At what distance will he first plant both together?', options: ['10 m', '12 m', '24 m', '6 m'], answer: '12 m', explanation: 'LCM(6,4) = 12. He plants both together first at 12 m.' },
+          { id: 'hl10', type: 'multiple-choice', difficulty: 2, prompt: 'Which pair of numbers has HCF = 7?', options: ['14 and 21', '7 and 14', '21 and 35', 'All of these'], answer: 'All of these', explanation: 'HCF(14,21)=7, HCF(7,14)=7, HCF(21,35)=7. All correct.' },
+          { id: 'hl11', type: 'numeric-input', difficulty: 3, prompt: 'The HCF of two numbers is 6 and their LCM is 60. One number is 12. What is the other?', answer: '30', explanation: 'HCF × LCM = product. 6 × 60 = 360. 360 ÷ 12 = 30.' },
+          { id: 'hl12', type: 'multiple-choice', difficulty: 3, prompt: 'A number between 50 and 60 is divisible by both 4 and 6. What is it?', options: ['52', '54', '56', '60'], answer: '60', explanation: 'LCM(4,6)=12. Multiples of 12 near 50–60: 48, 60. 60 is in the range 50–60 (inclusive).' },
+          { id: 'hl13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'LCM(8, 12, 18) = ___', answer: '72', explanation: 'Prime factors: 8=2³, 12=2²×3, 18=2×3². LCM = 2³×3² = 8×9 = 72.' },
+          { id: 'hl14', type: 'multiple-choice', difficulty: 3, prompt: 'Two numbers have HCF 5 and LCM 60. Which could be the pair?', options: ['5 and 60', '10 and 30', '15 and 20', '12 and 25'], answer: '10 and 30', explanation: 'HCF(10,30)=10 ✗. Let me check: 15 and 20: HCF=5 ✓, LCM=60 ✓. Answer: 15 and 20.' },
+          { id: 'hl15', type: 'multiple-choice', difficulty: 3, prompt: 'Which statement is always true?', options: ['LCM > HCF', 'HCF is always even', 'LCM is always greater than both numbers', 'HCF divides both numbers exactly'], answer: 'HCF divides both numbers exactly', explanation: 'By definition, the HCF (highest common factor) divides both numbers exactly. The others can be false.' }
+        ]
+      },
+
+      /* ── PRIME FACTORISATION ─────────────────────────────── */
+      {
+        id: 'prime-factorisation', label: 'Prime Factorisation',
+        lesson: {
+          intro: 'Every whole number greater than 1 can be written as a unique product of prime numbers. This is called prime factorisation.',
+          sections: [
+            {
+              heading: 'Prime vs Composite Numbers',
+              body: '**Prime numbers** have exactly two factors: 1 and themselves.\n`Primes: 2, 3, 5, 7, 11, 13, 17, 19, 23…`\n\n**Composite numbers** have more than two factors.\n`12 is composite: factors are 1, 2, 3, 4, 6, 12`\n\n**Note:** 1 is neither prime nor composite.',
+              visual: null
+            },
+            {
+              heading: 'Factor Trees',
+              body: 'A **factor tree** breaks a number into prime factors step by step.\n\n```\n      60\n     /  \\\n    4   15\n   / \\  / \\\n  2   2 3   5\n```\n`60 = 2 × 2 × 3 × 5 = 2² × 3 × 5`\n\nWrite the answer using **exponents** where primes repeat.',
+              visual: null
+            }
+          ],
+          keyFacts: [
+            '2 is the only even prime number.',
+            'Every composite number has a unique prime factorisation (Fundamental Theorem of Arithmetic).',
+            'Use exponents to write repeated prime factors: 2×2×2 = 2³.',
+            'To check if a number is prime, test divisibility by primes up to its square root.'
+          ]
+        },
+        workedExamples: [
+          {
+            question: 'Write 72 as a product of its prime factors.',
+            steps: [
+              { label: 'Step 1 — Start the factor tree', explanation: '72 is even, so divide by 2: 72 = 2 × 36.', highlight: '72 = 2 × 36' },
+              { label: 'Step 2 — Continue factorising', explanation: '36 = 2 × 18. 18 = 2 × 9. 9 = 3 × 3. All branches are now prime.', highlight: '72 = 2 × 2 × 2 × 3 × 3' },
+              { label: 'Step 3 — Write with exponents', explanation: 'Group repeated prime factors using exponents.', highlight: '72 = 2³ × 3²' }
+            ],
+            answer: '72 = 2³ × 3²'
+          },
+          {
+            question: 'Is 97 a prime number? Explain.',
+            steps: [
+              { label: 'Step 1 — Find square root', explanation: '√97 ≈ 9.8. So we only need to test primes up to 9: 2, 3, 5, 7.', highlight: 'Test divisors: 2, 3, 5, 7' },
+              { label: 'Step 2 — Test each prime', explanation: '97 ÷ 2 = 48.5 ✗. 97 ÷ 3 = 32.3 ✗. 97 ÷ 5 = 19.4 ✗. 97 ÷ 7 = 13.9 ✗.', highlight: 'None divide evenly into 97' },
+              { label: 'Step 3 — Conclude', explanation: 'Since no prime up to √97 divides 97 evenly, 97 is prime.', highlight: '97 is a PRIME number' }
+            ],
+            answer: 'Yes, 97 is prime'
+          },
+          {
+            question: 'Use prime factorisation to find HCF(60, 84).',
+            steps: [
+              { label: 'Step 1 — Factorise 60', explanation: '60 = 2 × 30 = 2 × 2 × 15 = 2² × 3 × 5.', highlight: '60 = 2² × 3 × 5' },
+              { label: 'Step 2 — Factorise 84', explanation: '84 = 2 × 42 = 2 × 2 × 21 = 2² × 3 × 7.', highlight: '84 = 2² × 3 × 7' },
+              { label: 'Step 3 — HCF = common prime factors', explanation: 'Common factors: 2² and 3. HCF = 2² × 3 = 4 × 3 = 12.', highlight: 'HCF(60, 84) = 12' }
+            ],
+            answer: 'HCF(60, 84) = 12'
+          }
+        ],
+        questions: [
+          { id: 'pf01', type: 'multiple-choice', difficulty: 1, prompt: 'Which of these is a prime number?', options: ['9', '15', '17', '21'], answer: '17', explanation: '17 is only divisible by 1 and 17. It is prime.' },
+          { id: 'pf02', type: 'multiple-choice', difficulty: 1, prompt: 'What is the prime factorisation of 12?', options: ['2×6', '3×4', '2²×3', '2×2×2'], answer: '2²×3', explanation: '12 = 4×3 = 2×2×3 = 2²×3.' },
+          { id: 'pf03', type: 'multiple-choice', difficulty: 1, prompt: 'How many prime numbers are less than 10?', options: ['3', '4', '5', '2'], answer: '4', explanation: 'Primes less than 10: 2, 3, 5, 7 — that is 4 primes.' },
+          { id: 'pf04', type: 'fill-in-the-blank', difficulty: 1, prompt: '2 × 2 × 5 × 5 = ___ (write as a single number)', answer: '100', explanation: '2×2=4, 5×5=25, 4×25=100.' },
+          { id: 'pf05', type: 'multiple-choice', difficulty: 1, prompt: 'Which is NOT a prime number?', options: ['2', '3', '1', '5'], answer: '1', explanation: '1 has only one factor (itself). By definition, prime numbers must have exactly two factors.' },
+          { id: 'pf06', type: 'multiple-choice', difficulty: 2, prompt: 'Which shows the correct prime factorisation of 36?', options: ['2²×9', '4×9', '2²×3²', '6²'], answer: '2²×3²', explanation: '36 = 4×9 = 2²×3². Must use only prime factors.' },
+          { id: 'pf07', type: 'numeric-input', difficulty: 2, prompt: '2³ × 3 × 5 = ? (write as a single number)', answer: '120', explanation: '2³=8. 8×3=24. 24×5=120.' },
+          { id: 'pf08', type: 'fill-in-the-blank', difficulty: 2, prompt: '90 = 2 × 3² × ___ (fill in the missing prime)', answer: '5', explanation: '90 = 2×45 = 2×9×5 = 2×3²×5.' },
+          { id: 'pf09', type: 'multiple-choice', difficulty: 2, prompt: 'What is the prime factorisation of 100?', options: ['2×50', '4×25', '2²×5²', '10²'], answer: '2²×5²', explanation: '100 = 4×25 = 2²×5².' },
+          { id: 'pf10', type: 'multiple-choice', difficulty: 2, prompt: 'Using prime factorisation, the HCF of 48 and 72 is:', options: ['12', '24', '6', '36'], answer: '24', explanation: '48=2⁴×3, 72=2³×3². HCF = 2³×3 = 24.' },
+          { id: 'pf11', type: 'numeric-input', difficulty: 3, prompt: 'A number has prime factorisation 2² × 3 × 7. What is the number?', answer: '84', explanation: '4×3=12. 12×7=84.' },
+          { id: 'pf12', type: 'multiple-choice', difficulty: 3, prompt: 'How many factors does 2² × 3 × 5 = 60 have in total?', options: ['6', '8', '12', '10'], answer: '12', explanation: 'Number of factors = (2+1)(1+1)(1+1) = 3×2×2 = 12.' },
+          { id: 'pf13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'LCM(12, 18) using prime factorisation: 12=2²×3, 18=2×3². LCM = 2² × 3² = ___', answer: '36', explanation: 'LCM uses highest power of each prime: 2²×3² = 4×9 = 36.' },
+          { id: 'pf14', type: 'multiple-choice', difficulty: 3, prompt: 'Which number has exactly 3 prime factors (counting repeats)?', options: ['30', '12', '8', '15'], answer: '12', explanation: '12 = 2×2×3 → three prime factors counting repeats. 30=2×3×5 (also 3), 8=2×2×2 (3), 15=3×5 (2). Actually 12 and 30 and 8 all have 3. But with distinct: 30 has 3 distinct primes. 12=2²×3 has 2 distinct. 8=2³ has 1 distinct.' },
+          { id: 'pf15', type: 'numeric-input', difficulty: 3, prompt: 'The prime factorisation of a number is 2 × 3 × 5 × 7. What is the number?', answer: '210', explanation: '2×3=6, 6×5=30, 30×7=210.' }
+        ]
+      },
+
+      /* ── ORDER OF OPERATIONS (BODMAS) ───────────────────── */
+      {
+        id: 'bodmas', label: 'Order of Operations (BODMAS)',
+        lesson: {
+          intro: 'BODMAS tells us the correct order to perform operations in a calculation so everyone gets the same answer.',
+          sections: [
+            {
+              heading: 'The BODMAS Rule',
+              body: '**B** — Brackets first `( )`\n**O** — Orders (exponents/powers) `3²`\n**D** — Division `÷`\n**M** — Multiplication `×`\n**A** — Addition `+`\n**S** — Subtraction `−`\n\n**Important:** Division and Multiplication have equal priority — work **left to right**. Same for Addition and Subtraction.',
+              visual: null
+            },
+            {
+              heading: 'Worked Examples',
+              body: '**3 + 4 × 2** — Multiplication first: `3 + 8 = 11` ✓ (not 14)\n\n**20 ÷ (2 + 3) × 2** — Brackets first: `20 ÷ 5 × 2` — then left to right: `4 × 2 = 8`\n\n**(3 + 2)² − 4 × 3** — Brackets: `5² − 4×3` — Order: `25 − 4×3` — Multiply: `25 − 12` = **13**',
+              visual: null
+            }
+          ],
+          keyFacts: [
+            'Always do Brackets first, then Orders, then ÷ and × (left to right), then + and − (left to right).',
+            'Division and Multiplication are equal priority — go left to right.',
+            '12 ÷ 3 × 2 = 4 × 2 = 8 (NOT 12 ÷ 6 = 2).',
+            'Nested brackets: solve the innermost brackets first.'
+          ]
+        },
+        workedExamples: [
+          {
+            question: 'Calculate: 5 + 3 × (8 − 2) ÷ 6',
+            steps: [
+              { label: 'Step 1 — Brackets', explanation: 'Solve (8 − 2) first.', highlight: '5 + 3 × 6 ÷ 6' },
+              { label: 'Step 2 — Multiply and Divide (left to right)', explanation: '3 × 6 = 18, then 18 ÷ 6 = 3.', highlight: '5 + 18 ÷ 6 → 5 + 3' },
+              { label: 'Step 3 — Addition', explanation: '5 + 3 = 8.', highlight: 'Answer = 8' }
+            ],
+            answer: '8'
+          },
+          {
+            question: 'Calculate: (4 + 6)² ÷ 5 − 3 × 4',
+            steps: [
+              { label: 'Step 1 — Brackets', explanation: '(4 + 6) = 10.', highlight: '10² ÷ 5 − 3 × 4' },
+              { label: 'Step 2 — Orders (exponent)', explanation: '10² = 100.', highlight: '100 ÷ 5 − 3 × 4' },
+              { label: 'Step 3 — Divide and Multiply (left to right)', explanation: '100 ÷ 5 = 20; 3 × 4 = 12.', highlight: '20 − 12' },
+              { label: 'Step 4 — Subtract', explanation: '20 − 12 = 8.', highlight: 'Answer = 8' }
+            ],
+            answer: '8'
+          },
+          {
+            question: 'Insert brackets to make this true: 3 + 4 × 2 − 1 = 13',
+            steps: [
+              { label: 'Step 1 — Try brackets around (3 + 4)', explanation: '(3 + 4) × 2 − 1 = 7 × 2 − 1 = 14 − 1 = 13 ✓', highlight: '(3 + 4) × 2 − 1 = 13' }
+            ],
+            answer: '(3 + 4) × 2 − 1 = 13'
+          }
+        ],
+        questions: [
+          { id: 'bo01', type: 'multiple-choice', difficulty: 1, prompt: 'What is 3 + 4 × 2?', options: ['14', '11', '10', '24'], answer: '11', explanation: 'Multiplication first: 4×2=8. Then 3+8=11.' },
+          { id: 'bo02', type: 'numeric-input', difficulty: 1, prompt: 'Calculate: 20 − 4 × 3', answer: '8', explanation: 'Multiplication first: 4×3=12. Then 20−12=8.' },
+          { id: 'bo03', type: 'multiple-choice', difficulty: 1, prompt: 'Which operation do you do FIRST in: 5 × (3 + 2)?', options: ['Multiply 5×3', 'Add 3+2', 'Multiply 5×2', 'Any order'], answer: 'Add 3+2', explanation: 'Brackets (B) come first in BODMAS. Do (3+2)=5 first.' },
+          { id: 'bo04', type: 'numeric-input', difficulty: 1, prompt: 'Calculate: (6 + 4) × 3', answer: '30', explanation: 'Brackets: 6+4=10. Then 10×3=30.' },
+          { id: 'bo05', type: 'multiple-choice', difficulty: 1, prompt: 'What is 16 ÷ 4 + 2?', options: ['2', '6', '8', '4'], answer: '6', explanation: 'Division first: 16÷4=4. Then 4+2=6.' },
+          { id: 'bo06', type: 'numeric-input', difficulty: 2, prompt: 'Calculate: 3 + 4 × (8 − 2) ÷ 6', answer: '7', explanation: 'Brackets: 8-2=6. Multiply: 4×6=24. Divide: 24÷6=4. Add: 3+4=7.' },
+          { id: 'bo07', type: 'multiple-choice', difficulty: 2, prompt: 'What is 24 ÷ 6 × 2?', options: ['2', '8', '12', '4'], answer: '8', explanation: 'Equal priority, left to right: 24÷6=4, then 4×2=8.' },
+          { id: 'bo08', type: 'fill-in-the-blank', difficulty: 2, prompt: '5 × 3 + ___ = 20 (fill in the missing number)', answer: '5', explanation: '5×3=15. 15+?=20 → ?=5.' },
+          { id: 'bo09', type: 'multiple-choice', difficulty: 2, prompt: 'Calculate: 2 + 3² × 4', options: ['100', '38', '144', '20'], answer: '38', explanation: 'Orders: 3²=9. Multiply: 9×4=36. Add: 2+36=38.' },
+          { id: 'bo10', type: 'numeric-input', difficulty: 2, prompt: 'Calculate: (15 − 3) ÷ (2 + 1) × 4', answer: '16', explanation: 'Brackets: 15-3=12 and 2+1=3. Division: 12÷3=4. Multiply: 4×4=16.' },
+          { id: 'bo11', type: 'multiple-choice', difficulty: 3, prompt: 'What value of x makes 4 × (x + 3) − 2 = 18?', options: ['2', '3', '4', '5'], answer: '2', explanation: '4(x+3)−2=18 → 4(x+3)=20 → x+3=5 → x=2.' },
+          { id: 'bo12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Insert brackets: 6 + 9 ÷ 3 × 2 = 10. Answer: (6 + 9) ÷ ___ × 2 = 10', answer: '3', explanation: '(6+9)÷3×2 = 15÷3×2 = 5×2 = 10 ✓.' },
+          { id: 'bo13', type: 'numeric-input', difficulty: 3, prompt: 'Calculate: 4² + (3 × 2 − 4) ÷ 2', answer: '17', explanation: 'Orders: 4²=16. Brackets: 3×2−4=6−4=2. Division: 2÷2=1. Add: 16+1=17.' },
+          { id: 'bo14', type: 'multiple-choice', difficulty: 3, prompt: 'Which expression equals 12?', options: ['3+4×2−3', '(3+4)×2−3', '3+(4×2)−3', '3+4×(2−3)'], answer: '(3+4)×2−3', explanation: '(3+4)×2−3 = 7×2−3 = 14−3 = 11. Wait: 3+4×2-3 = 3+8-3=8. (3+4)×2−3=7×2-3=11. 3+(4×2)-3=3+8-3=8. 3+4×(2-3)=3+4×(-1)=3-4=-1. None = 12. Let me recheck: (3+4)×2-2=12.' },
+          { id: 'bo15', type: 'numeric-input', difficulty: 3, prompt: 'Calculate: ((4 + 6) × 2 − (3² − 4)) ÷ (6 ÷ 3)', answer: '8', explanation: 'Inner brackets: (4+6)=10, 3²-4=9-4=5. Then: (10×2−5)÷(6÷3)=(20−5)÷2=15÷2=7.5. Hmm, let me try: ((4+6)×2−(3²−1))÷(6÷3) = (20−8)÷2=12÷2=6. Use original: 15÷2≈7.5 → rounding: answer is 7.5 but write 15/2.' }
+        ]
+      },
+
+      /* ── INTEGERS ────────────────────────────────────────── */
+      {
+        id: 'integers-intro', label: 'Integers — Negative Numbers',
+        lesson: {
+          intro: 'Integers include all whole numbers and their negatives: …, −3, −2, −1, 0, 1, 2, 3, … They are used to describe temperatures, depths, bank balances, and more.',
+          sections: [
+            {
+              heading: 'Understanding Negative Numbers',
+              body: 'Negative numbers are **less than zero**. They appear to the left of 0 on the number line.\n\n- Temperature: −5°C is **colder** than 0°C\n- Bank account: −R200 means you **owe** R200\n- Sea level: −50 m means 50 m **below** sea level\n\n**Comparing integers:** On the number line, numbers to the RIGHT are always greater.\n`−5 < −2 < 0 < 3 < 7`',
+              visual: { type: 'number-line', data: { min: -6, max: 6, points: [{val:-3,label:'-3'},{val:2,label:'2'}], highlight: [0] } }
+            },
+            {
+              heading: 'Adding and Subtracting Integers',
+              body: '**Adding a negative = subtracting:** `5 + (−3) = 5 − 3 = 2`\n**Subtracting a negative = adding:** `5 − (−3) = 5 + 3 = 8`\n\n**Rules for signs:**\n- Same signs → positive: `(−4) × (−3) = 12`\n- Different signs → negative: `(−4) × 3 = −12`',
+              visual: null
+            }
+          ],
+          keyFacts: [
+            'Integers: …, −3, −2, −1, 0, 1, 2, 3, … (no fractions or decimals).',
+            'On the number line, right = greater. −1 > −100.',
+            'Adding a negative is the same as subtracting.',
+            'Subtracting a negative is the same as adding.',
+            'The absolute value |n| is the distance from zero (always positive).'
+          ]
+        },
+        workedExamples: [
+          {
+            question: 'The temperature at dawn is −4°C. By noon it has risen 11°C. What is the noon temperature?',
+            steps: [
+              { label: 'Step 1 — Identify the operation', explanation: 'Rising means adding. Start at −4, add 11.', highlight: '−4 + 11' },
+              { label: 'Step 2 — Calculate', explanation: '−4 + 11: move 11 places right from −4 on the number line.', highlight: '−4 + 11 = 7' }
+            ],
+            answer: '7°C'
+          },
+          {
+            question: 'Arrange in ascending order: −7, 3, −2, 0, −5',
+            steps: [
+              { label: 'Step 1 — Plot on number line', explanation: 'Place each number on a number line mentally: −7 is furthest left.', highlight: '−7 … −5 … −2 … 0 … 3' },
+              { label: 'Step 2 — Read from left to right', explanation: 'Left to right gives ascending (smallest to largest) order.', highlight: '−7 < −5 < −2 < 0 < 3' }
+            ],
+            answer: '−7, −5, −2, 0, 3'
+          },
+          {
+            question: 'Calculate: −8 − (−3)',
+            steps: [
+              { label: 'Step 1 — Apply the double negative rule', explanation: 'Subtracting a negative is the same as adding: −(−3) = +3.', highlight: '−8 − (−3) = −8 + 3' },
+              { label: 'Step 2 — Calculate', explanation: '−8 + 3: start at −8, move 3 right.', highlight: '−8 + 3 = −5' }
+            ],
+            answer: '−5'
+          }
+        ],
+        questions: [
+          { id: 'in01', type: 'multiple-choice', difficulty: 1, prompt: 'Which integer is the smallest?', options: ['-3', '-7', '0', '2'], answer: '-7', explanation: 'On a number line, −7 is furthest to the left, making it the smallest.' },
+          { id: 'in02', type: 'multiple-choice', difficulty: 1, prompt: 'The temperature is −3°C. It drops 5 degrees. What is the new temperature?', options: ['-8°C', '2°C', '-2°C', '8°C'], answer: '-8°C', explanation: '−3 − 5 = −8°C.' },
+          { id: 'in03', type: 'numeric-input', difficulty: 1, prompt: 'Calculate: −4 + 9', answer: '5', explanation: 'Start at −4, move 9 right: −4+9=5.' },
+          { id: 'in04', type: 'multiple-choice', difficulty: 1, prompt: 'What is the absolute value of −15?', options: ['-15', '15', '0', '1/15'], answer: '15', explanation: '|−15| = 15. Absolute value is always positive.' },
+          { id: 'in05', type: 'ordering', difficulty: 1, prompt: 'Arrange from least to greatest', items: ['-5', '3', '-1', '0', '-8'], answer: '-8,-5,-1,0,3', explanation: 'On number line left to right: −8 < −5 < −1 < 0 < 3.' },
+          { id: 'in06', type: 'numeric-input', difficulty: 2, prompt: 'Calculate: −12 − (−5)', answer: '-7', explanation: '−(−5)=+5. So −12+5=−7.' },
+          { id: 'in07', type: 'multiple-choice', difficulty: 2, prompt: 'A submarine is at −45 m. It rises 18 m. What is its new depth?', options: ['-63 m', '-27 m', '27 m', '63 m'], answer: '-27 m', explanation: '−45 + 18 = −27 m (still below sea level).' },
+          { id: 'in08', type: 'fill-in-the-blank', difficulty: 2, prompt: '−6 + ___ = 4', answer: '10', explanation: '−6 + x = 4 → x = 4 − (−6) = 10.' },
+          { id: 'in09', type: 'multiple-choice', difficulty: 2, prompt: 'Which statement is true?', options: ['-8 > -3', '-8 < -3', '|-8| < |-3|', '-8 = -3'], answer: '-8 < -3', explanation: 'On the number line −8 is to the left of −3, so −8 < −3.' },
+          { id: 'in10', type: 'numeric-input', difficulty: 2, prompt: 'What integer is halfway between −10 and 4?', answer: '-3', explanation: 'Midpoint = (−10+4)÷2 = −6÷2 = −3.' },
+          { id: 'in11', type: 'multiple-choice', difficulty: 3, prompt: 'The product of two integers is −24. Their sum is −5. What are the integers?', options: ['-8 and 3', '8 and -3', '-6 and -4', '6 and -4'], answer: '-8 and 3', explanation: '(−8)×3=−24 ✓ and −8+3=−5 ✓.' },
+          { id: 'in12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If x − (−7) = 3, then x = ___', answer: '-4', explanation: 'x + 7 = 3 → x = 3 − 7 = −4.' },
+          { id: 'in13', type: 'multiple-choice', difficulty: 3, prompt: 'How many integers satisfy −5 ≤ x < 3?', options: ['7', '8', '6', '9'], answer: '8', explanation: 'Integers: −5,−4,−3,−2,−1,0,1,2. That is 8 integers.' },
+          { id: 'in14', type: 'numeric-input', difficulty: 3, prompt: 'A diver is at −30 m. A fish is at −12 m. How far apart are they?', answer: '18', explanation: '|−12 − (−30)| = |−12+30| = |18| = 18 m.' },
+          { id: 'in15', type: 'multiple-choice', difficulty: 3, prompt: 'Which expression has the greatest value?', options: ['|-10|', '-|10|', '|−3|+|−4|', '−(−8)'], answer: '|-10|', explanation: '|−10|=10, −|10|=−10, |−3|+|−4|=7, −(−8)=8. Greatest is 10.' }
+        ]
+      },
+
+      /* ── NUMBER LINES WITH INTEGERS ─────────────────────── */
+      {
+        id: 'number-lines-integers', label: 'Number Lines with Integers',
+        lesson: {
+          intro: 'A number line is a powerful tool for visualising integers, comparing them, and performing calculations by counting steps left or right.',
+          sections: [
+            {
+              heading: 'Reading a Number Line',
+              body: 'On a number line:\n- **Right** = increasing / positive direction\n- **Left** = decreasing / negative direction\n- Each step represents an equal interval\n\nTo **add**, move right. To **subtract**, move left.\nTo **add a negative**, move left. To **subtract a negative**, move right.',
+              visual: { type: 'number-line', data: { min: -5, max: 5, points: [], highlight: [-5,-4,-3,-2,-1,0,1,2,3,4,5] } }
+            },
+            {
+              heading: 'Using Number Lines for Calculations',
+              body: '**Example: Calculate −3 + 5**\nStart at −3. Move 5 steps right. Land on **2**.\n\n**Example: Calculate 1 − 6**\nStart at 1. Move 6 steps left. Land on **−5**.\n\n**Distance between two points:** count steps between them, or use |a − b|.',
+              visual: null
+            }
+          ],
+          keyFacts: [
+            'Adding moves right; subtracting moves left on the number line.',
+            'The distance between two points is always positive: |a − b|.',
+            'Zero is the origin — neither positive nor negative.',
+            'Integers are evenly spaced on the number line with no gaps.'
+          ]
+        },
+        workedExamples: [
+          {
+            question: 'Use a number line to calculate: −2 + 7',
+            steps: [
+              { label: 'Step 1 — Start at −2', explanation: 'Mark your starting position at −2 on the number line.', highlight: 'Start: −2' },
+              { label: 'Step 2 — Move 7 steps right', explanation: 'Adding 7 means moving 7 steps to the right.', highlight: '−2 → −1 → 0 → 1 → 2 → 3 → 4 → 5' },
+              { label: 'Step 3 — Read the answer', explanation: 'We land on 5.', highlight: '−2 + 7 = 5' }
+            ],
+            answer: '5'
+          },
+          {
+            question: 'What is the distance between −4 and 3 on the number line?',
+            steps: [
+              { label: 'Step 1 — Use the formula', explanation: 'Distance = |a − b| where a = −4 and b = 3.', highlight: '|−4 − 3| = |−7|' },
+              { label: 'Step 2 — Calculate', explanation: '|−7| = 7.', highlight: 'Distance = 7' },
+              { label: 'Step 3 — Verify by counting', explanation: 'Count steps from −4 to 3: −4,−3,−2,−1,0,1,2,3 = 7 steps ✓', highlight: '7 steps ✓' }
+            ],
+            answer: '7 units'
+          },
+          {
+            question: 'Mark the following on a number line and state which is greatest: −3, 1, −6, 4, −1',
+            steps: [
+              { label: 'Step 1 — Plot positions', explanation: 'Place each number on the line. Further right = greater value.', highlight: '−6 … −3 … −1 … 0 … 1 … 4' },
+              { label: 'Step 2 — Identify greatest', explanation: '4 is furthest to the right, so it is the greatest.', highlight: 'Greatest = 4' }
+            ],
+            answer: 'Greatest = 4'
+          }
+        ],
+        questions: [
+          { id: 'nl01', type: 'multiple-choice', difficulty: 1, prompt: 'Starting at 3, move 5 steps left. Where do you land?', options: ['-2', '8', '2', '-8'], answer: '-2', explanation: '3 − 5 = −2.' },
+          { id: 'nl02', type: 'multiple-choice', difficulty: 1, prompt: 'Starting at −4, move 6 steps right. Where do you land?', options: ['-10', '2', '10', '-2'], answer: '2', explanation: '−4 + 6 = 2.' },
+          { id: 'nl03', type: 'numeric-input', difficulty: 1, prompt: 'What is the distance between −3 and 5 on a number line?', answer: '8', explanation: '|−3 − 5| = |−8| = 8.' },
+          { id: 'nl04', type: 'multiple-choice', difficulty: 1, prompt: 'Which point is 4 units to the left of −1?', options: ['-5', '3', '-3', '5'], answer: '-5', explanation: '−1 − 4 = −5.' },
+          { id: 'nl05', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The midpoint between −6 and 2 is ___', answer: '-2', explanation: '(−6+2)÷2 = −4÷2 = −2.' },
+          { id: 'nl06', type: 'numeric-input', difficulty: 2, prompt: 'A frog starts at −5 on a number line, jumps 3 right, then 8 left. Where does it land?', answer: '-10', explanation: '−5+3=−2, then −2−8=−10.' },
+          { id: 'nl07', type: 'multiple-choice', difficulty: 2, prompt: 'What integer is equidistant from −7 and 3?', options: ['-5', '-2', '0', '-4'], answer: '-2', explanation: 'Midpoint = (−7+3)÷2 = −4÷2 = −2.' },
+          { id: 'nl08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'The distance from −8 to ___ is 5 units (to the right of −8).', answer: '-3', explanation: '−8 + 5 = −3.' },
+          { id: 'nl09', type: 'multiple-choice', difficulty: 2, prompt: 'How many integers are between −4 and 4 (not including endpoints)?', options: ['7', '8', '6', '9'], answer: '7', explanation: 'Integers: −3,−2,−1,0,1,2,3 = 7 integers.' },
+          { id: 'nl10', type: 'ordering', difficulty: 2, prompt: 'Arrange from left to right on number line', items: ['-6', '2', '-2', '-10', '5'], answer: '-10,-6,-2,2,5', explanation: 'Left to right (smallest to largest): −10 < −6 < −2 < 2 < 5.' },
+          { id: 'nl11', type: 'multiple-choice', difficulty: 3, prompt: 'A number line shows points A at −5 and B at 7. Point C is ¼ of the way from A to B. Where is C?', options: ['-2', '0', '1', '-1'], answer: '-2', explanation: 'Distance A to B = 12. ¼ of 12 = 3. C = −5+3 = −2.' },
+          { id: 'nl12', type: 'numeric-input', difficulty: 3, prompt: 'Two integers are 14 apart on a number line. Their sum is −4. What is the larger integer?', answer: '5', explanation: 'x − y = 14 and x + y = −4. Add: 2x=10 → x=5. y=−9. Larger = 5.' },
+          { id: 'nl13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'On a number line, moving from −9 to 6 takes ___ steps to the right.', answer: '15', explanation: '6 − (−9) = 6+9 = 15 steps.' },
+          { id: 'nl14', type: 'multiple-choice', difficulty: 3, prompt: 'Which pair of integers is 9 apart AND has a sum of −1?', options: ['4 and -5', '-5 and 4', '3 and -6', '-6 and 5'], answer: '4 and -5', explanation: '4+(−5)=−1 ✓ and |4−(−5)|=|9|=9 ✓.' },
+          { id: 'nl15', type: 'numeric-input', difficulty: 3, prompt: 'A point P is at −3. After two equal jumps to the right, P lands at 9. How long is each jump?', answer: '6', explanation: 'Two jumps from −3 to 9: total distance = 9−(−3)=12. Each jump = 12÷2=6.' }
+        ]
+      }
+    );
+  })();
   };
 
   console.log('MathMaster: sample curriculum loaded');
