@@ -4252,6 +4252,165 @@
     );
   })();
 
+  /* ── PHASE 4c: Grade 5 Curriculum ───────────────────────── */
+  (function(){
+    curriculum.grade5.modules.push(
+      /* ── Numbers & Operations ── */
+      {
+        id: 'numbers', label: 'Numbers & Operations', icon: '🔢', accent: 'var(--accent-num)',
+        topics: [
+          {
+            id: 'whole-numbers-5', label: 'Whole Numbers & Operations',
+            lesson: {
+              sections: [
+                { heading: 'Numbers to 1 000 000', body: '**Place value:** Millions | H.Thou | T.Thou | Thousands | Hundreds | Tens | Units.\n\n**Long multiplication (2-digit × 2-digit):**\n23 × 47:\n- 23 × 7 = 161\n- 23 × 40 = 920\n- Total: 161 + 920 = 1 081\n\n**Long division:** 784 ÷ 14:\n- 14 × 50 = 700. Remainder: 84.\n- 14 × 6 = 84.\n- Answer: 56.', visual: null },
+                { heading: 'Factors & Multiples', body: '**Factors** of 24: 1, 2, 3, 4, 6, 8, 12, 24 (numbers that divide evenly).\n**Multiples** of 6: 6, 12, 18, 24, 30 …\n\n**HCF (Highest Common Factor):** largest factor shared by two numbers.\nHCF(12, 18): factors of 12={1,2,3,4,6,12}, of 18={1,2,3,6,9,18}. HCF=6.\n\n**LCM (Lowest Common Multiple):** smallest multiple shared by two numbers.\nLCM(4,6): multiples of 4={4,8,12,16…}, of 6={6,12,18…}. LCM=12.', visual: null }
+              ],
+              keyFacts: [
+                'Long multiplication: multiply each digit separately, then add.',
+                'Long division: estimate, multiply, subtract, bring down.',
+                'HCF = largest shared factor. LCM = smallest shared multiple.',
+                'Factor pairs of n: pairs of numbers that multiply to give n.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 68 × 43.', steps: [
+                { label: 'Step 1 — Multiply by units', explanation: '68 × 3 = 204.', highlight: '68 × 3 = 204' },
+                { label: 'Step 2 — Multiply by tens', explanation: '68 × 40 = 2 720.', highlight: '68 × 40 = 2 720' },
+                { label: 'Step 3 — Add', explanation: '204 + 2 720 = 2 924.', highlight: '68 × 43 = 2 924' }
+              ], answer: '2 924' },
+              { question: 'Find HCF(36, 48).', steps: [
+                { label: 'Step 1 — List factors', explanation: 'Factors of 36: 1,2,3,4,6,9,12,18,36. Factors of 48: 1,2,3,4,6,8,12,16,24,48.', highlight: 'Common: 1,2,3,4,6,12' },
+                { label: 'Step 2 — Highest common', explanation: 'HCF = 12.', highlight: 'HCF = 12' }
+              ], answer: 'HCF = 12' },
+              { question: 'Calculate 952 ÷ 28.', steps: [
+                { label: 'Step 1 — Estimate', explanation: '28 × 30 = 840. 952 − 840 = 112.', highlight: '30 with 112 remaining' },
+                { label: 'Step 2 — Divide remainder', explanation: '28 × 4 = 112.', highlight: '+ 4 more' },
+                { label: 'Step 3 — Total', explanation: '30 + 4 = 34.', highlight: '952 ÷ 28 = 34' }
+              ], answer: '34' }
+            ],
+            questions: [
+              { id: 'wh501', type: 'numeric-input', difficulty: 1, prompt: '35 × 12 = ?', answer: '420', explanation: '35×10=350, 35×2=70. 350+70=420.' },
+              { id: 'wh502', type: 'fill-in-the-blank', difficulty: 1, prompt: 'HCF(8, 12) = ___', answer: '4', explanation: 'Factors of 8: 1,2,4,8. Factors of 12: 1,2,3,4,6,12. HCF=4.' },
+              { id: 'wh503', type: 'numeric-input', difficulty: 1, prompt: '144 ÷ 12 = ?', answer: '12', explanation: '12×12=144.' },
+              { id: 'wh504', type: 'fill-in-the-blank', difficulty: 1, prompt: 'LCM(5, 6) = ___', answer: '30', explanation: 'Multiples of 5: 5,10,15,20,25,30. Multiples of 6: 6,12,18,24,30. LCM=30.' },
+              { id: 'wh505', type: 'multiple-choice', difficulty: 1, prompt: 'Which is a factor of 45?', options: ['6','7','9','8'], answer: '9', explanation: '45÷9=5. ✓' },
+              { id: 'wh506', type: 'numeric-input', difficulty: 2, prompt: '47 × 23 = ?', answer: '1081', explanation: '47×3=141, 47×20=940. 141+940=1081.' },
+              { id: 'wh507', type: 'fill-in-the-blank', difficulty: 2, prompt: 'HCF(24, 36) = ___', answer: '12', explanation: 'Common factors: 1,2,3,4,6,12. HCF=12.' },
+              { id: 'wh508', type: 'numeric-input', difficulty: 2, prompt: '756 ÷ 21 = ?', answer: '36', explanation: '21×36=756.' },
+              { id: 'wh509', type: 'fill-in-the-blank', difficulty: 2, prompt: 'LCM(4, 9) = ___', answer: '36', explanation: 'LCM(4,9)=36 (they share no common factors except 1).' },
+              { id: 'wh510', type: 'multiple-choice', difficulty: 2, prompt: '56 × 38 = ?', options: ['2018','2128','2138','2048'], answer: '2128', explanation: '56×8=448, 56×30=1680. 448+1680=2128.' },
+              { id: 'wh511', type: 'numeric-input', difficulty: 3, prompt: '63 × 57 = ?', answer: '3591', explanation: '63×7=441, 63×50=3150. 441+3150=3591.' },
+              { id: 'wh512', type: 'fill-in-the-blank', difficulty: 3, prompt: 'LCM(12, 18) = ___', answer: '36', explanation: 'Multiples of 12: 12,24,36. Multiples of 18: 18,36. LCM=36.' },
+              { id: 'wh513', type: 'multiple-choice', difficulty: 3, prompt: '1 248 ÷ 24 = ?', options: ['42','52','62','72'], answer: '52', explanation: '24×52=1248.' },
+              { id: 'wh514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'HCF(60, 84) = ___', answer: '12', explanation: 'Factors of 60: ...12,... Factors of 84: ...12,... HCF=12.' },
+              { id: 'wh515', type: 'numeric-input', difficulty: 3, prompt: 'A × B = 180 and HCF(A,B)=6. LCM(A,B) = ?', answer: '30', explanation: 'LCM × HCF = A × B → LCM = 180÷6 = 30.' }
+            ]
+          },
+          {
+            id: 'decimals-5', label: 'Decimals & Percentages',
+            lesson: {
+              sections: [
+                { heading: 'Decimals to Thousandths', body: '**Decimal place value:**\n| Tens | Units | . | Tenths | Hundredths | Thousandths |\n|------|-------|---|--------|------------|-------------|\n| 1 | 2 | . | 3 | 4 | 5 |\n\n12.345 = 12 + 3/10 + 4/100 + 5/1000.\n\n**Operations with decimals:**\n- Add/subtract: line up decimal points.\n- Multiply: ignore decimal, multiply, count decimal places.\n- Divide by 10/100/1000: move decimal left.', visual: null },
+                { heading: 'Percentages', body: '**Percent (%)** means "out of 100".\n\n**Fraction ↔ %:** 3/4 = 75% (multiply by 100). 40% = 40/100 = 2/5.\n\n**% of amount:** 30% of 80 = (30/100) × 80 = 0.3 × 80 = 24.\n\n**Increase/decrease by %:**\n- 20% increase of 50 = 50 + (20% of 50) = 50 + 10 = 60.\n- 15% discount off R200 = R200 − R30 = R170.', visual: null }
+              ],
+              keyFacts: [
+                'Line up decimal points for addition and subtraction.',
+                '% means per hundred: 45% = 45/100 = 0.45.',
+                '% of amount: multiply by the decimal equivalent.',
+                'Increase: add the % amount. Decrease: subtract it.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 4.75 + 12.8.', steps: [
+                { label: 'Step 1 — Line up decimals', explanation: '4.75 + 12.80 (add trailing zero).', highlight: 'Aligned' },
+                { label: 'Step 2 — Add', explanation: '0.75+0.80=1.55. 4+12+1=17.', highlight: '4.75+12.80=17.55' }
+              ], answer: '17.55' },
+              { question: 'Find 35% of 120.', steps: [
+                { label: 'Step 1 — Convert %', explanation: '35% = 35/100 = 0.35.', highlight: '0.35' },
+                { label: 'Step 2 — Multiply', explanation: '0.35 × 120 = 42.', highlight: '35% of 120 = 42' }
+              ], answer: '42' },
+              { question: 'A shirt costs R350. It is on sale for 20% off. What is the sale price?', steps: [
+                { label: 'Step 1 — Calculate discount', explanation: '20% of 350 = 0.20 × 350 = R70.', highlight: 'Discount = R70' },
+                { label: 'Step 2 — Sale price', explanation: '350 − 70 = R280.', highlight: 'Sale price = R280' }
+              ], answer: 'R280' }
+            ],
+            questions: [
+              { id: 'dc501', type: 'numeric-input', difficulty: 1, prompt: '3.6 + 2.8 = ?', answer: '6.4', explanation: '3.6+2.8=6.4.' },
+              { id: 'dc502', type: 'fill-in-the-blank', difficulty: 1, prompt: '25% = ___/100', answer: '25', explanation: 'Per cent means out of 100.' },
+              { id: 'dc503', type: 'multiple-choice', difficulty: 1, prompt: '50% of 80 = ?', options: ['20','30','40','60'], answer: '40', explanation: '50% = half. 80÷2=40.' },
+              { id: 'dc504', type: 'fill-in-the-blank', difficulty: 1, prompt: '7.5 − 3.2 = ___', answer: '4.3', explanation: '7.5−3.2=4.3.' },
+              { id: 'dc505', type: 'multiple-choice', difficulty: 1, prompt: '0.75 as a percentage = ?', options: ['7.5%','75%','750%','0.75%'], answer: '75%', explanation: '0.75×100=75%.' },
+              { id: 'dc506', type: 'fill-in-the-blank', difficulty: 2, prompt: '4.3 × 10 = ___', answer: '43', explanation: 'Multiply by 10: move decimal one right. 43.' },
+              { id: 'dc507', type: 'multiple-choice', difficulty: 2, prompt: '20% of 65 = ?', options: ['10','13','15','20'], answer: '13', explanation: '0.20×65=13.' },
+              { id: 'dc508', type: 'fill-in-the-blank', difficulty: 2, prompt: '3.14 × 100 = ___', answer: '314', explanation: 'Move decimal 2 places right: 314.' },
+              { id: 'dc509', type: 'multiple-choice', difficulty: 2, prompt: 'A price of R240 increases by 15%. New price = ?', options: ['R254','R255','R276','R264'], answer: 'R276', explanation: '15% of 240=36. 240+36=276.' },
+              { id: 'dc510', type: 'fill-in-the-blank', difficulty: 2, prompt: '3/5 as a percentage = ___%', answer: '60', explanation: '3÷5=0.6=60%.' },
+              { id: 'dc511', type: 'numeric-input', difficulty: 3, prompt: '12.46 + 8.7 − 5.3 = ?', answer: '15.86', explanation: '12.46+8.70=21.16; 21.16-5.30=15.86.' },
+              { id: 'dc512', type: 'fill-in-the-blank', difficulty: 3, prompt: 'R850 after 30% discount = R___', answer: '595', explanation: '30% of 850=255. 850-255=595.' },
+              { id: 'dc513', type: 'multiple-choice', difficulty: 3, prompt: '0.045 × 1000 = ?', options: ['4.5','45','0.45','450'], answer: '45', explanation: 'Move decimal 3 right: 045 = 45.' },
+              { id: 'dc514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If 40% of a number = 60, the number = ___', answer: '150', explanation: '60÷0.4=150.' },
+              { id: 'dc515', type: 'numeric-input', difficulty: 3, prompt: 'Cost R120. Sold for R150. Profit % = ?', answer: '25', explanation: 'Profit=30. 30/120×100=25%.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Geometry ── */
+      {
+        id: 'geometry', label: 'Geometry & Measurement', icon: '📐', accent: 'var(--accent-geo)',
+        topics: [
+          {
+            id: 'angles-5', label: 'Angles & Triangles',
+            lesson: {
+              sections: [
+                { heading: 'Types of Angles', body: '**Acute angle:** between 0° and 90°.\n**Right angle:** exactly 90°.\n**Obtuse angle:** between 90° and 180°.\n**Straight angle:** exactly 180°.\n**Reflex angle:** between 180° and 360°.\n**Revolution:** 360°.\n\n**Measuring angles:** use a protractor. Place the centre on the vertex, 0° on one arm, read where the other arm falls.', visual: null },
+                { heading: 'Triangles & Angle Rules', body: '**Angles in a triangle sum to 180°.**\n\n**Types of triangles by angles:**\n- Acute triangle: all angles < 90°.\n- Right triangle: one angle = 90°.\n- Obtuse triangle: one angle > 90°.\n\n**Types by sides:**\n- Equilateral: 3 equal sides, 3 × 60° angles.\n- Isosceles: 2 equal sides, 2 equal base angles.\n- Scalene: no equal sides, no equal angles.\n\n**Sum of angles:** a + b + c = 180°. If two are known, find the third.', visual: null }
+              ],
+              keyFacts: [
+                'Acute: 0–90°; Right: 90°; Obtuse: 90–180°; Reflex: 180–360°.',
+                'Angles in a triangle always add to 180°.',
+                'Equilateral triangle: all sides equal, all angles 60°.',
+                'Isosceles triangle: 2 equal sides, 2 equal base angles.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A triangle has angles 47° and 68°. Find the third angle.', steps: [
+                { label: 'Step 1 — Sum rule', explanation: 'Angles sum = 180°.', highlight: '180° total' },
+                { label: 'Step 2 — Subtract', explanation: '180 − 47 − 68 = 65°.', highlight: 'Third angle = 65°' }
+              ], answer: '65°' },
+              { question: 'Classify the triangle with angles 35°, 55°, 90°.', steps: [
+                { label: 'Step 1 — Check for right angle', explanation: 'One angle = 90°.', highlight: 'Right triangle' },
+                { label: 'Step 2 — Check sides', explanation: 'No equal angles, so scalene.', highlight: 'Right-angled scalene triangle' }
+              ], answer: 'Right-angled scalene triangle' },
+              { question: 'An isosceles triangle has one angle of 40°. The two base angles are equal. Find all angles.', steps: [
+                { label: 'Step 1 — Identify', explanation: 'If 40° is the apex angle, the two base angles split the remaining 140°.', highlight: '140° ÷ 2 = 70° each' },
+                { label: 'Step 2 — Confirm', explanation: '40 + 70 + 70 = 180°. ✓', highlight: 'Angles: 40°, 70°, 70°' }
+              ], answer: '40°, 70°, 70°' }
+            ],
+            questions: [
+              { id: 'an501', type: 'multiple-choice', difficulty: 1, prompt: 'An angle of 130° is called:', options: ['Acute','Right','Obtuse','Reflex'], answer: 'Obtuse', explanation: '90° < 130° < 180° → obtuse.' },
+              { id: 'an502', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Angles in a triangle sum to ___ °', answer: '180', explanation: 'The interior angles of any triangle always sum to 180°.' },
+              { id: 'an503', type: 'multiple-choice', difficulty: 1, prompt: 'An equilateral triangle has how many degrees in each angle?', options: ['45°','60°','90°','120°'], answer: '60°', explanation: '180÷3=60°.' },
+              { id: 'an504', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Third angle of triangle with 75° and 85° = ___°', answer: '20', explanation: '180-75-85=20°.' },
+              { id: 'an505', type: 'multiple-choice', difficulty: 1, prompt: 'Which is a reflex angle?', options: ['89°','91°','181°','90°'], answer: '181°', explanation: 'Reflex: greater than 180°.' },
+              { id: 'an506', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Isosceles triangle with apex angle 50°. Base angles each = ___°', answer: '65', explanation: '(180-50)÷2=65°.' },
+              { id: 'an507', type: 'multiple-choice', difficulty: 2, prompt: 'A triangle has angles in ratio 2:3:4. Smallest angle = ?', options: ['20°','40°','60°','80°'], answer: '40°', explanation: 'Parts sum = 9. Each part = 180÷9=20°. Smallest = 2×20=40°.' },
+              { id: 'an508', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Straight angle = ___°', answer: '180', explanation: 'A straight angle is exactly 180°.' },
+              { id: 'an509', type: 'multiple-choice', difficulty: 2, prompt: 'A right triangle has one angle of 32°. The other non-right angle = ?', options: ['32°','48°','58°','68°'], answer: '58°', explanation: '180−90−32=58°.' },
+              { id: 'an510', type: 'fill-in-the-blank', difficulty: 2, prompt: 'An obtuse angle is between ___° and ___°. (write as "a,b")', answer: '90,180', explanation: 'Obtuse angles are greater than 90° and less than 180°.' },
+              { id: 'an511', type: 'multiple-choice', difficulty: 3, prompt: 'Triangle PQR: angle P = 2x, Q = 3x, R = x. Find angle P.', options: ['30°','60°','90°','120°'], answer: '60°', explanation: '2x+3x+x=6x=180, x=30. P=2×30=60°.' },
+              { id: 'an512', type: 'fill-in-the-blank', difficulty: 3, prompt: 'The exterior angle of a triangle equals the sum of the two non-adjacent interior angles. If interior angles are 50° and 70°, exterior angle = ___°', answer: '120', explanation: '50+70=120°.' },
+              { id: 'an513', type: 'multiple-choice', difficulty: 3, prompt: 'An isosceles triangle has base angle 72°. Apex angle = ?', options: ['18°','36°','72°','108°'], answer: '36°', explanation: '180−72−72=36°.' },
+              { id: 'an514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Revolution = ___ °. Reflex angle of 100° = ___°. (write as "R,X")', answer: '360,260', explanation: 'Revolution=360°. Reflex of 100°=360-100=260°.' },
+              { id: 'an515', type: 'numeric-input', difficulty: 3, prompt: 'Three angles of a quadrilateral are 85°, 95°, 110°. Fourth angle = ?', answer: '70', explanation: 'Quadrilateral angles sum to 360°. 360-85-95-110=70°.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 3d: Grade 6 — Data & Probability ─────────────── */
   (function(){
     curriculum.grade6.modules.push({
