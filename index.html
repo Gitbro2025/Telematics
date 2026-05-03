@@ -3738,6 +3738,215 @@
     ]
   });
 
+  /* ── PHASE 3d: Grade 6 — Data & Probability ─────────────── */
+  (function(){
+    curriculum.grade6.modules.push({
+      id: 'data', label: 'Data & Probability', icon: '📊', accent: 'var(--accent-data)',
+      topics: [
+
+        /* ── 1. Interpreting & Drawing Graphs ─────────────── */
+        {
+          id: 'graphs', label: 'Interpreting & Drawing Graphs',
+          lesson: {
+            sections: [
+              { heading: 'Types of Graphs', body: '**Bar graph:** compares quantities using rectangular bars. Bars can be vertical or horizontal. The height (or length) represents the value.\n\n**Line graph:** shows change over time. Points are plotted and joined with straight lines. Best for continuous data (temperature, growth).\n\n**Pie chart:** shows parts of a whole as sectors of a circle. Each sector angle = (frequency ÷ total) × 360°.\n\n**Histogram:** similar to a bar graph but for grouped continuous data — there are no gaps between bars.', visual: null },
+              { heading: 'Reading & Drawing Graphs', body: '**Reading a bar graph:** read the height of each bar against the scale on the y-axis.\n\n**Drawing a bar graph:**\n1. Draw and label axes (include units).\n2. Choose a scale that fits all values.\n3. Draw bars of equal width, equal spacing, correct height.\n4. Give the graph a title.\n\n**Pie chart sector angle:** Angle = (value ÷ total) × 360°\n\n**Double bar graph:** two bars per category — use different colours and add a legend.', visual: null }
+            ],
+            keyFacts: [
+              'Bar graphs compare categories; line graphs show trends over time.',
+              'Pie chart sector angle = (frequency ÷ total) × 360°.',
+              'A histogram has no gaps — it shows grouped continuous data.',
+              'Always label axes, include units, and give every graph a title.'
+            ]
+          },
+          workedExamples: [
+            { question: 'A class of 30 scored: Maths 12, Science 8, English 10. Find the pie chart angle for Maths.', steps: [
+              { label: 'Step 1 — Identify total', explanation: 'Total students = 30.', highlight: 'Total = 30' },
+              { label: 'Step 2 — Sector angle formula', explanation: 'Angle = (value ÷ total) × 360°.', highlight: 'Angle = (12 ÷ 30) × 360°' },
+              { label: 'Step 3 — Calculate', explanation: '= 0.4 × 360° = 144°.', highlight: 'Maths sector = 144°' }
+            ], answer: '144°' },
+            { question: 'A bar graph shows: Monday 15, Tuesday 20, Wednesday 18, Thursday 25. By how much did Friday need to raise the total to 100?', steps: [
+              { label: 'Step 1 — Sum Mon–Thu', explanation: '15 + 20 + 18 + 25 = 78.', highlight: 'Mon–Thu total = 78' },
+              { label: 'Step 2 — Subtract from 100', explanation: '100 − 78 = 22.', highlight: 'Friday needs 22' }
+            ], answer: 'Friday = 22' },
+            { question: 'A line graph shows temperatures: Jan 18°C, Feb 22°C, Mar 28°C, Apr 32°C. What is the increase from Jan to Apr?', steps: [
+              { label: 'Step 1 — Identify values', explanation: 'Jan = 18°C, Apr = 32°C.', highlight: 'Start 18, End 32' },
+              { label: 'Step 2 — Calculate increase', explanation: '32 − 18 = 14°C.', highlight: 'Increase = 14°C' }
+            ], answer: '14°C' }
+          ],
+          questions: [
+            { id: 'gr01', type: 'multiple-choice', difficulty: 1, prompt: 'Which graph is best for showing how temperature changes over a day?', options: ['Bar graph','Pie chart','Line graph','Histogram'], answer: 'Line graph', explanation: 'Line graphs show change over time.' },
+            { id: 'gr02', type: 'multiple-choice', difficulty: 1, prompt: 'A pie chart shows 25 out of 100 students prefer soccer. What is the sector angle?', options: ['25°','45°','90°','100°'], answer: '90°', explanation: '(25÷100)×360°=90°.' },
+            { id: 'gr03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A pie chart sector for 1/4 of the data = ___ °', answer: '90', explanation: '(1÷4)×360=90°.' },
+            { id: 'gr04', type: 'multiple-choice', difficulty: 1, prompt: 'Which graph compares different categories side by side?', options: ['Line graph','Bar graph','Pie chart','Scatter plot'], answer: 'Bar graph', explanation: 'Bar graphs compare categories.' },
+            { id: 'gr05', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A bar graph has values 10, 20, 30. The tallest bar represents ___', answer: '30', explanation: 'The tallest bar represents the largest value.' },
+            { id: 'gr06', type: 'multiple-choice', difficulty: 2, prompt: 'Favourite colours: Red 6, Blue 9, Green 5, Yellow 10. Total = 30. Pie angle for Blue = ?', options: ['54°','72°','90°','108°'], answer: '108°', explanation: '(9÷30)×360=108°.' },
+            { id: 'gr07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Bar graph values Mon=15, Tue=20, Wed=25. The mean daily value = ___', answer: '20', explanation: '(15+20+25)÷3=60÷3=20.' },
+            { id: 'gr08', type: 'multiple-choice', difficulty: 2, prompt: 'A line graph goes 5, 10, 8, 12, 15. Between which readings is there a decrease?', options: ['1st to 2nd','2nd to 3rd','3rd to 4th','4th to 5th'], answer: '2nd to 3rd', explanation: '10 to 8 is a decrease.' },
+            { id: 'gr09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Pie chart: total = 60. A sector has angle 120°. Its frequency = ___', answer: '20', explanation: '(120÷360)×60=20.' },
+            { id: 'gr10', type: 'multiple-choice', difficulty: 2, prompt: 'A double bar graph compares boys and girls marks. Jan: Boys 14, Girls 16; Feb: Boys 18, Girls 15. Who improved more from Jan to Feb?', options: ['Boys','Girls','Same','Cannot tell'], answer: 'Boys', explanation: 'Boys: +4. Girls: −1. Boys improved more.' },
+            { id: 'gr11', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Pie chart: Sector A = 144°, B = 90°, C = 72°, D = ?°', answer: '54', explanation: '360−144−90−72=54°.' },
+            { id: 'gr12', type: 'multiple-choice', difficulty: 3, prompt: 'Data: 5, 8, 12, 15, 20. Which is the correct bar graph scale to use so all bars fit on a graph 10cm tall?', options: ['1cm = 1 unit','1cm = 2 units','1cm = 5 units','1cm = 10 units'], answer: '1cm = 2 units', explanation: 'Max value 20 ÷ 10cm = 2 units per cm.' },
+            { id: 'gr13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Pie chart: total 200 people. Sector angle 54°. Frequency = ___', answer: '30', explanation: '(54÷360)×200=30.' },
+            { id: 'gr14', type: 'multiple-choice', difficulty: 3, prompt: 'Line graph: Jan=20, Feb=25, Mar=30, Apr=28, May=35. What is the overall trend?', options: ['Decreasing','Increasing','Constant','No trend'], answer: 'Increasing', explanation: 'Despite one dip, the overall trend is upward.' },
+            { id: 'gr15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A pie chart has 4 equal sectors. Sector angle = ___ °', answer: '90', explanation: '360÷4=90°.' }
+          ]
+        },
+
+        /* ── 2. Mean, Median, Mode & Range ───────────────── */
+        {
+          id: 'averages', label: 'Mean, Median, Mode & Range',
+          lesson: {
+            sections: [
+              { heading: 'Measures of Central Tendency', body: '**Mean (average):** sum all values, then divide by how many there are.\nMean = (sum of data) ÷ (number of values)\n\n**Median:** the middle value when data is arranged in order.\n- Odd number of values: pick the middle one.\n- Even number of values: mean of the two middle values.\n\n**Mode:** the value that appears most often. There can be more than one mode, or no mode.\n\n**Range:** spread of the data.\nRange = largest value − smallest value', visual: null },
+              { heading: 'Calculating & Comparing', body: '**Example dataset:** 3, 7, 7, 9, 4\nOrdered: 3, 4, 7, 7, 9\n- Mean = (3+4+7+7+9) ÷ 5 = 30 ÷ 5 = **6**\n- Median = middle value = **7** (3rd of 5)\n- Mode = **7** (appears twice)\n- Range = 9 − 3 = **6**\n\n**When to use each:**\n- Mean: when data has no extreme outliers.\n- Median: better when there are very high or very low outliers.\n- Mode: for categorical data ("favourite colour").', visual: null }
+            ],
+            keyFacts: [
+              'Mean = sum ÷ count.',
+              'Median = middle value of ordered data.',
+              'Mode = most frequent value.',
+              'Range = largest − smallest.'
+            ]
+          },
+          workedExamples: [
+            { question: 'Find the mean, median, mode and range of: 4, 9, 6, 4, 7, 5, 4.', steps: [
+              { label: 'Step 1 — Order the data', explanation: '4, 4, 4, 5, 6, 7, 9.', highlight: 'Ordered set' },
+              { label: 'Step 2 — Mean', explanation: '(4+4+4+5+6+7+9) ÷ 7 = 39 ÷ 7 ≈ 5.57.', highlight: 'Mean ≈ 5.57' },
+              { label: 'Step 3 — Median', explanation: '7 values → 4th value = 5.', highlight: 'Median = 5' },
+              { label: 'Step 4 — Mode & Range', explanation: 'Mode = 4 (appears 3 times). Range = 9 − 4 = 5.', highlight: 'Mode=4, Range=5' }
+            ], answer: 'Mean≈5.57, Median=5, Mode=4, Range=5' },
+            { question: 'The mean of 5 numbers is 8. Four of the numbers are 6, 9, 7, 10. Find the 5th.', steps: [
+              { label: 'Step 1 — Total from mean', explanation: 'Total = mean × count = 8 × 5 = 40.', highlight: 'Sum = 40' },
+              { label: 'Step 2 — Sum of known values', explanation: '6+9+7+10 = 32.', highlight: 'Known sum = 32' },
+              { label: 'Step 3 — Find missing', explanation: '40 − 32 = 8.', highlight: '5th number = 8' }
+            ], answer: '8' },
+            { question: 'Scores: 12, 15, 11, 18, 14, 15, 17. Find the median and mode.', steps: [
+              { label: 'Step 1 — Order', explanation: '11, 12, 14, 15, 15, 17, 18.', highlight: '7 values ordered' },
+              { label: 'Step 2 — Median', explanation: '4th value = 15.', highlight: 'Median = 15' },
+              { label: 'Step 3 — Mode', explanation: '15 appears twice (most frequent).', highlight: 'Mode = 15' }
+            ], answer: 'Median = 15, Mode = 15' }
+          ],
+          questions: [
+            { id: 'av01', type: 'multiple-choice', difficulty: 1, prompt: 'Mean of 2, 4, 6, 8 = ?', options: ['4','5','6','7'], answer: '5', explanation: '(2+4+6+8)÷4=20÷4=5.' },
+            { id: 'av02', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Mode of 3, 5, 3, 7, 3, 9 = ___', answer: '3', explanation: '3 appears 3 times — most frequent.' },
+            { id: 'av03', type: 'multiple-choice', difficulty: 1, prompt: 'Range of 5, 12, 3, 8, 17 = ?', options: ['5','12','14','17'], answer: '14', explanation: '17 − 3 = 14.' },
+            { id: 'av04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Median of 2, 5, 7, 9, 11 = ___', answer: '7', explanation: 'Middle value (3rd of 5) = 7.' },
+            { id: 'av05', type: 'multiple-choice', difficulty: 1, prompt: 'Data: 4, 4, 6, 8, 8. How many modes are there?', options: ['0','1','2','3'], answer: '2', explanation: '4 and 8 both appear twice — two modes.' },
+            { id: 'av06', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Mean of 10, 14, 18, 22 = ___', answer: '16', explanation: '(10+14+18+22)÷4=64÷4=16.' },
+            { id: 'av07', type: 'multiple-choice', difficulty: 2, prompt: 'Median of 3, 6, 8, 12 (even count) = ?', options: ['6','7','8','9'], answer: '7', explanation: '(6+8)÷2=7.' },
+            { id: 'av08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Mean of 5 values = 12. Their total = ___', answer: '60', explanation: '12 × 5 = 60.' },
+            { id: 'av09', type: 'multiple-choice', difficulty: 2, prompt: 'Data: 5, 8, 12, 8, 15, 5, 8. Mode = ?', options: ['5','8','12','15'], answer: '8', explanation: '8 appears 3 times — highest frequency.' },
+            { id: 'av10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Range of 23, 45, 12, 67, 34 = ___', answer: '55', explanation: '67 − 12 = 55.' },
+            { id: 'av11', type: 'multiple-choice', difficulty: 3, prompt: 'Mean of 4 numbers = 9. Three numbers are 7, 10, 11. 4th number = ?', options: ['7','8','9','10'], answer: '8', explanation: 'Sum = 36. 36 − (7+10+11) = 36 − 28 = 8.' },
+            { id: 'av12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Scores: 6, 8, 9, 9, x. Median = 9. Mean = 8.4. Find x.', answer: '10', explanation: 'Sum = 8.4×5=42. 6+8+9+9+x=42 → x=10.' },
+            { id: 'av13', type: 'multiple-choice', difficulty: 3, prompt: 'Which measure is LEAST affected by an extreme outlier?', options: ['Mean','Median','Mode','Range'], answer: 'Median', explanation: 'The median is robust to outliers as it depends only on the middle value(s).' },
+            { id: 'av14', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Data set has mean 10, range 12, mode 8. The median of 5, 8, 8, 12, 17 = ___', answer: '8', explanation: 'Middle value of ordered 5-item set is 3rd = 8.' },
+            { id: 'av15', type: 'multiple-choice', difficulty: 3, prompt: 'Adding the value 100 to the set {2, 4, 6, 8} will most dramatically change which measure?', options: ['Median','Mode','Range','None'], answer: 'Range', explanation: 'Range becomes 100−2=98 (was 6). Mean also increases but range changes most dramatically.' }
+          ]
+        },
+
+        /* ── 3. Data Collection & Questionnaire Design ───── */
+        {
+          id: 'data-collection', label: 'Data Collection & Questionnaires',
+          lesson: {
+            sections: [
+              { heading: 'Types of Data', body: '**Qualitative data:** describes categories or qualities. Cannot be measured with numbers.\nExamples: favourite colour, gender, type of pet.\n\n**Quantitative data:** measured numerically.\n- **Discrete:** counted in whole numbers (number of children, goals scored).\n- **Continuous:** measured on a scale and can take any value (height, temperature, mass).\n\n**Primary data:** collected yourself (surveys, experiments).\n**Secondary data:** collected by someone else (internet, books, databases).', visual: null },
+              { heading: 'Tally Tables & Questionnaires', body: '**Tally table:** quick way to record data using tally marks. Every 5th mark crosses the previous 4 (||||).\n\n**Questionnaire design rules:**\n1. Questions should be clear and unambiguous.\n2. Use categories that do not overlap.\n3. Cover all possible answers (include "Other").\n4. Avoid leading questions ("Don\'t you think...?").\n5. Keep it short — only ask what you need.\n\n**Frequency table:** records how often each value or category occurs.', visual: null }
+            ],
+            keyFacts: [
+              'Qualitative data = categories; quantitative data = numbers.',
+              'Discrete data = whole number counts; continuous data = measurements.',
+              'Primary data = collected by you; secondary data = from existing sources.',
+              'Tally marks: four upright strokes, 5th is a diagonal cross.'
+            ]
+          },
+          workedExamples: [
+            { question: 'Classify each: (a) number of books owned (b) hair colour (c) temperature in °C.', steps: [
+              { label: 'Step 1 — (a) Books owned', explanation: 'Counted in whole numbers → discrete quantitative.', highlight: 'Discrete quantitative' },
+              { label: 'Step 2 — (b) Hair colour', explanation: 'Describes a category, not a number → qualitative.', highlight: 'Qualitative' },
+              { label: 'Step 3 — (c) Temperature', explanation: 'Measured on a continuous scale → continuous quantitative.', highlight: 'Continuous quantitative' }
+            ], answer: '(a) discrete, (b) qualitative, (c) continuous' },
+            { question: 'A tally shows: Red: |||| |, Blue: ||||, Green: |||| |||. How many Green responses?', steps: [
+              { label: 'Step 1 — Count tally marks for Green', explanation: '|||| ||| = 5 + 3 = 8.', highlight: 'Green = 8' }
+            ], answer: '8' },
+            { question: 'Identify the problem with this question: "How often do you exercise? □ Sometimes □ Often □ Always"', steps: [
+              { label: 'Step 1 — Check categories', explanation: '"Sometimes, Often, Always" — there is no option for "Never".', highlight: 'Missing "Never" option' },
+              { label: 'Step 2 — Check ambiguity', explanation: '"Sometimes" and "Often" are subjective — not clearly defined.', highlight: 'Vague categories' }
+            ], answer: 'Missing "Never"; vague/overlapping categories' }
+          ],
+          questions: [
+            { id: 'dc01', type: 'multiple-choice', difficulty: 1, prompt: 'Which is qualitative data?', options: ['Height in cm','Number of goals','Favourite subject','Test score'], answer: 'Favourite subject', explanation: 'Favourite subject is a category, not a number.' },
+            { id: 'dc02', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Data collected from a website you didn\'t create yourself is called ___ data.', answer: 'secondary', explanation: 'Secondary data comes from sources you did not gather yourself.' },
+            { id: 'dc03', type: 'multiple-choice', difficulty: 1, prompt: 'Number of pets owned is what type of data?', options: ['Qualitative','Continuous','Discrete','Secondary'], answer: 'Discrete', explanation: 'You count pets in whole numbers → discrete.' },
+            { id: 'dc04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Tally |||| |||| = ___ (how many?)', answer: '9', explanation: '5 + 4 = 9.' },
+            { id: 'dc05', type: 'multiple-choice', difficulty: 1, prompt: 'Which data type can take any value on a scale (e.g. 1.73 m)?', options: ['Discrete','Qualitative','Continuous','Primary'], answer: 'Continuous', explanation: 'Height can be 1.73 m, 1.735 m, etc. → continuous.' },
+            { id: 'dc06', type: 'multiple-choice', difficulty: 2, prompt: 'A survey asks "Do you agree that homework is too much?" — what is wrong with this?', options: ['Too short','Leading question','No response options','Wrong format'], answer: 'Leading question', explanation: '"Do you agree that..." steers the respondent towards "yes".' },
+            { id: 'dc07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Frequency table: A=5, B=8, C=4, D=3. Total responses = ___', answer: '20', explanation: '5+8+4+3=20.' },
+            { id: 'dc08', type: 'multiple-choice', difficulty: 2, prompt: 'A questionnaire age group uses □ 0–10 □ 10–20 □ 20–30. What is wrong?', options: ['Too few options','Age 10 fits in two boxes','No "Other" box','Too many options'], answer: 'Age 10 fits in two boxes', explanation: 'Overlapping categories — age 10 appears in both 0–10 and 10–20.' },
+            { id: 'dc09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Data: 12 boys, 8 girls surveyed. Fraction that are girls = ___ (simplest form, write as "a/b")', answer: '2/5', explanation: '8/20 = 2/5.' },
+            { id: 'dc10', type: 'multiple-choice', difficulty: 2, prompt: 'Which is primary data?', options: ['Reading a census report','Searching the internet','Measuring your classmates\' heights yourself','Copying from a textbook'], answer: 'Measuring your classmates\' heights yourself', explanation: 'Primary data = you collect it yourself.' },
+            { id: 'dc11', type: 'multiple-choice', difficulty: 3, prompt: 'Which is the best way to record 40 survey responses quickly?', options: ['List each answer','Tally table','Bar graph','Pie chart'], answer: 'Tally table', explanation: 'Tally tables are designed for quick recording during data collection.' },
+            { id: 'dc12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Tally shows: |||| |||| ||| for one category. Frequency = ___', answer: '13', explanation: '5+5+3=13.' },
+            { id: 'dc13', type: 'multiple-choice', difficulty: 3, prompt: 'A researcher measures rainfall every day for a year. This is:', options: ['Discrete primary','Continuous primary','Discrete secondary','Continuous secondary'], answer: 'Continuous primary', explanation: 'Rainfall is continuous; researcher collects it = primary.' },
+            { id: 'dc14', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A frequency table shows 5 categories. The total is 60. Category C has frequency 18. What % is that? (whole number)', answer: '30', explanation: '(18÷60)×100=30%.' },
+            { id: 'dc15', type: 'multiple-choice', difficulty: 3, prompt: 'Which question is the BEST for a survey about screen time?', options: ['"Don\'t you think phones are bad?"','"How many hours per day do you use screens? □ <1 □ 1–3 □ 3–5 □ >5"','"Do you use your phone a lot? □ Yes □ No"','"How much screen time is enough?"'], answer: '"How many hours per day do you use screens? □ <1 □ 1–3 □ 3–5 □ >5"', explanation: 'Clear, non-leading, with non-overlapping exhaustive categories.' }
+          ]
+        },
+
+        /* ── 4. Probability ──────────────────────────────── */
+        {
+          id: 'probability', label: 'Probability',
+          lesson: {
+            sections: [
+              { heading: 'Basic Probability Concepts', body: '**Probability** measures how likely an event is to happen.\n\nProbability scale: 0 (impossible) → ½ (equally likely) → 1 (certain).\n\n**Outcome:** a single possible result (e.g. rolling a 3).\n**Event:** one or more outcomes (e.g. rolling an even number).\n**Sample space:** all possible outcomes (e.g. {1,2,3,4,5,6} for a die).\n\n**Theoretical probability:**\nP(event) = number of favourable outcomes ÷ total outcomes\n\nExample: P(rolling a 4 on a die) = 1/6.', visual: null },
+              { heading: 'Theoretical vs Experimental Probability', body: '**Theoretical probability:** based on equally likely outcomes (maths).\n**Experimental probability:** based on actual results from trials.\nExperimental P = (number of times event occurred) ÷ (total number of trials)\n\nAs you do more trials, experimental probability gets closer to theoretical probability (**Law of Large Numbers**).\n\n**Complementary events:** P(event) + P(not event) = 1\nSo: P(not A) = 1 − P(A)\n\n**Listing outcomes:** use a list or table to find sample space for two events (e.g. flipping two coins: HH, HT, TH, TT).', visual: null }
+            ],
+            keyFacts: [
+              'P(event) = favourable outcomes ÷ total outcomes.',
+              'Probability is always between 0 and 1 (or 0% and 100%).',
+              'P(not A) = 1 − P(A).',
+              'More trials → experimental probability approaches theoretical probability.'
+            ]
+          },
+          workedExamples: [
+            { question: 'A bag has 3 red, 5 blue, 2 green marbles. Find P(blue).', steps: [
+              { label: 'Step 1 — Total outcomes', explanation: '3 + 5 + 2 = 10 marbles total.', highlight: 'Total = 10' },
+              { label: 'Step 2 — Favourable outcomes', explanation: '5 blue marbles.', highlight: 'Favourable = 5' },
+              { label: 'Step 3 — Calculate probability', explanation: 'P(blue) = 5/10 = 1/2.', highlight: 'P(blue) = 1/2' }
+            ], answer: '1/2' },
+            { question: 'A die is rolled. Find P(prime number).', steps: [
+              { label: 'Step 1 — Sample space', explanation: '{1, 2, 3, 4, 5, 6}.', highlight: '6 outcomes' },
+              { label: 'Step 2 — Prime numbers in {1–6}', explanation: '2, 3, 5 are prime. (1 is not prime, 4 and 6 are not prime.)', highlight: 'Primes: 2, 3, 5' },
+              { label: 'Step 3 — Calculate', explanation: 'P(prime) = 3/6 = 1/2.', highlight: 'P = 1/2' }
+            ], answer: '1/2' },
+            { question: 'P(rain today) = 0.3. Find P(no rain).', steps: [
+              { label: 'Step 1 — Complementary rule', explanation: 'P(not A) = 1 − P(A).', highlight: 'P(no rain) = 1 − 0.3' },
+              { label: 'Step 2 — Calculate', explanation: '1 − 0.3 = 0.7.', highlight: 'P(no rain) = 0.7' }
+            ], answer: '0.7' }
+          ],
+          questions: [
+            { id: 'pr01', type: 'multiple-choice', difficulty: 1, prompt: 'A coin is flipped. P(heads) = ?', options: ['0','1/4','1/2','1'], answer: '1/2', explanation: '1 head out of 2 outcomes = 1/2.' },
+            { id: 'pr02', type: 'fill-in-the-blank', difficulty: 1, prompt: 'P(rolling a 6 on a fair die) = ___ (write as fraction)', answer: '1/6', explanation: '1 favourable outcome out of 6 total.' },
+            { id: 'pr03', type: 'multiple-choice', difficulty: 1, prompt: 'An event with probability 0 is:', options: ['Certain','Likely','Unlikely','Impossible'], answer: 'Impossible', explanation: 'P = 0 means it can never happen.' },
+            { id: 'pr04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'P(A) = 0.6. P(not A) = ___', answer: '0.4', explanation: '1 − 0.6 = 0.4.' },
+            { id: 'pr05', type: 'multiple-choice', difficulty: 1, prompt: 'A bag has 2 red and 8 blue balls. P(red) = ?', options: ['1/5','1/4','2/5','1/2'], answer: '1/5', explanation: '2/10 = 1/5.' },
+            { id: 'pr06', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Die rolled 60 times; 6 appeared 8 times. Experimental P(6) = ___ (as fraction)', answer: '2/15', explanation: '8/60 = 2/15.' },
+            { id: 'pr07', type: 'multiple-choice', difficulty: 2, prompt: 'Two coins flipped. Sample space = ?', options: ['{H,T}','{HH,HT,TH,TT}','{HH,TT}','{H,H,T,T}'], answer: '{HH,HT,TH,TT}', explanation: '4 equally likely outcomes when flipping two coins.' },
+            { id: 'pr08', type: 'fill-in-the-blank', difficulty: 2, prompt: 'P(rolling even on die) = ___ (fraction)', answer: '1/2', explanation: 'Even: {2,4,6} = 3 outcomes out of 6 = 1/2.' },
+            { id: 'pr09', type: 'multiple-choice', difficulty: 2, prompt: 'A spinner has 5 equal sections: 2 red, 1 blue, 2 green. P(not green) = ?', options: ['2/5','3/5','1/5','4/5'], answer: '3/5', explanation: 'P(green) = 2/5, so P(not green) = 1 − 2/5 = 3/5.' },
+            { id: 'pr10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A bag has 4 yellow and 6 white balls. P(white) as a percentage = ___%', answer: '60', explanation: '6/10 = 0.6 = 60%.' },
+            { id: 'pr11', type: 'multiple-choice', difficulty: 3, prompt: 'A fair die is rolled 120 times. How many times would you expect a 3?', options: ['10','15','20','30'], answer: '20', explanation: 'P(3) = 1/6. Expected = 120 × 1/6 = 20.' },
+            { id: 'pr12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Two dice rolled. P(sum = 7) — count pairs: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) out of 36. P = ___ (fraction, lowest terms)', answer: '1/6', explanation: '6 favourable out of 36 = 1/6.' },
+            { id: 'pr13', type: 'multiple-choice', difficulty: 3, prompt: 'A card is drawn from 52 cards. P(king or ace) = ?', options: ['1/13','2/13','4/52','8/52'], answer: '2/13', explanation: '4 kings + 4 aces = 8 cards. 8/52 = 2/13.' },
+            { id: 'pr14', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Experimental probability of event E is 0.45 after 200 trials. How many times did E occur?', answer: '90', explanation: '0.45 × 200 = 90.' },
+            { id: 'pr15', type: 'multiple-choice', difficulty: 3, prompt: 'A bag has 5 red, 3 blue, 2 yellow. P(not red) = ?', options: ['1/2','2/5','3/5','1/5'], answer: '1/2', explanation: 'P(red) = 5/10 = 1/2, so P(not red) = 1 − 1/2 = 1/2.' }
+          ]
+        }
+
+      ]
+    });
+  })();
+
   /* ── BOOT ────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => App.init());
   </script>
