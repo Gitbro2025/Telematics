@@ -19,7 +19,9 @@
       --accent-alg: #6366f1;
       --accent-geo: #ef4444;
       --accent-dat: #0ea5e9;
+      --accent-data:#0ea5e9;
       --accent-rat: #8b5cf6;
+      --accent-meas:#14b8a6;
       --success:    #22c55e;
       --error:      #ef4444;
       --neutral:    #94a3b8;
@@ -3779,7 +3781,7 @@
               { id: 'pv304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Count in 5s: 15, 20, 25, ___', answer: '30', explanation: '25 + 5 = 30.' },
               { id: 'pv305', type: 'multiple-choice', difficulty: 1, prompt: 'Round 67 to the nearest 10.', options: ['60','65','70','80'], answer: '70', explanation: 'Units = 7 ≥ 5, round up to 70.' },
               { id: 'pv306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'The number 300 + 6 = ___', answer: '306', explanation: '300 + 0 tens + 6 units = 306.' },
-              { id: 'pv307', type: 'multiple-choice', difficulty: 2, prompt: 'Which correctly orders 478, 784, 487 from smallest to largest?', options: ['478, 487, 784','487, 478, 784','784, 487, 478','478, 784, 487'], answer: '478, 487, 784', explanation: '478 < 487 (tens: 7=7, units: 8>7 — wait: 478 vs 487: tens 7 vs 8) actually 478 < 487 < 784.' },
+              { id: 'pv307', type: 'multiple-choice', difficulty: 2, prompt: 'Which correctly orders 478, 784, 487 from smallest to largest?', options: ['478, 487, 784','487, 478, 784','784, 487, 478','478, 784, 487'], answer: '478, 487, 784', explanation: '478 vs 487: hundreds equal (4), tens 7<8 → 478 < 487. 784 has 7 hundreds, largest. Order: 478 < 487 < 784.' },
               { id: 'pv308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Round 845 to the nearest 10 = ___', answer: '850', explanation: 'Units = 5, round up: 840+10=850.' },
               { id: 'pv309', type: 'multiple-choice', difficulty: 2, prompt: '600 + 30 + 9 represents which number?', options: ['639','693','369','963'], answer: '639', explanation: '6 hundreds + 3 tens + 9 units = 639.' },
               { id: 'pv310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Skip count in 100s: 300, 400, 500, ___', answer: '600', explanation: '500 + 100 = 600.' },
@@ -3829,14 +3831,14 @@
               { id: 'as305', type: 'numeric-input', difficulty: 1, prompt: '425 + 363 = ?', answer: '788', explanation: '4+3 hundreds=7, 2+6 tens=8, 5+3 units=8 → 788.' },
               { id: 'as306', type: 'numeric-input', difficulty: 2, prompt: '637 + 285 = ?', answer: '922', explanation: '7+5=12(carry1), 3+8+1=12(carry1), 6+2+1=9 → 922.' },
               { id: 'as307', type: 'fill-in-the-blank', difficulty: 2, prompt: '800 − ___ = 357', answer: '443', explanation: '800 − 357 = 443.' },
-              { id: 'as308', type: 'numeric-input', difficulty: 2, prompt: '904 − 467 = ?', answer: '437', explanation: '4−7 borrow: 14−7=7; 9→8 tens, 0→9→8−6=3? Wait: 904-467: units:14-7=7, tens: 9-1=8→ 8-6=2→wait actually: 904: H=9,T=0,U=4. U:4-7 borrow T, but T=0 borrow H. So H=8,T=10→9,U=14. 14-7=7, 9-6=3? No: 9-1(borrow)=8 hundreds left. 10-1(lend to U)=9 tens. Tens: 9-6=3? No: 904-467=437. Let me verify: 437+467=904. 7+7=14 carry1, 3+6+1=10 carry1, 4+4+1=9. Yes 904. Answer 437.' },
+              { id: 'as308', type: 'numeric-input', difficulty: 2, prompt: '904 − 467 = ?', answer: '437', explanation: 'Borrow chain: U=4−7 needs borrow; T=0 needs borrow from H. H→8, T→10→9(lend1), U→14. 14−7=7, 9−6=3, 8−4=4 → 437. Check: 437+467=904 ✓' },
               { id: 'as309', type: 'multiple-choice', difficulty: 2, prompt: 'A school has 456 boys and 378 girls. Total students = ?', options: ['724','834','824','734'], answer: '834', explanation: '456+378: 6+8=14(c1), 5+7+1=13(c1), 4+3+1=8 → 834.' },
               { id: 'as310', type: 'fill-in-the-blank', difficulty: 2, prompt: '___ + 247 = 600', answer: '353', explanation: '600 − 247 = 353.' },
               { id: 'as311', type: 'numeric-input', difficulty: 3, prompt: '546 + 285 + 143 = ?', answer: '974', explanation: '546+285=831, 831+143=974.' },
-              { id: 'as312', type: 'fill-in-the-blank', difficulty: 3, prompt: '956 − 278 = ___', answer: '678', explanation: '6-8 borrow: 16-8=8; 4-1=3→3-7 borrow: 13-7=6? Wait 956-278: U:6-8 borrow:16-8=8, T:5→4, 4-7 borrow:14-7=7? No: T=5-1(lend)=4, then 4-7 need borrow from H: 14-7=7? H=9-1=8, 8-2=6. Answer=678. Check: 678+278=956: 8+8=16c1, 7+7+1=15c1, 6+2+1=9. Yes.' },
+              { id: 'as312', type: 'fill-in-the-blank', difficulty: 3, prompt: '956 − 278 = ___', answer: '678', explanation: 'U:6−8 borrow → 16−8=8; T:5→4, 4−7 borrow → 14−7=7; H:9→8, 8−2=6. Answer: 678. Check: 678+278=956 ✓' },
               { id: 'as313', type: 'multiple-choice', difficulty: 3, prompt: 'A farmer had 823 chickens. He sold 267 and bought 154 more. How many does he have now?', options: ['700','710','720','712'], answer: '710', explanation: '823-267=556, 556+154=710.' },
               { id: 'as314', type: 'fill-in-the-blank', difficulty: 3, prompt: '___ − 138 = 465', answer: '603', explanation: '465 + 138 = 603.' },
-              { id: 'as315', type: 'numeric-input', difficulty: 3, prompt: 'What is the sum of the largest and smallest 3-digit numbers made from digits 7, 2, 5?', answer: '969', explanation: 'Largest=752, smallest=257. 752+257=1009... wait: 3-digit, digits 7,2,5. Largest=752, smallest=257. Sum=752+257=1009. But that is 4 digits. Hmm. Let me reconsider: what is the sum of largest 3-digit and smallest 3-digit number using digits 7, 2, 5 (each once): 752+257=1009. I\'ll change the question slightly.' }
+              { id: 'as315', type: 'numeric-input', difficulty: 3, prompt: 'What is the difference between the largest and smallest 3-digit numbers made from digits 7, 2, 5 (each used once)?', answer: '495', explanation: 'Largest = 752, smallest = 257. 752 − 257 = 495.' }
             ]
           }
         ]
@@ -3933,7 +3935,7 @@
               { id: 'tc311', type: 'multiple-choice', difficulty: 3, prompt: 'School starts at 07:45 and ends at 14:15. How long is the school day?', options: ['6 h 30 min','6 h','7 h 30 min','6 h 45 min'], answer: '6 h 30 min', explanation: '14:15 − 07:45 = 6 h 30 min.' },
               { id: 'tc312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A train leaves at 09:55 and arrives 2 hours 40 minutes later. Arrival time = ___:___', answer: '12:35', explanation: '9:55 + 2h40m: 9+2=11, 55+40=95min=1h35m → 12:35.' },
               { id: 'tc313', type: 'multiple-choice', difficulty: 3, prompt: 'How many weeks and days in 50 days?', options: ['6 weeks 2 days','7 weeks 1 day','7 weeks 2 days','6 weeks 8 days'], answer: '7 weeks 1 day', explanation: '50 ÷ 7 = 7 weeks r1 day.' },
-              { id: 'tc314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If today is Wednesday 3 April, what day is it in 20 days? (write day name)', answer: 'Monday', explanation: '20 days later: 3+20=23 April. 20 days = 2 weeks + 6 days. Wed + 6 = Tuesday? Wed=0,Thu=1,Fri=2,Sat=3,Sun=4,Mon=5,Tue=6. So Tuesday. Hmm: Wed+6=Tuesday. Wait: Wed+1=Thu, +2=Fri, +3=Sat, +4=Sun, +5=Mon, +6=Tue. Answer is Tuesday.' },
+              { id: 'tc314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If today is Wednesday 3 April, what day is it in 20 days? (write day name)', answer: 'Tuesday', explanation: '20 days = 2 weeks + 6 extra days. Wed+1=Thu, +2=Fri, +3=Sat, +4=Sun, +5=Mon, +6=Tue. Answer: Tuesday.' },
               { id: 'tc315', type: 'multiple-choice', difficulty: 3, prompt: 'Which year is NOT a leap year?', options: ['2020','2024','2100','2028'], answer: '2100', explanation: '2100 is divisible by 100 but not 400, so it is NOT a leap year.' }
             ]
           }
@@ -4241,7 +4243,7 @@
               { id: 'np409', type: 'multiple-choice', difficulty: 2, prompt: 'Which sequence has rule "subtract 7"?', options: ['3,10,17,24','42,35,28,21','5,10,20,40','8,16,24,32'], answer: '42,35,28,21', explanation: '42-7=35, 35-7=28, 28-7=21.' },
               { id: 'np410', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Flow diagram: input 9, rule ÷3 then +4. Output = ___', answer: '7', explanation: '9÷3=3, 3+4=7.' },
               { id: 'np411', type: 'multiple-choice', difficulty: 3, prompt: 'Pattern: 2, 5, 10, 17, 26 … Rule is n² + 1. What is Term 6?', options: ['35','37','39','40'], answer: '37', explanation: '6²+1=36+1=37.' },
-              { id: 'np412', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Flow: output = 23, rule "+6 then ×2". Input = ___', answer: '5.5', explanation: 'Reverse: 23÷2=11.5, 11.5-6=5.5.' },
+              { id: 'np412', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Flow diagram: rule "×3 then −5". Input = 9. Output = ___', answer: '22', explanation: '9×3=27, 27−5=22.' },
               { id: 'np413', type: 'multiple-choice', difficulty: 3, prompt: 'Triangular numbers: 1, 3, 6, 10, 15. Next term = ?', options: ['18','20','21','25'], answer: '21', explanation: 'Differences: 2,3,4,5,6. Next: 15+6=21.' },
               { id: 'np414', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Find the missing term: 5, ___, 20, 40, 80. (hint: each doubles)', answer: '10', explanation: '5×2=10, 10×2=20✓.' },
               { id: 'np415', type: 'numeric-input', difficulty: 3, prompt: 'Pattern: dots per figure: 1, 4, 7, 10. How many dots in Figure 10?', answer: '28', explanation: 'Rule: 3n−2. 3(10)−2=28.' }
@@ -4506,7 +4508,7 @@
               { id: 'rn709', type: 'multiple-choice', difficulty: 2, prompt: 'Ratio 2:3:5. Smallest share from R800 = ?', options: ['R160','R200','R240','R400'], answer: 'R160', explanation: '10 parts total. Each part=80. Smallest=2×80=160.' },
               { id: 'rn710', type: 'fill-in-the-blank', difficulty: 2, prompt: '2½ × 1⅓ = ___ (as a mixed number or fraction, write as "a b/c" or "a/b")', answer: '10/3', explanation: '5/2 × 4/3 = 20/6 = 10/3.' },
               { id: 'rn711', type: 'multiple-choice', difficulty: 3, prompt: 'If x:y = 3:4 and y:z = 2:5, find x:z.', options: ['3:5','6:20','3:10','6:10'], answer: '3:10', explanation: 'y=4→2→scale by 2: x:y:z=6:8:20 → simplify x:z=6:20=3:10.' },
-              { id: 'rn712', type: 'fill-in-the-blank', difficulty: 3, prompt: '(3/4)² − (1/2)³ = ___ (write as a/b)', answer: '5/8', explanation: '9/16 − 1/8 = 9/16 − 2/16 = 7/16. Hmm: 9/16-2/16=7/16.' },
+              { id: 'rn712', type: 'fill-in-the-blank', difficulty: 3, prompt: '(3/4)² − (1/2)³ = ___ (write as a/b)', answer: '7/16', explanation: '(3/4)²=9/16. (1/2)³=1/8=2/16. 9/16−2/16=7/16.' },
               { id: 'rn713', type: 'multiple-choice', difficulty: 3, prompt: 'A 56 cm stick is cut in ratio 3:4. Longer piece = ?', options: ['24 cm','32 cm','28 cm','36 cm'], answer: '32 cm', explanation: '7 parts. Each=8cm. Longer=4×8=32cm.' },
               { id: 'rn714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Reciprocal of −5/8 = ___ (write as a/b)', answer: '-8/5', explanation: 'Reciprocal of −5/8 is −8/5.' },
               { id: 'rn715', type: 'multiple-choice', difficulty: 3, prompt: 'p:q = 5:3. If p + q = 160, find p − q.', options: ['20','40','60','80'], answer: '40', explanation: '8 parts=160, each=20. p=5×20=100, q=3×20=60. p-q=40.' }
@@ -4561,9 +4563,9 @@
               { id: 'ae710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'If a = 3, b = −2: find 2a − 3b = ___', answer: '12', explanation: '2(3)−3(−2)=6+6=12.' },
               { id: 'ae711', type: 'multiple-choice', difficulty: 3, prompt: 'Expand and simplify: 3(x+2) + 2(x−4)', options: ['5x−2','5x+2','5x+14','5x−14'], answer: '5x−2', explanation: '3x+6+2x−8=5x−2.' },
               { id: 'ae712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: 4(x − 1) = 2(x + 5). x = ___', answer: '7', explanation: '4x−4=2x+10 → 2x=14 → x=7.' },
-              { id: 'ae713', type: 'multiple-choice', difficulty: 3, prompt: 'Which value of x satisfies 3x + 7 > 16?', options: ['x=2','x=3','x=1','x=0'], answer: 'x=3', explanation: '3(3)+7=16. Strictly: x>3. Hmm. 3x>9 → x>3. So x=4 would work. Let me adjust: answer among options should be x=3 gives 16 which is NOT >16. Better: "3x+7 ≥ 16" answer x=3. I\'ll use ≥.' },
+              { id: 'ae713', type: 'multiple-choice', difficulty: 3, prompt: 'Which value of x satisfies 3x + 7 ≥ 16?', options: ['x=2','x=3','x=1','x=0'], answer: 'x=3', explanation: '3(3)+7=9+7=16 ≥ 16. ✓ (x=3 is the smallest whole-number solution.)' },
               { id: 'ae714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If 2x + y = 10 and x = 3, find y. ___', answer: '4', explanation: '2(3)+y=10 → 6+y=10 → y=4.' },
-              { id: 'ae715', type: 'numeric-input', difficulty: 3, prompt: 'Perimeter of rectangle = 38 cm. Length = 2x+1, Width = x−1. Find x.', answer: '7', explanation: '2(2x+1+x−1)=38 → 2(3x)=38 → 6x=38 → x=19/3? Hmm. Let me redo: 2(2x+1)+2(x-1)=38 → 4x+2+2x-2=38 → 6x=38 → x≈6.33. Use simpler: Length=2x, Width=x+3. P=2(2x+x+3)=2(3x+3)=6x+6=38→6x=32→x=16/3. Try: L=x+5, W=x. 2(x+5+x)=38→2(2x+5)=38→4x+10=38→4x=28→x=7. ✓ So x=7.' }
+              { id: 'ae715', type: 'numeric-input', difficulty: 3, prompt: 'Perimeter of rectangle = 38 cm. Length = (x + 5) cm, Width = x cm. Find x.', answer: '7', explanation: '2(x+5+x)=38 → 2(2x+5)=38 → 4x+10=38 → 4x=28 → x=7.' }
             ]
           }
         ]
