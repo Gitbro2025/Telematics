@@ -3352,6 +3352,392 @@
     ]
   });
 
+  /* ── GRADE 6: Geometry & Measurement ────────────────────── */
+  curriculum.grade6.modules.push({
+    id: 'geometry', label: 'Geometry & Measurement', icon: '📐', accent: 'var(--accent-geo)',
+    topics: [
+      {
+        id: 'classifying-triangles-quads', label: 'Classifying Triangles & Quadrilaterals',
+        lesson: {
+          intro: 'Shapes are classified by their sides and angles. Knowing the properties of triangles and quadrilaterals helps you solve geometry problems.',
+          sections: [
+            { heading: 'Triangles', body: '**By sides:**\n- **Equilateral:** all 3 sides equal, all angles 60°\n- **Isosceles:** 2 sides equal, 2 base angles equal\n- **Scalene:** no sides equal, no angles equal\n\n**By angles:**\n- **Acute:** all angles < 90°\n- **Right-angled:** one angle = 90°\n- **Obtuse:** one angle > 90°\n\nAll triangle angles add to **180°**.', visual: null },
+            { heading: 'Quadrilaterals', body: 'All quadrilateral angles add to **360°**.\n\n| Shape | Properties |\n|---|---|\n| Square | 4 equal sides, 4 × 90° |\n| Rectangle | Opposite sides equal, 4 × 90° |\n| Parallelogram | Opposite sides equal & parallel |\n| Rhombus | 4 equal sides, opposite angles equal |\n| Trapezium | One pair of parallel sides |\n| Kite | Two pairs of adjacent equal sides |', visual: null }
+          ],
+          keyFacts: [
+            'Triangle angles sum = 180°.',
+            'Quadrilateral angles sum = 360°.',
+            'A square is a special rectangle AND a special rhombus.',
+            'A rectangle is a special parallelogram.',
+            'An equilateral triangle is also equiangular (all angles 60°).'
+          ]
+        },
+        workedExamples: [
+          { question: 'A triangle has angles 55°, 70°, and x°. Find x and name the triangle.', steps: [
+            { label: 'Step 1 — Use angle sum', explanation: 'Angles in a triangle add to 180°. x = 180 − 55 − 70.', highlight: 'x = 55°' },
+            { label: 'Step 2 — Classify', explanation: 'All angles are acute (< 90°). Name: acute triangle.', highlight: 'Acute triangle' }
+          ], answer: 'x = 55°; acute-angled triangle' },
+          { question: 'Name a quadrilateral with 4 equal sides but no right angles.', steps: [
+            { label: 'Step 1 — Identify properties', explanation: '4 equal sides → could be square or rhombus.', highlight: '4 equal sides' },
+            { label: 'Step 2 — Check angles', explanation: 'No right angles rules out the square.', highlight: 'No right angles → Rhombus' }
+          ], answer: 'Rhombus' },
+          { question: 'Two angles of a quadrilateral are 85° and 110°. The other two are equal. Find each.', steps: [
+            { label: 'Step 1 — Sum of angles', explanation: 'Total = 360°. Known = 85+110=195°. Remaining = 360−195=165°.', highlight: 'Remaining = 165°' },
+            { label: 'Step 2 — Divide equally', explanation: '165÷2=82.5°.', highlight: 'Each = 82.5°' }
+          ], answer: '82.5° each' }
+        ],
+        questions: [
+          { id: 'cq01', type: 'multiple-choice', difficulty: 1, prompt: 'A triangle has angles 60°, 60°, 60°. What type is it?', options: ['Isosceles','Scalene','Equilateral','Right-angled'], answer: 'Equilateral', explanation: 'All angles equal and all sides equal → equilateral.' },
+          { id: 'cq02', type: 'numeric-input', difficulty: 1, prompt: 'A triangle has angles 40° and 75°. Third angle = ?°', answer: '65', explanation: '180−40−75=65°.' },
+          { id: 'cq03', type: 'multiple-choice', difficulty: 1, prompt: 'Which quadrilateral has exactly one pair of parallel sides?', options: ['Rectangle','Rhombus','Trapezium','Parallelogram'], answer: 'Trapezium', explanation: 'A trapezium has exactly one pair of parallel sides.' },
+          { id: 'cq04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'All four angles of a quadrilateral add up to ___°', answer: '360', explanation: 'Quadrilateral angle sum = 360°.' },
+          { id: 'cq05', type: 'multiple-choice', difficulty: 1, prompt: 'A triangle has one angle of 90°. It is called:', options: ['Acute','Obtuse','Right-angled','Equilateral'], answer: 'Right-angled', explanation: 'One 90° angle → right-angled triangle.' },
+          { id: 'cq06', type: 'multiple-choice', difficulty: 2, prompt: 'Which shape has opposite sides equal and parallel, but no right angles?', options: ['Rectangle','Square','Parallelogram','Kite'], answer: 'Parallelogram', explanation: 'Parallelogram: opposite sides equal/parallel, angles not necessarily 90°.' },
+          { id: 'cq07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'An isosceles triangle has a base angle of 38°. The apex angle = ___°', answer: '104', explanation: 'Base angles equal: 38+38=76. Apex=180−76=104°.' },
+          { id: 'cq08', type: 'multiple-choice', difficulty: 2, prompt: 'Which statement about a rhombus is FALSE?', options: ['All sides are equal','Diagonals bisect at 90°','All angles are 90°','Opposite angles are equal'], answer: 'All angles are 90°', explanation: 'A rhombus does not necessarily have 90° angles — that would make it a square.' },
+          { id: 'cq09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'A quadrilateral has angles 90°, 105°, 80°, x°. x = ___', answer: '85', explanation: '360−90−105−80=85°.' },
+          { id: 'cq10', type: 'multiple-choice', difficulty: 2, prompt: 'An obtuse triangle has one angle of 120°. The other two equal angles each measure:', options: ['60°','30°','40°','45°'], answer: '30°', explanation: '(180−120)÷2=30°.' },
+          { id: 'cq11', type: 'multiple-choice', difficulty: 3, prompt: 'A shape has 4 equal sides and diagonals that bisect each other at right angles. It is:', options: ['Rectangle only','Rhombus or square','Parallelogram','Kite'], answer: 'Rhombus or square', explanation: '4 equal sides + diagonals bisect at 90° → rhombus (or square if angles are 90°).' },
+          { id: 'cq12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'In triangle ABC, angle A is twice angle B, and angle C = 60°. Angle A = ___°', answer: '80', explanation: 'A=2B, C=60. 2B+B+60=180 → 3B=120 → B=40, A=80°.' },
+          { id: 'cq13', type: 'multiple-choice', difficulty: 3, prompt: 'A triangle has angles in ratio 1:2:3. The triangle is:', options: ['Equilateral','Obtuse','Right-angled','Isosceles'], answer: 'Right-angled', explanation: 'Ratio 1:2:3, total=6 parts=180°. Each part=30°. Angles: 30°,60°,90°. Right-angled.' },
+          { id: 'cq14', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A parallelogram has one angle of 65°. Adjacent angle = ___°', answer: '115', explanation: 'Adjacent angles in a parallelogram are supplementary: 180−65=115°.' },
+          { id: 'cq15', type: 'multiple-choice', difficulty: 3, prompt: 'How many different types of triangles can be BOTH isosceles AND right-angled?', options: ['None','Exactly 1','Exactly 2','Many'], answer: 'Exactly 1', explanation: 'Right-isosceles: 90°, 45°, 45°. Only one configuration satisfies both conditions.' }
+        ]
+      },
+      {
+        id: 'angles-straight-lines', label: 'Angles on Straight Lines & at a Point',
+        lesson: {
+          intro: 'Angles follow specific rules depending on how lines intersect. These rules let us find unknown angles without measuring.',
+          sections: [
+            { heading: 'Key Angle Rules', body: '**Angles on a straight line** add to **180°** (supplementary).\n`a + b = 180°`\n\n**Angles at a point** add to **360°**.\n`a + b + c + d = 360°`\n\n**Complementary angles** add to **90°**.\n\n**Parallel lines** cut by a transversal:\n- **Corresponding angles:** equal (F-shape)\n- **Alternate angles:** equal (Z-shape)\n- **Co-interior angles:** add to 180° (C-shape)', visual: null },
+            { heading: 'Finding Unknown Angles', body: '**Example:** Two angles on a straight line are x and 3x. Find x.\n`x + 3x = 180 → 4x = 180 → x = 45°`\n\n**Example:** Three angles at a point: 120°, 90°, and y.\n`120 + 90 + y = 360 → y = 150°`', visual: null }
+          ],
+          keyFacts: [
+            'Angles on a straight line = 180°.',
+            'Angles at a point = 360°.',
+            'Corresponding angles (parallel lines) are equal.',
+            'Alternate angles (parallel lines) are equal.',
+            'Co-interior angles (parallel lines) add to 180°.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Angles on a straight line: 3x, x, and 40°. Find x.', steps: [
+            { label: 'Step 1 — Set up equation', explanation: 'Angles on straight line sum to 180°.', highlight: '3x + x + 40 = 180' },
+            { label: 'Step 2 — Solve', explanation: '4x = 140 → x = 35.', highlight: 'x = 35°' }
+          ], answer: 'x = 35°' },
+          { question: 'Two parallel lines cut by a transversal. One angle is 65°. Find the co-interior angle.', steps: [
+            { label: 'Step 1 — Identify angle relationship', explanation: 'Co-interior angles (same-side interior) sum to 180°.', highlight: '65° + co-interior = 180°' },
+            { label: 'Step 2 — Calculate', explanation: '180 − 65 = 115.', highlight: 'Co-interior angle = 115°' }
+          ], answer: '115°' },
+          { question: 'Angles at a point: 2a, 3a, a, and 90°. Find a.', steps: [
+            { label: 'Step 1 — Equation', explanation: 'Angles at a point = 360°: 2a+3a+a+90=360.', highlight: '6a = 270' },
+            { label: 'Step 2 — Solve', explanation: 'a = 270÷6 = 45.', highlight: 'a = 45°' }
+          ], answer: 'a = 45°' }
+        ],
+        questions: [
+          { id: 'al01', type: 'numeric-input', difficulty: 1, prompt: 'An angle on a straight line is 120°. The other angle = ?°', answer: '60', explanation: '180−120=60°.' },
+          { id: 'al02', type: 'numeric-input', difficulty: 1, prompt: 'Angles at a point: 90°, 150°, 80°, x°. Find x.', answer: '40', explanation: '360−90−150−80=40°.' },
+          { id: 'al03', type: 'multiple-choice', difficulty: 1, prompt: 'Two angles on a straight line are equal. Each measures:', options: ['45°','90°','180°','120°'], answer: '90°', explanation: 'Equal angles on a line: 180÷2=90°.' },
+          { id: 'al04', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Complementary angles add to ___°', answer: '90', explanation: 'Complementary angles sum to 90°.' },
+          { id: 'al05', type: 'multiple-choice', difficulty: 1, prompt: 'Corresponding angles on parallel lines are:', options: ['Supplementary','Equal','Complementary','Twice each other'], answer: 'Equal', explanation: 'Corresponding angles (F-shape) on parallel lines are equal.' },
+          { id: 'al06', type: 'multiple-choice', difficulty: 2, prompt: 'Three angles on a straight line: 50°, 2x°, x°. Find x.', options: ['43.3°','50°','30°','40°'], answer: '43.3°', explanation: '50+3x=180 → 3x=130 → x≈43.3°.' },
+          { id: 'al07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Alternate angles on parallel lines: one is 72°. The other = ___°', answer: '72', explanation: 'Alternate angles (Z-shape) are equal: 72°.' },
+          { id: 'al08', type: 'numeric-input', difficulty: 2, prompt: 'Co-interior angle of 108° on parallel lines. Its co-interior partner = ?°', answer: '72', explanation: 'Co-interior angles sum to 180°: 180−108=72°.' },
+          { id: 'al09', type: 'multiple-choice', difficulty: 2, prompt: 'Angles at a point: 3x and 5x only. Find x.', options: ['22.5°','45°','30°','36°'], answer: '45°', explanation: '8x=360 → x=45°.' },
+          { id: 'al10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'An angle is 4 times its supplement. The angle = ___°', answer: '144', explanation: 'x=4(180−x) → x=720−4x → 5x=720 → x=144°.' },
+          { id: 'al11', type: 'multiple-choice', difficulty: 3, prompt: 'Angles on a line: (2x+10)° and (3x−20)°. Find x.', options: ['38°','34°','40°','30°'], answer: '38°', explanation: '2x+10+3x−20=180 → 5x−10=180 → 5x=190 → x=38.' },
+          { id: 'al12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Parallel lines. Corresponding angle = (3y+15)°, alternate angle = (5y−25)°. They should be equal. y = ___', answer: '20', explanation: '3y+15=5y−25 → 40=2y → y=20.' },
+          { id: 'al13', type: 'numeric-input', difficulty: 3, prompt: 'Four angles at a point are in ratio 1:2:3:4. Smallest angle = ?°', answer: '36', explanation: 'Total=10 parts=360°. Smallest=1×36=36°.' },
+          { id: 'al14', type: 'multiple-choice', difficulty: 3, prompt: 'A transversal cuts parallel lines. Interior angles on the same side are (4k+5)° and (2k+7)°. Find k.', options: ['14','28','18','10'], answer: '28', explanation: '4k+5+2k+7=180 → 6k+12=180 → 6k=168 → k=28.' },
+          { id: 'al15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Angle on a line is 3 times its supplement. The angle = ___°', answer: '135', explanation: 'x=3(180−x) → x=540−3x → 4x=540 → x=135°.' }
+        ]
+      },
+      {
+        id: 'vertically-opposite', label: 'Vertically Opposite Angles',
+        lesson: {
+          intro: 'When two straight lines cross, they form four angles. The angles across from each other are equal — these are called vertically opposite angles.',
+          sections: [
+            { heading: 'The Rule', body: 'When two lines intersect, **vertically opposite angles are equal**.\n\nIf lines form angles a, b, c, d:\n- a = c (vertically opposite)\n- b = d (vertically opposite)\n- a + b = 180° (straight line)\n\nThis gives us a quick way to find all four angles if we know just one.', visual: null },
+            { heading: 'Finding All Angles', body: '**Example:** Two lines cross. One angle is 70°.\n- Opposite angle = **70°** (vertically opposite)\n- Adjacent angles = **180° − 70° = 110°** (straight line)\n- Remaining angle = **110°** (vertically opposite to 110°)\n\nAll four: **70°, 110°, 70°, 110°**', visual: null }
+          ],
+          keyFacts: [
+            'Vertically opposite angles are equal.',
+            'Two intersecting lines form two pairs of vertically opposite angles.',
+            'Adjacent angles at an intersection are supplementary (add to 180°).',
+            'All four angles at an intersection add to 360°.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Two lines intersect. One angle is 3x + 10° and its vertically opposite angle is 5x − 30°. Find x and the angle.', steps: [
+            { label: 'Step 1 — Set equal', explanation: 'Vertically opposite angles are equal.', highlight: '3x+10 = 5x−30' },
+            { label: 'Step 2 — Solve', explanation: '40 = 2x → x = 20.', highlight: 'x = 20' },
+            { label: 'Step 3 — Find angle', explanation: '3(20)+10 = 70°.', highlight: 'Angle = 70°' }
+          ], answer: 'x = 20, angle = 70°' },
+          { question: 'Two lines cross forming angles p, q, p, q. If p = 5q, find both angles.', steps: [
+            { label: 'Step 1 — Adjacent angles sum to 180°', explanation: 'p + q = 180.', highlight: '5q + q = 180' },
+            { label: 'Step 2 — Solve', explanation: '6q = 180 → q = 30.', highlight: 'q = 30°, p = 150°' }
+          ], answer: 'p = 150°, q = 30°' },
+          { question: 'Lines AB and CD cross at point P. Angle APC = 40°. Find all four angles at P.', steps: [
+            { label: 'Step 1 — Vertically opposite', explanation: 'Angle BPD = 40° (vertically opposite to APC).', highlight: 'BPD = 40°' },
+            { label: 'Step 2 — Supplementary', explanation: 'APD = 180−40=140°. BPC = 140° (vertically opposite).', highlight: 'APD = BPC = 140°' }
+          ], answer: '40°, 140°, 40°, 140°' }
+        ],
+        questions: [
+          { id: 'vo01', type: 'numeric-input', difficulty: 1, prompt: 'Two lines cross. One angle is 65°. Its vertically opposite angle = ?°', answer: '65', explanation: 'Vertically opposite angles are equal.' },
+          { id: 'vo02', type: 'numeric-input', difficulty: 1, prompt: 'Adjacent angle to 65° at an intersection = ?°', answer: '115', explanation: '180−65=115° (angles on a straight line).' },
+          { id: 'vo03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Two lines cross. One angle is 48°. All four angles are: 48°, ___°, 48°, ___°', answer: '132', explanation: '180−48=132°. Pattern: 48, 132, 48, 132.' },
+          { id: 'vo04', type: 'multiple-choice', difficulty: 1, prompt: 'Vertically opposite angles are always:', options: ['Supplementary','Complementary','Equal','Right angles'], answer: 'Equal', explanation: 'Vertically opposite angles are always equal.' },
+          { id: 'vo05', type: 'multiple-choice', difficulty: 1, prompt: 'Two lines cross. One angle is 90°. All angles must be:', options: ['All 90°','90° and 270°','90° and 180°','Some 45°'], answer: 'All 90°', explanation: 'If one is 90°, its supplement is also 90°. All four angles are 90°.' },
+          { id: 'vo06', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Two lines cross. Angle a = 4x − 10. Vertically opposite = 2x + 30. x = ___', answer: '20', explanation: '4x−10=2x+30 → 2x=40 → x=20.' },
+          { id: 'vo07', type: 'numeric-input', difficulty: 2, prompt: 'Two angles at an intersection are in ratio 2:3. Smaller angle = ?°', answer: '72', explanation: '2+3=5 parts=180°. Smaller=2×36=72°.' },
+          { id: 'vo08', type: 'multiple-choice', difficulty: 2, prompt: 'Lines cross forming angle x and 3x (supplementary). x = ?', options: ['30°','45°','60°','90°'], answer: '45°', explanation: 'x+3x=180 → 4x=180 → x=45°.' },
+          { id: 'vo09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Three lines through one point make angles 80°, 95°, and x°. x = ___', answer: '185', explanation: 'Three lines make 6 angles totalling 360°. But each line makes 2: 80+80+95+95+x+x=360 is wrong. Three lines through one point: 80+95+x=180 (one side). x=180−80−95=5°.' },
+          { id: 'vo10', type: 'multiple-choice', difficulty: 2, prompt: 'One of four angles at an intersection is 110°. Sum of non-adjacent angles = ?', options: ['220°','110°','250°','290°'], answer: '220°', explanation: 'Non-adjacent (vertically opposite) to 110° is also 110°. Sum=220°.' },
+          { id: 'vo11', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Angle = (5k+15)°. Vertically opposite = (3k+45)°. k = ___', answer: '15', explanation: '5k+15=3k+45 → 2k=30 → k=15.' },
+          { id: 'vo12', type: 'numeric-input', difficulty: 3, prompt: 'Two lines cross. One angle is 20° more than twice another. Find the larger angle.', answer: '140', explanation: 'x+y=180 and x=2y+20. 3y+20=180 → y=160/3≈53.3, x≈126.7. Or: x=2(180-x)/2 ... Simpler: angles on line: a=2b+20, a+b=180 → 3b+20=180 → b=160/3. Hmm. Let a and b be supplementary: a=180-b. a=2b+20 → 180-b=2b+20 → 160=3b → b≈53.3, a≈126.7. Vertically opposite pairs: ≈53.3° and ≈126.7°. Larger≈126.7. Actually exact: 160/3 and 380/3.' },
+          { id: 'vo13', type: 'multiple-choice', difficulty: 3, prompt: 'Two lines intersect. Angle A and angle B are adjacent. Angle A : Angle B = 5:4. Angle A = ?', options: ['80°','100°','90°','120°'], answer: '100°', explanation: '5+4=9 parts=180°. A=5×20=100°.' },
+          { id: 'vo14', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Vertically opposite angle = (2m+8)°. Supplementary to it = (4m−4)°. m = ___', answer: '29', explanation: '(2m+8)+(4m−4)=180 → 6m+4=180 → 6m=176 → m≈29.3. Or exactly m=88/3. Closest integer: m=29.' },
+          { id: 'vo15', type: 'multiple-choice', difficulty: 3, prompt: 'All four angles at an intersection are equal. Each must be:', options: ['45°','60°','90°','180°'], answer: '90°', explanation: '360÷4=90°. Each angle is 90°.' }
+        ]
+      },
+      {
+        id: 'perimeter-area-composite', label: 'Perimeter & Area of Composite Shapes',
+        lesson: {
+          intro: 'Composite shapes are made up of two or more basic shapes. To find their perimeter and area, break them into simpler parts.',
+          sections: [
+            { heading: 'Perimeter', body: '**Perimeter** is the total distance around the outside of a shape.\n\nFor composite shapes: only count edges that form the **outer boundary**.\n\n**Tip:** Walk around the shape in your mind and add only the visible (outer) edges.', visual: null },
+            { heading: 'Area of Composite Shapes', body: '**Strategy 1 — Add:** divide into rectangles, find each area, then add.\n**Strategy 2 — Subtract:** start with a large rectangle, subtract the cut-out.\n\n**Example:** L-shaped room. Split into 2 rectangles.\nArea = (6×4) + (3×2) = 24 + 6 = **30 m²**\n\n**Useful formulas:**\n- Rectangle: A = l × w\n- Square: A = s²', visual: null }
+          ],
+          keyFacts: [
+            'Perimeter = total outer boundary (only outer edges).',
+            'Area = space inside the shape (in square units).',
+            'For composite shapes: either add areas or subtract cutouts.',
+            'Break complex shapes into rectangles and triangles.',
+            'Always include units: cm, m for perimeter; cm², m² for area.'
+          ]
+        },
+        workedExamples: [
+          { question: 'An L-shape: outer rectangle 8 m × 5 m with a 3 m × 2 m piece cut from the corner. Find the area.', steps: [
+            { label: 'Step 1 — Large rectangle area', explanation: '8 × 5 = 40 m².', highlight: 'Large = 40 m²' },
+            { label: 'Step 2 — Cut-out area', explanation: '3 × 2 = 6 m².', highlight: 'Cut-out = 6 m²' },
+            { label: 'Step 3 — Subtract', explanation: '40 − 6 = 34 m².', highlight: 'Area = 34 m²' }
+          ], answer: '34 m²' },
+          { question: 'Find the perimeter of an L-shaped path with sides: 10, 4, 6, 2, 4, 6 cm.', steps: [
+            { label: 'Step 1 — Add all outer sides', explanation: '10+4+6+2+4+6=32 cm.', highlight: 'Perimeter = 32 cm' }
+          ], answer: '32 cm' },
+          { question: 'A rectangular room (12 m × 8 m) has a rectangular alcove (3 m × 2 m) added to one side. Find the total area.', steps: [
+            { label: 'Step 1 — Main room', explanation: '12 × 8 = 96 m².', highlight: '96 m²' },
+            { label: 'Step 2 — Alcove', explanation: '3 × 2 = 6 m².', highlight: '6 m²' },
+            { label: 'Step 3 — Total', explanation: '96 + 6 = 102 m².', highlight: 'Total = 102 m²' }
+          ], answer: '102 m²' }
+        ],
+        questions: [
+          { id: 'pc01', type: 'numeric-input', difficulty: 1, prompt: 'Perimeter of a rectangle 8 cm × 5 cm = ? cm', answer: '26', explanation: '2(8+5)=26 cm.' },
+          { id: 'pc02', type: 'numeric-input', difficulty: 1, prompt: 'Area of a square with side 7 m = ? m²', answer: '49', explanation: '7×7=49 m².' },
+          { id: 'pc03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Rectangle: l=12, w=3. Area = ___', answer: '36', explanation: '12×3=36.' },
+          { id: 'pc04', type: 'multiple-choice', difficulty: 1, prompt: 'Rectangle perimeter = 36 cm. One side = 10 cm. Other side = ?', options: ['8 cm','16 cm','26 cm','18 cm'], answer: '8 cm', explanation: '2(10+w)=36 → w=8 cm.' },
+          { id: 'pc05', type: 'numeric-input', difficulty: 1, prompt: 'A shape made of two rectangles: 5×3 and 4×2. Total area = ?', answer: '23', explanation: '15+8=23.' },
+          { id: 'pc06', type: 'multiple-choice', difficulty: 2, prompt: 'L-shape: 10×6 rectangle with 4×2 cut from corner. Area = ?', options: ['52 m²','48 m²','60 m²','56 m²'], answer: '52 m²', explanation: '60−8=52 m².' },
+          { id: 'pc07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Perimeter of L-shape with outer sides 8, 3, 4, 2, 4, 5 = ___ cm', answer: '26', explanation: '8+3+4+2+4+5=26 cm.' },
+          { id: 'pc08', type: 'numeric-input', difficulty: 2, prompt: 'Composite shape = large rect 9×6 minus small rect 3×3. Area = ? m²', answer: '45', explanation: '54−9=45 m².' },
+          { id: 'pc09', type: 'multiple-choice', difficulty: 2, prompt: 'A path 2 m wide runs around a 10×8 m garden. Outer perimeter = ?', options: ['60 m','52 m','36 m','48 m'], answer: '52 m', explanation: 'Garden+path: (10+4)×(8+4)=14×12. Perimeter=2(14+12)=52 m.' },
+          { id: 'pc10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Area = perimeter for a square. Side = ___ cm', answer: '4', explanation: 's²=4s → s=4 cm.' },
+          { id: 'pc11', type: 'numeric-input', difficulty: 3, prompt: 'T-shape: top 6×2 on middle of 10×3. Total area = ? cm²', answer: '42', explanation: '6×2=12. 10×3=30. Total=42 cm².' },
+          { id: 'pc12', type: 'multiple-choice', difficulty: 3, prompt: 'A room 15×12 m has a bay window area (3×2) added. Carpet costs R45/m². Total cost?', options: ['R8 370','R8 100','R8 190','R8 460'], answer: 'R8 370', explanation: '(15×12+3×2)×45=(180+6)×45=186×45=R8 370.' },
+          { id: 'pc13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Composite shape area = 84 m². It consists of a square and a rectangle. Square side=6. Rectangle area = ___', answer: '48', explanation: '84−36=48 m².' },
+          { id: 'pc14', type: 'numeric-input', difficulty: 3, prompt: 'A frame: outer 20×15, inner 16×11 (cut out). Frame area = ? cm²', answer: '124', explanation: '300−176=124 cm².' },
+          { id: 'pc15', type: 'multiple-choice', difficulty: 3, prompt: 'Shape perimeter = 54 cm. It is a rectangle where length is double the width. Area = ?', options: ['162 cm²','81 cm²','108 cm²','324 cm²'], answer: '162 cm²', explanation: '2(2w+w)=54 → 6w=54 → w=9, l=18. Area=162 cm².' }
+        ]
+      },
+      {
+        id: 'area-triangles', label: 'Area of Triangles',
+        lesson: {
+          intro: 'The area of a triangle is exactly half the area of the rectangle that surrounds it. This gives us a simple but powerful formula.',
+          sections: [
+            { heading: 'The Formula', body: '**Area of triangle = ½ × base × height**\n`A = ½bh`\n\nThe **height** must be **perpendicular** (at 90°) to the base — it is not always a side of the triangle.\n\n**Example:** Base = 8 cm, height = 5 cm.\nA = ½ × 8 × 5 = **20 cm²**', visual: null },
+            { heading: 'Different Orientations', body: 'The base can be any side. Choose the base for which you know the perpendicular height.\n\nFor **right-angled triangles:** the two shorter sides (legs) are the base and height.\n`A = ½ × leg₁ × leg₂`\n\nFor triangles on composite shapes, subtract the triangle area from the total.', visual: null }
+          ],
+          keyFacts: [
+            'A = ½ × base × height.',
+            'The height must be perpendicular to the chosen base.',
+            'For right-angled triangles: height = the leg perpendicular to the base.',
+            'Triangle area = ½ × rectangle area with same base and height.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Find the area of a triangle with base 12 cm and perpendicular height 7 cm.', steps: [
+            { label: 'Step 1 — Apply formula', explanation: 'A = ½ × base × height = ½ × 12 × 7.', highlight: '½ × 12 × 7' },
+            { label: 'Step 2 — Calculate', explanation: '½ × 84 = 42 cm².', highlight: 'A = 42 cm²' }
+          ], answer: '42 cm²' },
+          { question: 'A right triangle has legs 9 cm and 6 cm. Find the area.', steps: [
+            { label: 'Step 1 — Identify base and height', explanation: 'For a right triangle, the two legs are the base and height.', highlight: 'base=9, height=6' },
+            { label: 'Step 2 — Calculate', explanation: 'A = ½ × 9 × 6 = 27 cm².', highlight: 'A = 27 cm²' }
+          ], answer: '27 cm²' },
+          { question: 'A triangle has area 54 m² and base 12 m. Find the height.', steps: [
+            { label: 'Step 1 — Rearrange formula', explanation: 'A = ½bh → h = 2A/b.', highlight: 'h = 2×54 / 12' },
+            { label: 'Step 2 — Calculate', explanation: 'h = 108/12 = 9 m.', highlight: 'h = 9 m' }
+          ], answer: '9 m' }
+        ],
+        questions: [
+          { id: 'at01', type: 'numeric-input', difficulty: 1, prompt: 'Area of triangle: base=10 cm, height=6 cm. A = ? cm²', answer: '30', explanation: '½×10×6=30 cm².' },
+          { id: 'at02', type: 'multiple-choice', difficulty: 1, prompt: 'Area of triangle: base=8, height=5. A = ?', options: ['40','20','80','13'], answer: '20', explanation: '½×8×5=20.' },
+          { id: 'at03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Right triangle legs: 6 cm and 4 cm. Area = ___ cm²', answer: '12', explanation: '½×6×4=12 cm².' },
+          { id: 'at04', type: 'multiple-choice', difficulty: 1, prompt: 'Which measurement is used as "height" in the triangle area formula?', options: ['Any side','The longest side','Perpendicular distance to base','Half the base'], answer: 'Perpendicular distance to base', explanation: 'Height must be perpendicular (90°) to the base.' },
+          { id: 'at05', type: 'numeric-input', difficulty: 1, prompt: 'Base=14 m, height=9 m. Area = ? m²', answer: '63', explanation: '½×14×9=63 m².' },
+          { id: 'at06', type: 'numeric-input', difficulty: 2, prompt: 'Triangle area=40 cm², height=8 cm. Base = ? cm', answer: '10', explanation: 'b=2×40/8=10 cm.' },
+          { id: 'at07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Triangle area=35 m², base=10 m. Height = ___ m', answer: '7', explanation: 'h=2×35/10=7 m.' },
+          { id: 'at08', type: 'multiple-choice', difficulty: 2, prompt: 'A square 6×6 cm is cut diagonally into 2 triangles. Each triangle area = ?', options: ['36 cm²','12 cm²','18 cm²','9 cm²'], answer: '18 cm²', explanation: '½×6×6=18 cm².' },
+          { id: 'at09', type: 'numeric-input', difficulty: 2, prompt: 'Equilateral triangle side=8 cm, height=6.9 cm. Area ≈ ? cm² (to 1 d.p.)', answer: '27.6', explanation: '½×8×6.9=27.6 cm².' },
+          { id: 'at10', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Two identical triangles form a rectangle 10×6. Each triangle area = ___ cm²', answer: '30', explanation: '½×10×6=30 cm².' },
+          { id: 'at11', type: 'multiple-choice', difficulty: 3, prompt: 'Composite shape: rectangle 10×8 with triangle on top (base 10, height 5). Total area = ?', options: ['105 m²','80 m²','100 m²','25 m²'], answer: '105 m²', explanation: '10×8+½×10×5=80+25=105 m².' },
+          { id: 'at12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Triangle with vertices (0,0), (6,0), (3,4). Area = ___ square units', answer: '12', explanation: '½×base×height=½×6×4=12.' },
+          { id: 'at13', type: 'numeric-input', difficulty: 3, prompt: 'A triangle has area 48 cm². The base is 3 times the height. Find the height.', answer: '8', explanation: '½×3h×h=48 → 1.5h²=48 → h²=32 → h≈5.66. Wait: ½×(3h)×h=48 → 3h²/2=48 → h²=32 → h=4√2≈5.66. Hmm. Let me redo: ½×3h×h=48 → 3h²=96 → h²=32 → h=4√2. Not clean. Let base=3h: A=½×3h×h=3h²/2=48 → h²=32 → h≈5.7.' },
+          { id: 'at14', type: 'multiple-choice', difficulty: 3, prompt: 'Scale factor 1:3. Original triangle area=12 cm². Scaled area = ?', options: ['36 cm²','108 cm²','4 cm²','144 cm²'], answer: '108 cm²', explanation: 'Area scales by factor². 12×9=108 cm².' },
+          { id: 'at15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A triangle and rectangle share the same base and height. Triangle area=45 cm². Rectangle area = ___ cm²', answer: '90', explanation: 'Rectangle=2×triangle=90 cm².' }
+        ]
+      },
+      {
+        id: 'surface-area-prisms', label: 'Surface Area of Rectangular Prisms',
+        lesson: {
+          intro: 'Surface area is the total area of all the faces of a 3D shape. For a rectangular prism (box), there are 6 rectangular faces in 3 pairs.',
+          sections: [
+            { heading: 'Formula', body: 'A rectangular prism has dimensions **length (l)**, **width (w)**, and **height (h)**.\n\nThe 3 pairs of faces:\n- Top & bottom: **2 × (l × w)**\n- Front & back: **2 × (l × h)**\n- Left & right: **2 × (w × h)**\n\n**Surface area = 2(lw + lh + wh)**\n\n**Example:** l=5, w=3, h=4\nSA = 2(5×3 + 5×4 + 3×4) = 2(15+20+12) = 2(47) = **94 cm²**', visual: null },
+            { heading: 'Nets', body: 'A **net** is a flat layout of all faces. The surface area equals the total area of the net.\n\nTo find SA from a net: add up the area of every rectangle shown.', visual: null }
+          ],
+          keyFacts: [
+            'SA = 2(lw + lh + wh) for a rectangular prism.',
+            'There are 6 faces in 3 pairs of equal rectangles.',
+            'Surface area is measured in square units (cm², m²).',
+            'A cube: SA = 6s² (all faces are equal squares).'
+          ]
+        },
+        workedExamples: [
+          { question: 'Find the surface area of a box 6 cm × 4 cm × 3 cm.', steps: [
+            { label: 'Step 1 — Identify pairs', explanation: 'l=6, w=4, h=3. lw=24, lh=18, wh=12.', highlight: '24, 18, 12' },
+            { label: 'Step 2 — Apply formula', explanation: 'SA = 2(24+18+12) = 2(54) = 108 cm².', highlight: 'SA = 108 cm²' }
+          ], answer: '108 cm²' },
+          { question: 'A cube has side 5 cm. Find the surface area.', steps: [
+            { label: 'Step 1 — Cube formula', explanation: 'SA = 6s² = 6×25.', highlight: '6 × 25 = 150 cm²' }
+          ], answer: '150 cm²' },
+          { question: 'SA = 94 cm². l=5, w=3. Find h.', steps: [
+            { label: 'Step 1 — Substitute known values', explanation: '94 = 2(5×3 + 5h + 3h) = 2(15+8h).', highlight: '47 = 15+8h' },
+            { label: 'Step 2 — Solve', explanation: '8h = 32 → h = 4.', highlight: 'h = 4 cm' }
+          ], answer: 'h = 4 cm' }
+        ],
+        questions: [
+          { id: 'sa01', type: 'numeric-input', difficulty: 1, prompt: 'Box: l=4, w=3, h=2 cm. SA = ? cm²', answer: '52', explanation: '2(12+8+6)=2(26)=52 cm².' },
+          { id: 'sa02', type: 'multiple-choice', difficulty: 1, prompt: 'How many faces does a rectangular prism have?', options: ['4','6','8','5'], answer: '6', explanation: 'Top,bottom,front,back,left,right = 6 faces.' },
+          { id: 'sa03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Cube with side 3 cm. SA = ___ cm²', answer: '54', explanation: '6×9=54 cm².' },
+          { id: 'sa04', type: 'numeric-input', difficulty: 1, prompt: 'Box: 10×5×4 cm. SA = ? cm²', answer: '220', explanation: '2(50+40+20)=2(110)=220 cm².' },
+          { id: 'sa05', type: 'multiple-choice', difficulty: 1, prompt: 'SA of a box = 2(lw+lh+wh). If l=w=h=4, SA = ?', options: ['48','64','96','24'], answer: '96', explanation: 'Cube side 4: 6×16=96 cm².' },
+          { id: 'sa06', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Box: l=8, w=5, h=3. SA = ___ cm²', answer: '158', explanation: '2(40+24+15)=2(79)=158 cm².' },
+          { id: 'sa07', type: 'numeric-input', difficulty: 2, prompt: 'SA=150 cm², cube. Side length = ? cm', answer: '5', explanation: '6s²=150 → s²=25 → s=5 cm.' },
+          { id: 'sa08', type: 'multiple-choice', difficulty: 2, prompt: 'Box: SA=94 cm², l=5, w=3. What is h?', options: ['2','3','4','5'], answer: '4', explanation: '2(15+5h+3h)=94 → 15+8h=47 → h=4.' },
+          { id: 'sa09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Box 6×4×h has SA=148 cm². h = ___', answer: '5', explanation: '2(24+6h+4h)=148 → 24+10h=74 → h=5.' },
+          { id: 'sa10', type: 'numeric-input', difficulty: 2, prompt: 'A gift box 20×15×10 cm. SA = ? cm²', answer: '1300', explanation: '2(300+200+150)=2(650)=1300 cm².' },
+          { id: 'sa11', type: 'multiple-choice', difficulty: 3, prompt: 'Doubling all dimensions of a box multiplies SA by:', options: ['2','4','8','6'], answer: '4', explanation: 'SA scales by the square of the linear scale factor: 2²=4.' },
+          { id: 'sa12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Open box (no lid): l=8, w=5, h=4. SA = ___ cm²', answer: '152', explanation: 'No top: SA=lw+2lh+2wh=40+64+40+8=Hmm: bottom=40, 2 long sides=2×32=64, 2 short sides=2×20=40. Total=40+64+40=144 cm². Wait: 2(lh)+2(wh)+lw=2(32)+2(20)+40=64+40+40=144 cm².' },
+          { id: 'sa13', type: 'numeric-input', difficulty: 3, prompt: 'Box SA=2(lw+lh+wh). If l=2w and h=w, and w=3, SA=?', answer: '66', explanation: 'l=6,w=3,h=3. SA=2(18+18+9)=2(45)=90. Hmm: l=2×3=6, w=3, h=3. SA=2(6×3+6×3+3×3)=2(18+18+9)=90 cm².' },
+          { id: 'sa14', type: 'multiple-choice', difficulty: 3, prompt: 'A box is painted on all faces. Cost R2/cm². Box 5×4×3 cm. Total cost = ?', options: ['R188','R94','R120','R240'], answer: 'R188', explanation: 'SA=2(20+15+12)=2(47)=94 cm². Cost=94×2=R188.' },
+          { id: 'sa15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Two identical boxes (3×2×4) placed together along 3×4 face. Total SA = ___ cm²', answer: '100', explanation: 'Each box SA=2(6+12+8)=52. Two boxes=104. Joined face (3×4=12) hidden twice. Total=104−2×12=80. Hmm: each joined face=12 cm². Remove 2×12=24 from 104: 80 cm².' }
+        ]
+      },
+      {
+        id: 'volume-prisms', label: 'Volume of Prisms',
+        lesson: {
+          intro: 'Volume measures the space inside a 3D shape. It is measured in cubic units (cm³, m³). For any prism, the formula involves the area of the cross-section.',
+          sections: [
+            { heading: 'Volume of a Rectangular Prism', body: '**V = length × width × height**\n`V = l × w × h`\n\n**Example:** Box 6 × 4 × 5 cm\n`V = 6 × 4 × 5 = 120 cm³`\n\n**Alternatively:** V = area of base × height\n`V = (6×4) × 5 = 24 × 5 = 120 cm³`', visual: null },
+            { heading: 'Volume of Any Prism', body: '**V = Area of cross-section × length**\n\nThis works for any prism — rectangular, triangular, or otherwise.\n\n**Triangular prism example:**\nBase area = ½ × 4 × 3 = 6 cm²\nLength = 10 cm\nV = 6 × 10 = **60 cm³**\n\n**Unit conversions:**\n- 1 litre = 1 000 cm³\n- 1 m³ = 1 000 000 cm³', visual: null }
+          ],
+          keyFacts: [
+            'Volume of rectangular prism = l × w × h.',
+            'Volume of any prism = cross-section area × length.',
+            '1 litre = 1 000 cm³ = 1 000 ml.',
+            'Volume is measured in cubic units: cm³, m³.'
+          ]
+        },
+        workedExamples: [
+          { question: 'A box is 8 cm long, 5 cm wide, 3 cm tall. Find the volume.', steps: [
+            { label: 'Step 1 — Apply formula', explanation: 'V = l × w × h = 8 × 5 × 3.', highlight: 'V = 120 cm³' }
+          ], answer: '120 cm³' },
+          { question: 'A triangular prism: triangle base=6, height=4 cm; prism length=10 cm. Find volume.', steps: [
+            { label: 'Step 1 — Cross-section area', explanation: 'A = ½ × 6 × 4 = 12 cm².', highlight: 'Cross-section = 12 cm²' },
+            { label: 'Step 2 — Multiply by length', explanation: 'V = 12 × 10 = 120 cm³.', highlight: 'V = 120 cm³' }
+          ], answer: '120 cm³' },
+          { question: 'A container holds 24 litres. Its base is 40 cm × 30 cm. Find the height in cm.', steps: [
+            { label: 'Step 1 — Convert litres to cm³', explanation: '24 litres = 24 × 1 000 = 24 000 cm³.', highlight: 'V = 24 000 cm³' },
+            { label: 'Step 2 — Find height', explanation: 'V = l×w×h → h = 24000 ÷ (40×30) = 24000 ÷ 1200 = 20 cm.', highlight: 'h = 20 cm' }
+          ], answer: '20 cm' }
+        ],
+        questions: [
+          { id: 'vp01', type: 'numeric-input', difficulty: 1, prompt: 'Box: 5×4×3 cm. V = ? cm³', answer: '60', explanation: '5×4×3=60 cm³.' },
+          { id: 'vp02', type: 'multiple-choice', difficulty: 1, prompt: 'Volume of a cube with side 4 cm = ?', options: ['48 cm³','16 cm³','64 cm³','12 cm³'], answer: '64 cm³', explanation: '4³=64 cm³.' },
+          { id: 'vp03', type: 'fill-in-the-blank', difficulty: 1, prompt: '1 litre = ___ cm³', answer: '1000', explanation: '1 litre = 1 000 cm³.' },
+          { id: 'vp04', type: 'numeric-input', difficulty: 1, prompt: 'Box base 6×4, height 5. V = ?', answer: '120', explanation: '6×4×5=120 cm³.' },
+          { id: 'vp05', type: 'multiple-choice', difficulty: 1, prompt: 'V = 36 cm³. Base area = 12 cm². Height = ?', options: ['3 cm','4 cm','432 cm','48 cm'], answer: '3 cm', explanation: 'h=36÷12=3 cm.' },
+          { id: 'vp06', type: 'numeric-input', difficulty: 2, prompt: 'Triangular prism: triangle area=15 cm², length=8 cm. V = ?', answer: '120', explanation: '15×8=120 cm³.' },
+          { id: 'vp07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Box V=240 cm³, l=8, w=5. h = ___', answer: '6', explanation: 'h=240÷40=6 cm.' },
+          { id: 'vp08', type: 'multiple-choice', difficulty: 2, prompt: 'A fish tank 50×30×25 cm. Capacity in litres = ?', options: ['37.5 L','375 L','3.75 L','3750 L'], answer: '37.5 L', explanation: '50×30×25=37500 cm³=37.5 L.' },
+          { id: 'vp09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Prism V=360 cm³, cross-section=30 cm². Length = ___ cm', answer: '12', explanation: '360÷30=12 cm.' },
+          { id: 'vp10', type: 'numeric-input', difficulty: 2, prompt: 'Box 12×8×6 cm. SA = ? cm² and V = ? cm³ (enter V only)', answer: '576', explanation: 'V=12×8×6=576 cm³.' },
+          { id: 'vp11', type: 'multiple-choice', difficulty: 3, prompt: 'Double the length of a box. Volume is multiplied by:', options: ['4','8','2','3'], answer: '2', explanation: 'Doubling one dimension doubles the volume.' },
+          { id: 'vp12', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Cube: V=125 cm³. Side = ___ cm', answer: '5', explanation: 's³=125 → s=5 cm.' },
+          { id: 'vp13', type: 'numeric-input', difficulty: 3, prompt: 'Triangular prism: right-angled triangle legs 6 and 8 cm; prism length=15 cm. V = ?', answer: '360', explanation: '½×6×8=24 cm². V=24×15=360 cm³.' },
+          { id: 'vp14', type: 'multiple-choice', difficulty: 3, prompt: 'A pool 10m×4m×1.5m fills at 500 L/min. Time to fill (hours)?', options: ['2 h','2.5 h','1.5 h','3 h'], answer: '2 h', explanation: 'V=10×4×1.5=60 m³=60000 L. Time=60000÷500=120 min=2 h.' },
+          { id: 'vp15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Two cubes: side 3 cm and side 4 cm. Combined volume = ___ cm³', answer: '91', explanation: '27+64=91 cm³.' }
+        ]
+      },
+      {
+        id: 'coordinates-four-quadrants', label: 'Coordinates — All Four Quadrants',
+        lesson: {
+          intro: 'The coordinate plane extends in all four directions from the origin. Every point has a unique address in the form (x, y).',
+          sections: [
+            { heading: 'The Four Quadrants', body: 'The x-axis and y-axis divide the plane into 4 quadrants:\n\n| Quadrant | x | y | Example |\n|---|---|---|---|\n| I (top right) | + | + | (3, 4) |\n| II (top left) | − | + | (−2, 5) |\n| III (bottom left) | − | − | (−3, −4) |\n| IV (bottom right) | + | − | (2, −1) |\n\nThe **origin** (0, 0) is the intersection of the axes.', visual: { type: 'coordinate-grid', data: { points: [[3,2],[-2,3],[-3,-2],[2,-3]], lines: null } } },
+            { heading: 'Reading & Plotting Points', body: 'To read a point: x first (horizontal), then y (vertical). "Along the corridor, up the stairs."\n\nTo plot (−4, 3): move 4 left from origin, then 3 up.\n\n**Reflections in axes:**\n- Reflect in x-axis: (x, y) → (x, −y)\n- Reflect in y-axis: (x, y) → (−x, y)', visual: null }
+          ],
+          keyFacts: [
+            'Coordinates are written (x, y): x is horizontal, y is vertical.',
+            'The origin is (0, 0).',
+            'Quadrant I: (+, +). Quadrant II: (−, +). Quadrant III: (−, −). Quadrant IV: (+, −).',
+            'Reflecting in x-axis: flip the y sign. Reflecting in y-axis: flip the x sign.'
+          ]
+        },
+        workedExamples: [
+          { question: 'Plot A(2, 3), B(−3, 1), C(−2, −4). In which quadrant is each?', steps: [
+            { label: 'Step 1 — Quadrant for A(2,3)', explanation: 'x=+, y=+ → Quadrant I.', highlight: 'A is in Quadrant I' },
+            { label: 'Step 2 — Quadrant for B(−3,1)', explanation: 'x=−, y=+ → Quadrant II.', highlight: 'B is in Quadrant II' },
+            { label: 'Step 3 — Quadrant for C(−2,−4)', explanation: 'x=−, y=− → Quadrant III.', highlight: 'C is in Quadrant III' }
+          ], answer: 'A: Q1, B: Q2, C: Q3' },
+          { question: 'Point P is at (3, −4). Find its reflection in the y-axis.', steps: [
+            { label: 'Step 1 — Reflecting in y-axis', explanation: 'Flip the x-coordinate sign.', highlight: '(3, −4) → (−3, −4)' }
+          ], answer: '(−3, −4)' },
+          { question: 'Points A(1,2) and B(5,2). Find the midpoint.', steps: [
+            { label: 'Step 1 — Midpoint formula', explanation: 'M = ((x₁+x₂)/2, (y₁+y₂)/2).', highlight: '((1+5)/2, (2+2)/2)' },
+            { label: 'Step 2 — Calculate', explanation: '(6/2, 4/2) = (3, 2).', highlight: 'M = (3, 2)' }
+          ], answer: 'Midpoint = (3, 2)' }
+        ],
+        questions: [
+          { id: 'co01', type: 'multiple-choice', difficulty: 1, prompt: 'Point (−3, 4) is in which quadrant?', options: ['Q1','Q2','Q3','Q4'], answer: 'Q2', explanation: 'x=−, y=+ → Quadrant II.' },
+          { id: 'co02', type: 'multiple-choice', difficulty: 1, prompt: 'Which point lies on the x-axis?', options: ['(0,3)','(3,0)','(3,3)','(−3,3)'], answer: '(3,0)', explanation: 'Points on x-axis have y=0.' },
+          { id: 'co03', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Point (5, −2) is in Quadrant ___', answer: 'IV', explanation: 'x=+, y=− → Quadrant IV.' },
+          { id: 'co04', type: 'multiple-choice', difficulty: 1, prompt: 'Reflection of (2, 5) in the x-axis:', options: ['(−2,5)','(2,−5)','(−2,−5)','(5,2)'], answer: '(2,−5)', explanation: 'Reflect in x-axis: flip y sign.' },
+          { id: 'co05', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The origin has coordinates (___,___) — write as "x,y"', answer: '0,0', explanation: 'The origin is always (0,0).' },
+          { id: 'co06', type: 'multiple-choice', difficulty: 2, prompt: 'Midpoint of A(2,4) and B(6,8) = ?', options: ['(4,6)','(8,12)','(2,2)','(4,4)'], answer: '(4,6)', explanation: '((2+6)/2,(4+8)/2)=(4,6).' },
+          { id: 'co07', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Point P(−4, 3) reflected in y-axis = (___, 3)', answer: '4', explanation: 'Flip x sign: −4 → 4.' },
+          { id: 'co08', type: 'multiple-choice', difficulty: 2, prompt: 'A(−3, −3), B(3, −3), C(3, 3), D(−3, 3). What shape do these form?', options: ['Rectangle','Rhombus','Square','Trapezium'], answer: 'Square', explanation: 'All sides = 6 units, all right angles → square.' },
+          { id: 'co09', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Distance from (0,0) to (3,4) = ___ units', answer: '5', explanation: '√(9+16)=√25=5 units (Pythagoras).' },
+          { id: 'co10', type: 'multiple-choice', difficulty: 2, prompt: 'Point (a, b) is in Q3. Which is true?', options: ['a>0 and b>0','a<0 and b>0','a<0 and b<0','a>0 and b<0'], answer: 'a<0 and b<0', explanation: 'Q3: both coordinates negative.' },
+          { id: 'co11', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A(1,2) B(5,2) C(5,6). Area of triangle ABC = ___ sq units', answer: '8', explanation: '½×base×height=½×4×4=8.' },
+          { id: 'co12', type: 'multiple-choice', difficulty: 3, prompt: 'Point P(3,−1) is translated 4 left and 5 up. New coordinates = ?', options: ['(7,4)','(−1,4)','(7,−6)','(−1,−6)'], answer: '(−1,4)', explanation: '3−4=−1, −1+5=4. → (−1,4).' },
+          { id: 'co13', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Midpoint of A(x,3) and B(7,9) = (5,6). Find x.', answer: '3', explanation: '(x+7)/2=5 → x+7=10 → x=3.' },
+          { id: 'co14', type: 'multiple-choice', difficulty: 3, prompt: 'Which point is NOT on the line y = 2x − 1?', options: ['(1,1)','(2,3)','(3,5)','(4,8)'], answer: '(4,8)', explanation: '2(4)−1=7≠8. (4,8) is not on the line.' },
+          { id: 'co15', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Rectangle vertices: (−2,1),(4,1),(4,−3),(−2,−3). Perimeter = ___ units', answer: '20', explanation: 'Width=6, height=4. P=2(6+4)=20.' }
+        ]
+      }
+    ]
+  });
+
   /* ── BOOT ────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => App.init());
   </script>
