@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MathMaster">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='26' fill='%230f172a'/%3E%3Ctext x='60' y='78' font-size='60' text-anchor='middle'%3E📐%3C/text%3E%3C/svg%3E">
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22MathMaster%20IEB%22%2C%22short_name%22%3A%22MathMaster%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%25200%2520120%2520120'%253E%253Crect%2520width%3D'120'%2520height%3D'120'%2520rx%3D'26'%2520fill%3D'%25230f172a'%2F%253E%253Ctext%2520x%3D'60'%2520y%3D'78'%2520font-size%3D'60'%2520text-anchor%3D'middle'%253E%25F0%259F%2593%2590%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
   <title>MathMaster — IEB Math Learning</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -587,13 +594,139 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
+    /* ── SAFE AREA / PWA ────────────────────────────────── */
+    :root {
+      --safe-top:      env(safe-area-inset-top, 0px);
+      --safe-bottom:   env(safe-area-inset-bottom, 0px);
+      --safe-left:     env(safe-area-inset-left, 0px);
+      --safe-right:    env(safe-area-inset-right, 0px);
+      --bnav-h:        62px;
+    }
+
+    /* Sidebar drawer overlay */
+    #sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 200;
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    }
+    #sidebar-overlay.show { display: block; }
+
+    /* Bottom navigation bar */
+    #bottom-nav {
+      display: none; position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: calc(var(--bnav-h) + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,.1);
+      z-index: 150;
+    }
+    #bottom-nav .bnav-inner {
+      display: flex; height: var(--bnav-h);
+    }
+    .bnav-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      background: none; border: none;
+      color: rgba(255,255,255,.42);
+      font-size: .62rem; font-weight: 600; letter-spacing: .03em;
+      padding: 0; min-height: 44px; transition: color .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bnav-btn i { font-size: 1.25rem; }
+    .bnav-btn.active { color: var(--accent-num); }
+    .bnav-btn:active { opacity: .65; }
+
+    /* Hamburger button */
+    .hamburger {
+      display: none; background: none; border: none;
+      color: var(--white); font-size: 1.15rem;
+      min-width: 44px; min-height: 44px;
+      align-items: center; justify-content: center;
+      margin-right: 2px; border-radius: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     /* ── MOBILE ──────────────────────────────────────────── */
     @media (max-width: 768px) {
-      #sidebar          { display: none; }
-      .panel-top        { padding: 10px 16px 0; }
-      .content-area     { padding: 16px 16px 48px; }
-      .tab-btn          { padding: 8px 12px; font-size: .8rem; }
-      .q-card           { padding: 18px; }
+      /* Show mobile-specific chrome */
+      .hamburger   { display: flex; }
+      #bottom-nav  { display: block; }
+
+      /* Top bar: safe area + compact */
+      #top-bar {
+        padding: 0 12px 0 8px;
+        padding-top: var(--safe-top);
+        height: calc(var(--topbar-h) + var(--safe-top));
+      }
+      body { overflow: hidden; }
+
+      /* Grade pills: scrollable strip */
+      .grade-selector {
+        overflow-x: auto; flex: 1;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; margin-left: 4px;
+        padding-bottom: 2px;
+      }
+      .grade-selector::-webkit-scrollbar { display: none; }
+      .grade-btn { padding: 5px 13px; white-space: nowrap; font-size: .76rem; }
+
+      /* Main layout height respects top bar */
+      #main {
+        height: calc(100dvh - var(--topbar-h) - var(--safe-top));
+      }
+
+      /* Sidebar → slide-in drawer */
+      #sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: min(80vw, 300px);
+        z-index: 250;
+        padding-top: calc(var(--topbar-h) + var(--safe-top) + 4px);
+        transform: translateX(-100%);
+        transition: transform .3s cubic-bezier(.4,0,.2,1);
+        box-shadow: 4px 0 24px rgba(0,0,0,.4);
+      }
+      #sidebar.open { transform: translateX(0); }
+
+      /* Content panel */
+      .panel-top { padding: 10px 16px 0; }
+      .content-area {
+        padding: 16px 16px 20px;
+        padding-bottom: calc(var(--bnav-h) + var(--safe-bottom) + 20px);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Tab strip: scrollable */
+      .tab-strip {
+        overflow-x: auto; scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tab-strip::-webkit-scrollbar { display: none; }
+      .tab-btn   { padding: 9px 14px; font-size: .82rem; white-space: nowrap; }
+
+      /* Cards and content */
+      .q-card    { padding: 18px 16px; }
+      .lesson-section, .lesson-intro, .key-facts,
+      .drill-setup { max-width: 100%; }
+
+      /* Matching columns: stack vertically on narrow screens */
+      .match-cols { flex-direction: column; gap: 8px; }
+      .match-col  { width: 100%; }
+
+      /* Worked example steps */
+      .we-step    { padding: 12px 14px; }
+
+      /* End screen: compact */
+      .end-screen { padding: 24px 16px; }
+
+      /* Options grid: single column if needed */
+      .mc-options { gap: 8px; }
+    }
+
+    @media (max-width: 400px) {
+      .logo-accent { display: none; }
+      .stat-badge .si { display: none; }
     }
 
     /* ── REDUCED MOTION ──────────────────────────────────── */
@@ -604,7 +737,12 @@
 </head>
 <body>
 
+  <div id="sidebar-overlay"></div>
+
   <header id="top-bar">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
     <div class="logo">📐 Math<span class="logo-accent">Master</span></div>
     <div class="grade-selector" id="grade-selector"></div>
     <div class="top-stats">
@@ -625,6 +763,23 @@
   </div>
 
   <div id="feedback-overlay"></div>
+
+  <nav id="bottom-nav" aria-label="Mobile navigation">
+    <div class="bnav-inner">
+      <button class="bnav-btn" id="bnav-topics" aria-label="Topics">
+        <i class="fa-solid fa-list"></i>Topics
+      </button>
+      <button class="bnav-btn" id="bnav-lesson" aria-label="Lesson">
+        <i class="fa-solid fa-book-open"></i>Lesson
+      </button>
+      <button class="bnav-btn" id="bnav-examples" aria-label="Examples">
+        <i class="fa-solid fa-lightbulb"></i>Examples
+      </button>
+      <button class="bnav-btn" id="bnav-drill" aria-label="Practice">
+        <i class="fa-solid fa-pen-to-square"></i>Practice
+      </button>
+    </div>
+  </nav>
 
   <script>
   'use strict';
@@ -917,7 +1072,7 @@
             this.streak = raw.n + 1;
             localStorage.setItem(this._KEY_S, JSON.stringify({ d: today, n: this.streak }));
           } else {
-            this.streak = raw.d ? 1 : 1;
+            this.streak = 1;
             localStorage.setItem(this._KEY_S, JSON.stringify({ d: today, n: 1 }));
           }
         } catch(e) { console.warn('Progress load error', e); }
@@ -1142,6 +1297,7 @@
       App.state.stepsShown = 0;
       App.buildTabStrip();
       App.renderView(view);
+      if (App.mobile) App.mobile.updateBottomNav(view);
     },
 
     currentModule() {
@@ -1342,6 +1498,7 @@
       App.progress.load();
       App.ui.buildGradeSelector();
       App.ui.updateTopBar();
+      App.mobile.init();
 
       // Select default grade6, first module, first topic
       const g = curriculum[App.state.grade];
@@ -1354,6 +1511,69 @@
       }
       App.buildSidebar();
       App.renderEmpty();
+    },
+  };
+
+  /* ── MOBILE / PWA HELPERS ────────────────────────────── */
+  App.mobile = {
+    isMobile() { return window.innerWidth <= 768; },
+
+    openDrawer() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    },
+
+    closeDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('show');
+      document.body.style.overflow = '';
+    },
+
+    updateBottomNav(view) {
+      const map = { lesson:'bnav-lesson', worked:'bnav-examples', drill:'bnav-drill', 'drill-setup':'bnav-drill' };
+      document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+      const active = map[view];
+      if (active) document.getElementById(active)?.classList.add('active');
+    },
+
+    vibrate(ms = 8) {
+      if (navigator.vibrate) navigator.vibrate(ms);
+    },
+
+    init() {
+      /* Hamburger */
+      document.getElementById('hamburger-btn').addEventListener('click', () => {
+        App.mobile.openDrawer();
+        App.mobile.vibrate();
+      });
+
+      /* Overlay click closes drawer */
+      document.getElementById('sidebar-overlay').addEventListener('click', () => {
+        App.mobile.closeDrawer();
+      });
+
+      /* Bottom nav */
+      document.getElementById('bnav-topics').addEventListener('click', () => {
+        App.mobile.openDrawer();
+        App.mobile.vibrate();
+      });
+
+      ['bnav-lesson','bnav-examples','bnav-drill'].forEach(id => {
+        const viewMap = { 'bnav-lesson':'lesson', 'bnav-examples':'worked', 'bnav-drill':'drill-setup' };
+        document.getElementById(id)?.addEventListener('click', () => {
+          if (!App.state.topicId) return;
+          App.mobile.vibrate();
+          App.switchView(viewMap[id]);
+        });
+      });
+
+      /* Close drawer on topic select (mobile) */
+      const origSelectTopic = App.selectTopic.bind(App);
+      App.selectTopic = function(modId, topicId) {
+        origSelectTopic(modId, topicId);
+        if (App.mobile.isMobile()) App.mobile.closeDrawer();
+      };
     },
   };
 
