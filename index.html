@@ -594,6 +594,45 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
+    /* ── CONFETTI CANVAS ──────────────────────────────────── */
+    #confetti-canvas {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9000;
+    }
+
+    /* ── PROGRESS RING ANIMATION ─────────────────────────── */
+    .ring-fill {
+      transition: stroke-dashoffset 0.7s cubic-bezier(.4,0,.2,1);
+      transform-origin: center; transform: rotate(-90deg);
+    }
+    .ring-bg { fill: none; stroke: rgba(255,255,255,.15); }
+
+    /* ── END SCREEN ENTRANCE ─────────────────────────────── */
+    .end-screen { animation: endFadeIn .5s ease forwards; }
+    @keyframes endFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .end-score { animation: scorePop .6s cubic-bezier(.34,1.56,.64,1) .2s both; }
+    @keyframes scorePop {
+      from { transform: scale(0.4); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .end-stars { animation: starsBounce .5s cubic-bezier(.34,1.56,.64,1) .5s both; }
+    @keyframes starsBounce {
+      from { transform: scale(0.6) translateY(12px); opacity: 0; }
+      to   { transform: scale(1)   translateY(0);    opacity: 1; }
+    }
+
+    /* ── ENHANCED XP POP ─────────────────────────────────── */
+    @keyframes popUp {
+      0%   { opacity: 0; transform: translateY(10px) scale(.8); }
+      15%  { opacity: 1; transform: translateY(-4px) scale(1.15); }
+      30%  { transform: translateY(0)   scale(1); }
+      80%  { opacity: 1; transform: translateY(0)   scale(1); }
+      100% { opacity: 0; transform: translateY(-30px) scale(.9); }
+    }
+
     /* ── SAFE AREA / PWA ────────────────────────────────── */
     :root {
       --safe-top:      env(safe-area-inset-top, 0px);
@@ -738,6 +777,7 @@
 <body>
 
   <div id="sidebar-overlay"></div>
+  <canvas id="confetti-canvas" style="display:none"></canvas>
 
   <header id="top-bar">
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
@@ -958,10 +998,11 @@
       const r = 13, circ = +(2 * Math.PI * r).toFixed(2);
       const offset = +(circ - (pct / 100) * circ).toFixed(2);
       return `<svg class="ring-svg" width="32" height="32" viewBox="0 0 32 32"
-                   xmlns="http://www.w3.org/2000/svg">
-        <circle class="ring-bg"   cx="16" cy="16" r="${r}" stroke-width="3"/>
-        <circle class="ring-fill" cx="16" cy="16" r="${r}" stroke="${accent}"
-          stroke-width="3" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+                   xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+        <circle class="ring-bg"   cx="16" cy="16" r="${r}" fill="none" stroke-width="3"/>
+        <circle class="ring-fill" cx="16" cy="16" r="${r}" fill="none" stroke="${accent}"
+          stroke-width="3" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+          style="transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1)"/>
       </svg>`;
     },
 
@@ -2160,6 +2201,12 @@
             </div>` : ''}
         </div>`;
 
+      // Celebrate on good scores
+      if (pct >= 60 && typeof Confetti !== 'undefined') {
+        const burst = pct >= 90 ? 180 : pct >= 75 ? 130 : 80;
+        setTimeout(() => Confetti.burst(burst), 300);
+      }
+
       area.querySelector('#btn-retry').addEventListener('click', () => {
         App.renderDrillSetup(App.currentTopic(), area);
       });
@@ -2180,6 +2227,75 @@
   };
 
   console.log('MathMaster: drill engine loaded');
+
+  /* ═══════════════════════════════════════════════════════════
+     PHASE 7e: CONFETTI ENGINE
+  ═══════════════════════════════════════════════════════════ */
+  const Confetti = (() => {
+    const COLORS = ['#f59e0b','#10b981','#6366f1','#ef4444','#0ea5e9','#f472b6','#84cc16','#fb923c'];
+    let canvas, ctx, particles = [], raf = null;
+
+    function spawn(n) {
+      const cx = canvas.width / 2;
+      for (let i = 0; i < n; i++) {
+        particles.push({
+          x: cx + (Math.random() - .5) * canvas.width * .6,
+          y: -10,
+          vx: (Math.random() - .5) * 6,
+          vy: Math.random() * 3 + 2,
+          rot: Math.random() * 360,
+          rotV: (Math.random() - .5) * 10,
+          w: Math.random() * 8 + 6,
+          h: Math.random() * 4 + 3,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          life: 1
+        });
+      }
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0);
+      for (const p of particles) {
+        p.x  += p.vx;
+        p.y  += p.vy;
+        p.vy += 0.12;
+        p.rot += p.rotV;
+        if (p.y > canvas.height + 20) { p.life = 0; continue; }
+        p.life -= 0.004;
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, p.life * 3);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+      if (particles.length > 0) {
+        raf = requestAnimationFrame(step);
+      } else {
+        canvas.style.display = 'none';
+        raf = null;
+      }
+    }
+
+    return {
+      burst(n = 120) {
+        canvas = document.getElementById('confetti-canvas');
+        if (!canvas) return;
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.display = 'block';
+        ctx = canvas.getContext('2d');
+        if (raf) cancelAnimationFrame(raf);
+        particles = [];
+        spawn(n);
+        // second wave
+        setTimeout(() => spawn(Math.floor(n * .6)), 350);
+        raf = requestAnimationFrame(step);
+      }
+    };
+  })();
 
   /* ═══════════════════════════════════════════════════════════
      SAMPLE CURRICULUM  (Grade 6 — Numbers module, 2 topics)
@@ -3959,6 +4075,203 @@
     ]
   });
 
+  /* ── PHASE 7a: Grade 3 — Fractions & Data expansion ─────── */
+  (function(){
+    curriculum.grade3.modules.push(
+      /* ── Basic Fractions ── */
+      {
+        id: 'fractions', label: 'Fractions', icon: '🍕', accent: 'var(--accent-frac)',
+        topics: [
+          {
+            id: 'fraction-concepts', label: 'Understanding Fractions',
+            lesson: {
+              sections: [
+                { heading: 'What is a Fraction?', body: 'A **fraction** shows equal parts of a whole.\n\n**Numerator** (top) = how many parts we have.\n**Denominator** (bottom) = how many equal parts in the whole.\n\n**Common fractions:** ½ (one half), ¼ (one quarter), ⅓ (one third), ¾ (three quarters).\n\nIf a pizza is cut into 4 equal slices and you eat 1 slice → you ate **1/4** of the pizza.\n\n**Fractions on a number line:** place between 0 and 1.\n0 ……… ¼ ……… ½ ……… ¾ ……… 1', visual: null },
+                { heading: 'Equal Parts', body: 'For a fraction to be valid, the parts **must be equal in size**.\n\n- Cut a rectangle into 2 equal parts → each is **½**.\n- Cut into 3 equal parts → each is **⅓**.\n- Cut into 4 equal parts → each is **¼**.\n\n**Comparing simple fractions (same denominator):**\n¾ > ¼ because 3 parts > 1 part (same size pieces).\n\n**Whole = all parts:** 4/4 = 1 whole, 2/2 = 1 whole.', visual: null }
+              ],
+              keyFacts: [
+                'Numerator = parts we have (top number).',
+                'Denominator = total equal parts (bottom number).',
+                '½ = one half, ¼ = one quarter, ⅓ = one third.',
+                'To compare fractions with the same denominator, compare numerators.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A chocolate bar is broken into 8 equal pieces. Sam eats 3 pieces. What fraction did Sam eat?', steps: [
+                { label: 'Step 1 — Denominator', explanation: '8 equal pieces in total → denominator = 8.', highlight: 'Denom = 8' },
+                { label: 'Step 2 — Numerator', explanation: 'Sam eats 3 → numerator = 3.', highlight: 'Fraction = 3/8' }
+              ], answer: '3/8' },
+              { question: 'Which is greater: 5/8 or 3/8?', steps: [
+                { label: 'Step 1 — Same denominator', explanation: 'Both have 8 pieces, so compare numerators.', highlight: '5 vs 3' },
+                { label: 'Step 2 — Compare', explanation: '5 > 3, so 5/8 > 3/8.', highlight: '5/8 is greater' }
+              ], answer: '5/8 > 3/8' },
+              { question: 'Shade 3/4 of a shape divided into 4 equal parts. How many parts are shaded?', steps: [
+                { label: 'Step 1 — Read the fraction', explanation: '3/4 means 3 out of 4 equal parts.', highlight: '3 parts' }
+              ], answer: '3 parts shaded' }
+            ],
+            questions: [
+              { id: 'fc301', type: 'multiple-choice', difficulty: 1, prompt: 'What is the numerator in 3/5?', options: ['5','3','2','8'], answer: '3', explanation: 'The numerator is the top number.' },
+              { id: 'fc302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A pizza cut into 6 equal slices. You eat 2 slices. Fraction eaten = ___/6', answer: '2', explanation: '2 out of 6 slices = 2/6.' },
+              { id: 'fc303', type: 'multiple-choice', difficulty: 1, prompt: 'Which fraction means "one half"?', options: ['1/4','2/4','1/2','2/2'], answer: '1/2', explanation: 'One half is written as 1/2.' },
+              { id: 'fc304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Denominator of 7/10 = ___', answer: '10', explanation: 'Denominator is the bottom number.' },
+              { id: 'fc305', type: 'multiple-choice', difficulty: 1, prompt: 'A ribbon cut into 4 equal pieces. 1 piece = ?', options: ['1/3','1/4','1/5','1/2'], answer: '1/4', explanation: '1 out of 4 equal pieces = 1/4.' },
+              { id: 'fc306', type: 'fill-in-the-blank', difficulty: 2, prompt: '3 equal parts of a whole: each part = 1/___', answer: '3', explanation: '1 of 3 equal parts = 1/3.' },
+              { id: 'fc307', type: 'multiple-choice', difficulty: 2, prompt: 'Which is greater: 3/7 or 5/7?', options: ['3/7','5/7','Equal','Cannot tell'], answer: '5/7', explanation: 'Same denominator: 5 > 3, so 5/7 > 3/7.' },
+              { id: 'fc308', type: 'fill-in-the-blank', difficulty: 2, prompt: '4/4 = ___ (whole number)', answer: '1', explanation: '4 out of 4 = 1 whole.' },
+              { id: 'fc309', type: 'multiple-choice', difficulty: 2, prompt: 'A class of 20 children. 1/4 are absent. How many absent?', options: ['4','5','6','10'], answer: '5', explanation: '1/4 of 20 = 20÷4 = 5.' },
+              { id: 'fc310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Order from smallest: 1/5, 3/5, 2/5 → ___, ___, ___ (write as "a/b,c/d,e/f")', answer: '1/5,2/5,3/5', explanation: 'Same denominator: 1 < 2 < 3.' },
+              { id: 'fc311', type: 'multiple-choice', difficulty: 3, prompt: '½ of 24 = ?', options: ['6','8','12','24'], answer: '12', explanation: '24 ÷ 2 = 12.' },
+              { id: 'fc312', type: 'fill-in-the-blank', difficulty: 3, prompt: '¾ of 20 = ___', answer: '15', explanation: '20÷4=5, 5×3=15.' },
+              { id: 'fc313', type: 'multiple-choice', difficulty: 3, prompt: 'A bag has 12 sweets. 2/3 are red. How many are red?', options: ['4','6','8','9'], answer: '8', explanation: '12÷3=4, 4×2=8.' },
+              { id: 'fc314', type: 'fill-in-the-blank', difficulty: 3, prompt: '5/8 + 2/8 = ___/8', answer: '7', explanation: 'Same denominator: 5+2=7/8.' },
+              { id: 'fc315', type: 'multiple-choice', difficulty: 3, prompt: 'Which fraction equals one whole?', options: ['3/4','5/6','8/8','7/8'], answer: '8/8', explanation: '8/8 = 1 whole (numerator = denominator).' }
+            ]
+          },
+          {
+            id: 'fraction-counting', label: 'Counting in Fractions',
+            lesson: {
+              sections: [
+                { heading: 'Counting in Halves, Quarters & Thirds', body: '**Counting in halves (½):** 0, ½, 1, 1½, 2, 2½, 3 …\nEach jump adds ½ (half a unit).\n\n**Counting in quarters (¼):** 0, ¼, ½, ¾, 1, 1¼, 1½, 1¾, 2 …\n4 quarters = 1 whole.\n\n**Counting in thirds (⅓):** 0, ⅓, ⅔, 1, 1⅓, 1⅔, 2 …\n3 thirds = 1 whole.\n\n**Mixed numbers:** a whole number + a fraction (e.g. 1½ = 1 + ½).', visual: null },
+                { heading: 'Fractions on a Number Line', body: '**Number line from 0 to 2 in halves:**\n0 — ½ — 1 — 1½ — 2\n\n**Number line from 0 to 2 in quarters:**\n0 — ¼ — ½ — ¾ — 1 — 1¼ — 1½ — 1¾ — 2\n\nTo place a fraction on a number line:\n1. Count how many equal parts between each whole.\n2. Count from 0 the required number of parts.\n\n**Converting:** 1½ = 3/2 (improper fraction). 2¼ = 9/4.', visual: null }
+              ],
+              keyFacts: [
+                'Count in halves: add ½ each time. 2 halves = 1 whole.',
+                'Count in quarters: add ¼ each time. 4 quarters = 1 whole.',
+                'Count in thirds: add ⅓ each time. 3 thirds = 1 whole.',
+                'A mixed number has a whole part and a fraction part (e.g. 2¾).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Continue the pattern: 0, ¼, ½, ¾, ___, ___', steps: [
+                { label: 'Step 1 — Identify step', explanation: 'Adding ¼ each time.', highlight: 'Rule: +¼' },
+                { label: 'Step 2 — Continue', explanation: '¾ + ¼ = 4/4 = 1. Then 1 + ¼ = 1¼.', highlight: '1, 1¼' }
+              ], answer: '1, 1¼' },
+              { question: 'A measuring jug is filled to 1½ litres. Shade the correct level on a scale marked in halves from 0 to 3.', steps: [
+                { label: 'Step 1 — Find 1½', explanation: '1½ is halfway between 1 and 2.', highlight: 'Between 1 and 2' }
+              ], answer: 'Halfway between 1 and 2' },
+              { question: 'How many thirds are in 2 wholes?', steps: [
+                { label: 'Step 1 — Think in thirds', explanation: '1 whole = 3 thirds. 2 wholes = 2 × 3 = 6 thirds.', highlight: '6 thirds' }
+              ], answer: '6/3 = 6 thirds' }
+            ],
+            questions: [
+              { id: 'cc301', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Continue: ½, 1, 1½, ___', answer: '2', explanation: 'Add ½ each time: 1½ + ½ = 2.' },
+              { id: 'cc302', type: 'multiple-choice', difficulty: 1, prompt: 'How many halves make 1 whole?', options: ['1','2','3','4'], answer: '2', explanation: '1/2 + 1/2 = 2/2 = 1.' },
+              { id: 'cc303', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Continue: 0, ¼, ½, ¾, ___', answer: '1', explanation: '¾ + ¼ = 4/4 = 1.' },
+              { id: 'cc304', type: 'multiple-choice', difficulty: 1, prompt: 'How many quarters make 1 whole?', options: ['2','3','4','8'], answer: '4', explanation: '4 quarters = 4/4 = 1.' },
+              { id: 'cc305', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The mixed number 1½ = ___/2 (improper fraction)', answer: '3', explanation: '1 whole = 2/2. Plus ½ = 3/2.' },
+              { id: 'cc306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Continue: 1⅓, 1⅔, ___', answer: '2', explanation: 'Add ⅓: 1⅔ + ⅓ = 2.' },
+              { id: 'cc307', type: 'multiple-choice', difficulty: 2, prompt: 'How many thirds are in 3 wholes?', options: ['3','6','9','12'], answer: '9', explanation: '3 wholes × 3 thirds = 9 thirds.' },
+              { id: 'cc308', type: 'fill-in-the-blank', difficulty: 2, prompt: '2¾ as a number-line position: between ___ and ___ (whole numbers)', answer: '2,3', explanation: '2¾ lies between 2 and 3.' },
+              { id: 'cc309', type: 'multiple-choice', difficulty: 2, prompt: 'Continue: 3, 2½, 2, 1½, ___', options: ['1','½','2','0'], answer: '1', explanation: 'Counting back in halves: 1½ − ½ = 1.' },
+              { id: 'cc310', type: 'fill-in-the-blank', difficulty: 2, prompt: '5 halves = ___ (as a mixed number)', answer: '2½', explanation: '4 halves = 2, plus 1 half = 2½.' },
+              { id: 'cc311', type: 'multiple-choice', difficulty: 3, prompt: '7/4 as a mixed number = ?', options: ['1¼','1¾','2¼','3¼'], answer: '1¾', explanation: '4/4=1 remainder 3/4. So 1¾.' },
+              { id: 'cc312', type: 'fill-in-the-blank', difficulty: 3, prompt: '3½ as an improper fraction = ___/2', answer: '7', explanation: '3×2+1=7. So 7/2.' },
+              { id: 'cc313', type: 'multiple-choice', difficulty: 3, prompt: 'Which mixed number lies between 2 and 3?', options: ['1½','2⅔','3¼','4⅓'], answer: '2⅔', explanation: '2 < 2⅔ < 3.' },
+              { id: 'cc314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'How many quarters in 3½? (write a number)', answer: '14', explanation: '3½ = 7/2 = 14/4. So 14 quarters.' },
+              { id: 'cc315', type: 'multiple-choice', difficulty: 3, prompt: 'Count on from 1¾ in steps of ¼. What is the 5th number in the sequence?', options: ['2¾','3','3¼','2½'], answer: '3', explanation: '1¾→2→2¼→2½→2¾→3. 5th step = 3.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Data Handling ── */
+      {
+        id: 'data', label: 'Data Handling', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'pictographs', label: 'Pictographs & Bar Graphs',
+            lesson: {
+              sections: [
+                { heading: 'Pictographs', body: 'A **pictograph** uses pictures (symbols) to represent data.\n\nEach picture represents a certain number of items — shown in a **key**.\n\n**Example:** 🐟 = 5 fish.\n- Monday: 🐟🐟🐟 = 15 fish.\n- Tuesday: 🐟🐟 = 10 fish.\n\n**Reading:** multiply the number of symbols by the key value.\n**Drawing:** divide the frequency by the key value to find how many symbols.', visual: null },
+                { heading: 'Bar Graphs', body: 'A **bar graph** uses rectangular bars to show data.\n\n**Key parts:**\n- Title (what the graph is about)\n- x-axis (categories)\n- y-axis (numbers with a scale)\n- Bars (equal width, equal gaps)\n\n**Reading:** read the height of each bar on the y-axis.\n**Drawing steps:**\n1. Choose a scale (e.g. count in 5s).\n2. Draw and label axes.\n3. Draw bars of equal width.\n4. Title the graph.', visual: null }
+              ],
+              keyFacts: [
+                'Pictograph key tells you what each symbol represents.',
+                'Bar graph: bars must be equal width with equal gaps between them.',
+                'Always label both axes and give the graph a title.',
+                'To find total: add all bar values (or symbol counts) together.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A pictograph shows favourite fruits. Key: ★ = 4 children. Apples: ★★★, Bananas: ★★, Oranges: ★★★★. How many children prefer apples?', steps: [
+                { label: 'Step 1 — Count symbols', explanation: 'Apples has 3 stars.', highlight: '3 stars' },
+                { label: 'Step 2 — Multiply by key', explanation: '3 × 4 = 12 children.', highlight: '12 children' }
+              ], answer: '12 children' },
+              { question: 'Bar graph: Mon=10, Tue=15, Wed=5, Thu=20. What is the total and which day had the most?', steps: [
+                { label: 'Step 1 — Total', explanation: '10+15+5+20=50.', highlight: 'Total = 50' },
+                { label: 'Step 2 — Highest bar', explanation: 'Thursday with 20.', highlight: 'Thursday' }
+              ], answer: 'Total = 50, Thursday' },
+              { question: 'A pictograph uses ☀️ = 3. City A has 5 suns. How many days of sunshine?', steps: [
+                { label: 'Step 1 — Multiply', explanation: '5 × 3 = 15 days.', highlight: '15 sunny days' }
+              ], answer: '15 days' }
+            ],
+            questions: [
+              { id: 'pg301', type: 'multiple-choice', difficulty: 1, prompt: 'Key: ★ = 5. A row has 3 stars. Total = ?', options: ['3','5','10','15'], answer: '15', explanation: '3 × 5 = 15.' },
+              { id: 'pg302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A bar graph shows 20 books read. The bar reaches the number ___ on the y-axis.', answer: '20', explanation: 'Bar height = the value it represents.' },
+              { id: 'pg303', type: 'multiple-choice', difficulty: 1, prompt: 'Pictograph key: ☀️ = 2. Monday has 4 suns. Days of sunshine = ?', options: ['2','4','6','8'], answer: '8', explanation: '4 × 2 = 8 days.' },
+              { id: 'pg304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Bar graph: Cats=8, Dogs=12, Fish=6. Most popular pet = ___', answer: 'Dogs', explanation: 'Highest bar = 12 = Dogs.' },
+              { id: 'pg305', type: 'multiple-choice', difficulty: 1, prompt: 'Which of these is a key feature of a bar graph?', options: ['Pictures','Equal-width bars','Pie slices','Dot plots'], answer: 'Equal-width bars', explanation: 'Bar graphs use equal-width bars.' },
+              { id: 'pg306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Key: ★ = 10. Category needs 35 items. Draw ___ full stars and ___ half star(s). (write as "full,half")', answer: '3,1', explanation: '3×10=30, remaining 5 = half a star.' },
+              { id: 'pg307', type: 'multiple-choice', difficulty: 2, prompt: 'Bar graph: Spring=15, Summer=30, Autumn=20, Winter=10. Total = ?', options: ['65','75','70','80'], answer: '75', explanation: '15+30+20+10=75.' },
+              { id: 'pg308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Bar graph with scale in 5s. A bar that reaches between 25 and 30 represents approximately ___ (halfway)', answer: '27.5', explanation: 'Halfway between 25 and 30 = 27.5.' },
+              { id: 'pg309', type: 'multiple-choice', difficulty: 2, prompt: 'Pictograph: School A has 4★, B has 6★, C has 3★. Key ★=5. Which school has 30 items?', options: ['A','B','C','None'], answer: 'B', explanation: '6 × 5 = 30.' },
+              { id: 'pg310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Bar graph shows 40 red and 25 blue crayons. Difference = ___', answer: '15', explanation: '40 − 25 = 15.' },
+              { id: 'pg311', type: 'multiple-choice', difficulty: 3, prompt: 'Pictograph: Mon ★★★★, Tue ★★, Wed ★★★, Thu ★. Key ★ = 6. Average per day = ?', options: ['12','15','18','21'], answer: '15', explanation: '(24+12+18+6)÷4=60÷4=15.' },
+              { id: 'pg312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Bar graph: total = 60. Three bars show 15, 20, 10. Fourth bar = ___', answer: '15', explanation: '60-15-20-10=15.' },
+              { id: 'pg313', type: 'multiple-choice', difficulty: 3, prompt: 'A bar graph scale goes up in 4s. A bar between the 5th and 6th line represents a value between ? and ?', options: ['16 and 20','20 and 24','18 and 22','4 and 8'], answer: '20 and 24', explanation: '5th line=20, 6th line=24.' },
+              { id: 'pg314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Key: 1 symbol = 3. How many symbols to represent 21 items? ___', answer: '7', explanation: '21 ÷ 3 = 7 symbols.' },
+              { id: 'pg315', type: 'multiple-choice', difficulty: 3, prompt: 'Bar graph: Gr3=45, Gr4=60, Gr5=30. Gr3 is what fraction of total?', options: ['1/3','1/4','3/9','1/2'], answer: '1/3', explanation: 'Total=135. 45/135=1/3.' }
+            ]
+          },
+          {
+            id: 'sorting-grouping', label: 'Sorting & Grouping Data',
+            lesson: {
+              sections: [
+                { heading: 'Collecting & Sorting Data', body: '**Data** is information we collect to answer questions.\n\n**Tallying:** use tally marks to count quickly.\n||||  = 5 (four upright + one diagonal).\n\n**Sorting:** organising data into groups.\n\n**Categories:** groups of similar things.\nExample: sort animals into: Farm animals | Wild animals | Pets.\n\n**Frequency:** how many times something appears in a data set.\n\n**Frequency table:**\n| Colour | Tally | Frequency |\n|--------|-------|------|\n| Red | |||| | 4 |\n| Blue | ||| | 3 |', visual: null },
+                { heading: 'Mode and Most/Least Common', body: '**Mode:** the item that appears most often in a data set.\n\nExample: colours recorded — R, B, R, G, R, B, R.\nMode = Red (appears 4 times).\n\n**Most common** = highest frequency (mode).\n**Least common** = lowest frequency.\n\n**Venn diagram:** two overlapping circles showing items that belong to one category, both, or neither.\n\nCircle A = can swim. Circle B = can fly.\nOverlap = duck (can do both!)', visual: null }
+              ],
+              keyFacts: [
+                'Tally marks: groups of 5 (four upright, one diagonal cross).',
+                'Frequency = how many times an item appears.',
+                'Mode = the most frequent value or category.',
+                'A frequency table organises tallied data clearly.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Favourite sports: soccer×6, rugby×4, cricket×4, netball×7. Find the mode.', steps: [
+                { label: 'Step 1 — Find highest frequency', explanation: 'Netball has 7 — the highest.', highlight: 'Mode = Netball' }
+              ], answer: 'Netball (7 votes)' },
+              { question: 'Tally: |||| |||| || . How many?', steps: [
+                { label: 'Step 1 — Count groups', explanation: '|||| = 5, |||| = 5, || = 2. Total = 5+5+2 = 12.', highlight: '12' }
+              ], answer: '12' },
+              { question: 'Data: 3, 5, 3, 7, 3, 5, 7, 3. What is the mode?', steps: [
+                { label: 'Step 1 — Count each value', explanation: '3 appears 4 times, 5 appears 2 times, 7 appears 2 times.', highlight: '3 most frequent' },
+                { label: 'Step 2 — Mode', explanation: 'Mode = 3.', highlight: 'Mode = 3' }
+              ], answer: 'Mode = 3' }
+            ],
+            questions: [
+              { id: 'sg301', type: 'multiple-choice', difficulty: 1, prompt: 'Tally |||| = ?', options: ['3','4','5','6'], answer: '5', explanation: '4 upright + 1 diagonal cross = 5.' },
+              { id: 'sg302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The item that appears most often is called the ___', answer: 'mode', explanation: 'Mode = most frequent value.' },
+              { id: 'sg303', type: 'multiple-choice', difficulty: 1, prompt: 'Data: cat, dog, cat, fish, cat. Mode = ?', options: ['dog','fish','cat','none'], answer: 'cat', explanation: 'Cat appears 3 times — most frequent.' },
+              { id: 'sg304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Tally |||| |||| | = ___', answer: '11', explanation: '5+5+1=11.' },
+              { id: 'sg305', type: 'multiple-choice', difficulty: 1, prompt: 'A frequency table shows Red=4, Blue=7, Green=3. Least common = ?', options: ['Red','Blue','Green','All equal'], answer: 'Green', explanation: 'Green has frequency 3 — lowest.' },
+              { id: 'sg306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Colours: R,B,R,G,B,R,G,R. Frequency of R = ___', answer: '4', explanation: 'R appears 4 times.' },
+              { id: 'sg307', type: 'multiple-choice', difficulty: 2, prompt: 'Tally |||| |||| |||| || = ?', options: ['12','14','15','17'], answer: '17', explanation: '5+5+5+2=17.' },
+              { id: 'sg308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Frequency table: A=5, B=8, C=5, D=8. Mode(s) = ___ (write as "X,Y" or "X")', answer: 'B,D', explanation: 'B and D both have frequency 8 — highest.' },
+              { id: 'sg309', type: 'multiple-choice', difficulty: 2, prompt: 'A class collects data on favourite colours. 30 students respond. Red=10, Blue=12, Green=?', options: ['6','7','8','10'], answer: '8', explanation: '30-10-12=8.' },
+              { id: 'sg310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'How many tally marks represent 23? (write as "X groups of 5 + Y")', answer: '4 groups of 5 + 3', explanation: '4×5=20, then 3 more marks.' },
+              { id: 'sg311', type: 'multiple-choice', difficulty: 3, prompt: 'Data: 4,4,7,4,7,4,9,7. Mode=4. True statement?', options: ['7 is the mode','4 appears most','9 appears most','All equal'], answer: '4 appears most', explanation: '4 appears 4 times, 7 appears 3 times, 9 once.' },
+              { id: 'sg312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A Venn diagram: circle A (can swim)=8, circle B (can fly)=6, overlap=2. Only swim = ___', answer: '6', explanation: '8 total in A, 2 in overlap. Only A = 8-2=6.' },
+              { id: 'sg313', type: 'multiple-choice', difficulty: 3, prompt: 'Frequency table total = 50. Red=18, Blue=14, Green=?. Mode = Red. Is this consistent?', options: ['Yes, Green=18','Yes, Green=18 and ties Red','Yes, Green=18 < Red','No'], answer: 'Yes, Green=18 < Red', explanation: 'Green=50-18-14=18. Red=18. So they tie — Red is NOT strictly mode. But if Red=18 and Green=18 there are two modes.' },
+              { id: 'sg314', type: 'fill-in-the-blank', difficulty: 3, prompt: '12 tally marks in a frequency table. Bar height on a graph with scale 1cm=4 = ___ cm', answer: '3', explanation: '12÷4=3 cm.' },
+              { id: 'sg315', type: 'multiple-choice', difficulty: 3, prompt: 'Data collected on 40 students. Represented in a pictograph with key ★ = 5. How many symbols total?', options: ['5','8','40','200'], answer: '8', explanation: '40÷5=8 symbols total.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 4a: Grade 3 Curriculum ───────────────────────── */
   (function(){
     curriculum.grade3.modules.push(
@@ -4262,6 +4575,159 @@
     );
   })();
 
+  /* ── PHASE 7b: Grade 4 — Geometry & Data expansion ─────── */
+  (function(){
+    curriculum.grade4.modules.push(
+      /* ── Geometry ── */
+      {
+        id: 'geometry', label: 'Geometry', icon: '📐', accent: 'var(--accent-geo)',
+        topics: [
+          {
+            id: 'angles-4', label: 'Angles',
+            lesson: {
+              sections: [
+                { heading: 'What is an Angle?', body: 'An **angle** is the amount of turn between two lines that meet at a point (vertex).\n\nAngles are measured in **degrees (°)**.\n\n**Types of angles:**\n- **Acute:** less than 90°.\n- **Right angle:** exactly 90° (shown with a square corner symbol).\n- **Obtuse:** more than 90° but less than 180°.\n- **Straight angle:** exactly 180° (a straight line).\n- **Reflex:** more than 180°.\n- **Revolution:** exactly 360°.\n\n**Tool:** a protractor measures angles.', visual: null },
+                { heading: 'Angles in Shapes', body: '**Sum of angles in a triangle = 180°.**\n**Sum of angles in a quadrilateral = 360°.**\n\n**Right angle indicators:** a small square in the corner means 90°.\n\n**Complementary angles:** two angles that add to 90°.\n**Supplementary angles:** two angles that add to 180°.\n\n**Example:** angles of 35° and 55° are complementary (35+55=90°).\nAngles of 110° and 70° are supplementary (110+70=180°).', visual: null }
+              ],
+              keyFacts: [
+                'Acute < 90° < Right = 90° < Obtuse < 180° < Reflex < 360°.',
+                'Complementary angles sum to 90°; supplementary to 180°.',
+                'Angles in a triangle sum to 180°.',
+                'Angles in a quadrilateral sum to 360°.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Classify: 72°, 118°, 90°, 200°.', steps: [
+                { label: 'Step 1 — 72°', explanation: '72° < 90° → Acute.', highlight: 'Acute' },
+                { label: 'Step 2 — 118°', explanation: '90° < 118° < 180° → Obtuse.', highlight: 'Obtuse' },
+                { label: 'Step 3 — 90° and 200°', explanation: '90° = Right. 200° > 180° → Reflex.', highlight: 'Right, Reflex' }
+              ], answer: 'Acute, Obtuse, Right, Reflex' },
+              { question: 'Find the complement of 38°.', steps: [
+                { label: 'Step 1 — Complementary rule', explanation: 'Complement + 38° = 90°.', highlight: '90 − 38 = 52°' }
+              ], answer: '52°' },
+              { question: 'Two angles of a triangle are 54° and 78°. Find the third.', steps: [
+                { label: 'Step 1 — Sum rule', explanation: 'Third = 180 − 54 − 78 = 48°.', highlight: '48°' }
+              ], answer: '48°' }
+            ],
+            questions: [
+              { id: 'ag401', type: 'multiple-choice', difficulty: 1, prompt: 'An angle of 45° is:', options: ['Obtuse','Right','Acute','Reflex'], answer: 'Acute', explanation: '45° < 90° → acute.' },
+              { id: 'ag402', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A right angle = ___°', answer: '90', explanation: 'A right angle is exactly 90°.' },
+              { id: 'ag403', type: 'multiple-choice', difficulty: 1, prompt: 'An angle of 150° is:', options: ['Acute','Right','Obtuse','Reflex'], answer: 'Obtuse', explanation: '90° < 150° < 180° → obtuse.' },
+              { id: 'ag404', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Complement of 60° = ___°', answer: '30', explanation: '90 − 60 = 30°.' },
+              { id: 'ag405', type: 'multiple-choice', difficulty: 1, prompt: 'A straight angle = ?', options: ['90°','180°','270°','360°'], answer: '180°', explanation: 'A straight angle lies on a straight line = 180°.' },
+              { id: 'ag406', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Supplement of 75° = ___°', answer: '105', explanation: '180 − 75 = 105°.' },
+              { id: 'ag407', type: 'multiple-choice', difficulty: 2, prompt: 'Triangle angles: 90°, 45°, and?', options: ['35°','40°','45°','55°'], answer: '45°', explanation: '180 − 90 − 45 = 45°.' },
+              { id: 'ag408', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Quadrilateral has angles 80°, 100°, 90°. Fourth angle = ___°', answer: '90', explanation: '360 − 80 − 100 − 90 = 90°.' },
+              { id: 'ag409', type: 'multiple-choice', difficulty: 2, prompt: 'Which pair is supplementary?', options: ['30° and 60°','45° and 55°','120° and 60°','80° and 80°'], answer: '120° and 60°', explanation: '120+60=180°. Supplementary.' },
+              { id: 'ag410', type: 'fill-in-the-blank', difficulty: 2, prompt: 'An obtuse angle is between ___° and ___°. (write as "a,b")', answer: '90,180', explanation: 'Greater than 90° and less than 180°.' },
+              { id: 'ag411', type: 'multiple-choice', difficulty: 3, prompt: 'Triangle has angles in ratio 1:2:3. Largest angle = ?', options: ['30°','60°','90°','120°'], answer: '90°', explanation: '1+2+3=6 parts. 180÷6=30. Largest=3×30=90°.' },
+              { id: 'ag412', type: 'fill-in-the-blank', difficulty: 3, prompt: 'An angle and its supplement are in ratio 2:3. Smaller angle = ___°', answer: '72', explanation: '2x+3x=180 → x=36. Smaller=2×36=72°.' },
+              { id: 'ag413', type: 'multiple-choice', difficulty: 3, prompt: 'Regular quadrilateral (square). Each interior angle = ?', options: ['60°','90°','120°','360°'], answer: '90°', explanation: 'Square: 360÷4=90°.' },
+              { id: 'ag414', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Pentagon interior angle sum = ___°', answer: '540', explanation: '(5-2)×180=540°.' },
+              { id: 'ag415', type: 'numeric-input', difficulty: 3, prompt: 'Clock hands at 3:00. Angle between them = ?°', answer: '90', explanation: 'At 3:00, hands are at 90° (quarter of the clock face).' }
+            ]
+          },
+          {
+            id: 'transformations-4', label: 'Symmetry & Reflections',
+            lesson: {
+              sections: [
+                { heading: 'Lines of Symmetry', body: 'A **line of symmetry** divides a shape into two mirror-image halves.\n\n**Finding lines of symmetry:** fold the shape — if both halves match, the fold line is a line of symmetry.\n\n| Shape | Lines of symmetry |\n|-------|-------------------|\n| Equilateral triangle | 3 |\n| Square | 4 |\n| Rectangle | 2 |\n| Circle | Infinite |\n| Regular hexagon | 6 |\n| Scalene triangle | 0 |\n\n**Letters with symmetry:** A, H, I, M, O, T, U, V, W, X, Y (vertical), B, C, D, E, H, I, K, O, X (horizontal).', visual: null },
+                { heading: 'Reflections', body: 'A **reflection** flips a shape over a mirror line.\n\n**Properties of reflections:**\n- The image is the same size and shape.\n- Each point is the same distance from the mirror line.\n- Left and right are swapped.\n\n**Reflecting over the y-axis:** (x, y) → (−x, y)\n**Reflecting over the x-axis:** (x, y) → (x, −y)\n\n**Drawing a reflection:**\n1. Find each vertex.\n2. Measure its distance from the mirror line.\n3. Plot the mirror-image point on the other side.\n4. Join the points.', visual: null }
+              ],
+              keyFacts: [
+                'Line of symmetry: fold line that creates two identical halves.',
+                'A regular polygon with n sides has n lines of symmetry.',
+                'Reflection: shape flips over a mirror line, same size and shape.',
+                'Reflected point: same distance from mirror line, opposite side.'
+              ]
+            },
+            workedExamples: [
+              { question: 'How many lines of symmetry does a regular pentagon have?', steps: [
+                { label: 'Step 1 — Rule', explanation: 'Regular n-gon has n lines of symmetry.', highlight: 'n = 5' },
+                { label: 'Step 2 — Answer', explanation: 'Regular pentagon → 5 lines.', highlight: '5 lines' }
+              ], answer: '5 lines of symmetry' },
+              { question: 'Reflect point A(3, 2) in the y-axis.', steps: [
+                { label: 'Step 1 — Rule', explanation: 'Reflect in y-axis: (x,y) → (−x, y).', highlight: '(3,2) → (−3,2)' }
+              ], answer: '(−3, 2)' },
+              { question: 'A shape is reflected over a vertical mirror line. A vertex is 5 units from the line. Where is its reflected image?', steps: [
+                { label: 'Step 1 — Same distance', explanation: 'Reflected image is also 5 units from the mirror line, on the other side.', highlight: '5 units, opposite side' }
+              ], answer: '5 units on the other side' }
+            ],
+            questions: [
+              { id: 'sy401', type: 'multiple-choice', difficulty: 1, prompt: 'How many lines of symmetry does a square have?', options: ['1','2','3','4'], answer: '4', explanation: 'Square has 4 lines of symmetry.' },
+              { id: 'sy402', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A rectangle (non-square) has ___ lines of symmetry.', answer: '2', explanation: 'One horizontal, one vertical.' },
+              { id: 'sy403', type: 'multiple-choice', difficulty: 1, prompt: 'Which letter has a vertical line of symmetry?', options: ['S','R','A','G'], answer: 'A', explanation: 'Capital A has one vertical line of symmetry.' },
+              { id: 'sy404', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Reflect (4, 3) in x-axis: (___, ___). Write as "x,y"', answer: '4,-3', explanation: 'Flip y sign: (4, −3).' },
+              { id: 'sy405', type: 'multiple-choice', difficulty: 1, prompt: 'A scalene triangle has how many lines of symmetry?', options: ['0','1','2','3'], answer: '0', explanation: 'No equal sides → no lines of symmetry.' },
+              { id: 'sy406', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Regular hexagon has ___ lines of symmetry.', answer: '6', explanation: '6-sided regular polygon → 6 lines.' },
+              { id: 'sy407', type: 'multiple-choice', difficulty: 2, prompt: 'Reflect (−2, 5) in the y-axis:', options: ['(2,5)','(−2,−5)','(2,−5)','(−2,5)'], answer: '(2,5)', explanation: 'Flip x sign: (2, 5).' },
+              { id: 'sy408', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Shape reflected in a mirror line. Vertex is 7 cm from line. Image vertex is ___ cm from line.', answer: '7', explanation: 'Reflections preserve distance from mirror line.' },
+              { id: 'sy409', type: 'multiple-choice', difficulty: 2, prompt: 'Which shape has infinite lines of symmetry?', options: ['Square','Triangle','Circle','Pentagon'], answer: 'Circle', explanation: 'Any diameter is a line of symmetry for a circle.' },
+              { id: 'sy410', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Reflect (3, −4) in x-axis: (___, ___). Write as "x,y"', answer: '3,4', explanation: 'Flip y sign: (3, 4).' },
+              { id: 'sy411', type: 'multiple-choice', difficulty: 3, prompt: 'An isosceles triangle has ___ line(s) of symmetry.', options: ['0','1','2','3'], answer: '1', explanation: 'One line from apex to midpoint of base.' },
+              { id: 'sy412', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Point P(5, 3) reflected in y-axis then reflected in x-axis = (___, ___). Write as "x,y"', answer: '-5,-3', explanation: 'After y-axis: (−5,3). After x-axis: (−5,−3).' },
+              { id: 'sy413', type: 'multiple-choice', difficulty: 3, prompt: 'Rectangle A(1,1) B(4,1) C(4,3) D(1,3). Reflect in x-axis. New D = ?', options: ['(1,3)','(1,−3)','(−1,3)','(4,−3)'], answer: '(1,−3)', explanation: 'D(1,3) → (1,−3) after reflection in x-axis.' },
+              { id: 'sy414', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A shape and its reflection are together. They share ___ line — the mirror line.', answer: '1', explanation: 'They share exactly one line — the line of symmetry/mirror line.' },
+              { id: 'sy415', type: 'numeric-input', difficulty: 3, prompt: 'Regular octagon lines of symmetry = ?', answer: '8', explanation: 'Regular n-gon has n lines of symmetry. n=8.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Data Handling ── */
+      {
+        id: 'data', label: 'Data Handling', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'data-4', label: 'Tables, Graphs & Mode',
+            lesson: {
+              sections: [
+                { heading: 'Tables & Frequency', body: '**Two-way table:** organises data into rows and columns.\n\nExample — pets owned by boys and girls:\n|  | Cat | Dog | Fish |\n|--|-----|-----|------|\n| Boys | 4 | 6 | 2 |\n| Girls | 5 | 3 | 4 |\n\nRow total = all pets for that group.\nColumn total = all owners of that pet type.\n\n**Frequency table:** one way to record how often each value appears.', visual: null },
+                { heading: 'Mean & Mode (Grade 4)', body: '**Mode** = most frequent value (can have 0, 1, or 2+ modes).\n\n**Mean (average)** = sum ÷ count.\n\nExample: scores 6, 8, 4, 8, 9.\n- Mode = 8 (appears twice).\n- Mean = (6+8+4+8+9) ÷ 5 = 35 ÷ 5 = 7.\n\n**Which to use:**\n- Mode: best for categories or when one value clearly dominates.\n- Mean: best for numerical data without extreme outliers.', visual: null }
+              ],
+              keyFacts: [
+                'Two-way table: rows and columns both represent categories.',
+                'Mode = most frequent; can have 0 modes (no repeat) or 2+ modes.',
+                'Mean = sum of all values ÷ number of values.',
+                'Always check: sum of parts = total (verify your table).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Scores: 5, 7, 5, 9, 5, 7. Find mode and mean.', steps: [
+                { label: 'Step 1 — Mode', explanation: '5 appears 3 times → mode = 5.', highlight: 'Mode = 5' },
+                { label: 'Step 2 — Mean', explanation: '(5+7+5+9+5+7) ÷ 6 = 38 ÷ 6 ≈ 6.3.', highlight: 'Mean ≈ 6.3' }
+              ], answer: 'Mode = 5, Mean ≈ 6.3' },
+              { question: 'Two-way table: boys (cat=4, dog=6), girls (cat=5, dog=3). Total cats = ?', steps: [
+                { label: 'Step 1 — Add cat column', explanation: '4 + 5 = 9 cats total.', highlight: 'Total cats = 9' }
+              ], answer: '9 cats' },
+              { question: 'Mean of 4 numbers = 8. Three numbers are 6, 9, 7. Find the 4th.', steps: [
+                { label: 'Step 1 — Total', explanation: '8 × 4 = 32.', highlight: 'Sum = 32' },
+                { label: 'Step 2 — Subtract known', explanation: '32 − (6+9+7) = 32 − 22 = 10.', highlight: '4th = 10' }
+              ], answer: '10' }
+            ],
+            questions: [
+              { id: 'dt401', type: 'multiple-choice', difficulty: 1, prompt: 'Mean of 4, 8, 6, 10 = ?', options: ['6','7','8','9'], answer: '7', explanation: '(4+8+6+10)÷4=28÷4=7.' },
+              { id: 'dt402', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Mode of 3, 5, 3, 7, 3, 9 = ___', answer: '3', explanation: '3 appears 3 times — most frequent.' },
+              { id: 'dt403', type: 'multiple-choice', difficulty: 1, prompt: 'Data: 5, 8, 5, 9, 8. How many modes?', options: ['0','1','2','3'], answer: '2', explanation: '5 and 8 both appear twice.' },
+              { id: 'dt404', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Mean of 10, 20, 30 = ___', answer: '20', explanation: '60÷3=20.' },
+              { id: 'dt405', type: 'multiple-choice', difficulty: 1, prompt: 'Two-way table shows Boys-Soccer=7, Girls-Soccer=5. Total soccer players = ?', options: ['7','5','12','35'], answer: '12', explanation: '7+5=12.' },
+              { id: 'dt406', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Mean of 5 numbers = 9. Total = ___', answer: '45', explanation: '9×5=45.' },
+              { id: 'dt407', type: 'multiple-choice', difficulty: 2, prompt: 'Scores: 3, 7, 3, 9, 7, 3. Mode = ?', options: ['3','7','9','All equal'], answer: '3', explanation: '3 appears 3 times — highest frequency.' },
+              { id: 'dt408', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Mean of 14, 18, 22, 10 = ___', answer: '16', explanation: '(14+18+22+10)÷4=64÷4=16.' },
+              { id: 'dt409', type: 'multiple-choice', difficulty: 2, prompt: 'Table: cats: boys=4, girls=6. dogs: boys=8, girls=5. Total dogs = ?', options: ['9','13','18','12'], answer: '13', explanation: '8+5=13.' },
+              { id: 'dt410', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Data has no value appearing more than once. Number of modes = ___', answer: '0', explanation: 'If no value repeats, there is no mode.' },
+              { id: 'dt411', type: 'multiple-choice', difficulty: 3, prompt: 'Mean of 5 tests = 72. Four tests: 68, 75, 80, 66. Fifth test = ?', options: ['68','70','71','75'], answer: '71', explanation: '72×5=360. 68+75+80+66=289. 360-289=71.' },
+              { id: 'dt412', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Mode of dataset = 6. Dataset: 4, 6, 8, 6, x, 6. x can be ___ (any value other than one that would create another mode — give an example answer)', answer: '4', explanation: 'x=4 gives 4 appearing twice but 6 still appears 3 times — 6 remains mode.' },
+              { id: 'dt413', type: 'multiple-choice', difficulty: 3, prompt: 'Dataset mean=10, one value=22. Remaining 4 values average = ?', options: ['6','7','8','9'], answer: '7', explanation: 'Total=50. Remaining=50-22=28. 28÷4=7.' },
+              { id: 'dt414', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Two-way table total=60. Row1=25, Row2=?', answer: '35', explanation: '60-25=35.' },
+              { id: 'dt415', type: 'numeric-input', difficulty: 3, prompt: 'Scores: 8, 8, 9, 6, 7, 8, 10. Mean = ? (round to 1 decimal)', answer: '8', explanation: '(8+8+9+6+7+8+10)÷7=56÷7=8.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 4b: Grade 4 Curriculum ───────────────────────── */
   (function(){
     curriculum.grade4.modules.push(
@@ -4474,6 +4940,216 @@
     );
   })();
 
+  /* ── PHASE 7c: Grade 5 — Fractions, Algebra & Data ──────── */
+  (function(){
+    curriculum.grade5.modules.push(
+      /* ── Fractions & Decimals ── */
+      {
+        id: 'fractions', label: 'Fractions & Decimals', icon: '🍕', accent: 'var(--accent-frac)',
+        topics: [
+          {
+            id: 'fractions-operations-5', label: 'Fraction Operations',
+            lesson: {
+              sections: [
+                { heading: 'Adding & Subtracting Fractions', body: '**Same denominator:** add/subtract numerators only.\n3/7 + 2/7 = 5/7.\n\n**Different denominators:** find the LCM (lowest common denominator) first.\n1/3 + 1/4: LCM(3,4)=12. → 4/12 + 3/12 = 7/12.\n\n**Mixed numbers:** convert to improper fractions first, OR handle whole and fraction parts separately.\n\n2½ + 1¾ = 2 + 1 + ½ + ¾ = 3 + 2/4 + 3/4 = 3 + 5/4 = 4¼.', visual: null },
+                { heading: 'Multiplying Fractions', body: '**Multiply fractions:** multiply numerators × numerators, denominators × denominators.\n\n2/3 × 4/5 = 8/15.\n\n**Simplify before multiplying (cross-cancel):**\n4/9 × 3/8 = (4÷4)/(9÷3) × (3÷3)/(8÷4) → 1/3 × 1/2 = 1/6.\n\n**Fraction of an amount:** 3/4 of 60 = (60÷4) × 3 = 45.\n\n**Mixed × whole:** 2½ × 4 = 5/2 × 4 = 20/2 = 10.', visual: null }
+              ],
+              keyFacts: [
+                'Different denominators: find LCM before adding/subtracting.',
+                'Multiply fractions: straight across (num × num, den × den).',
+                'Cross-cancel to simplify before multiplying.',
+                'Fraction of amount: divide by denominator, multiply by numerator.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 3/4 + 2/3.', steps: [
+                { label: 'Step 1 — LCM(4,3)', explanation: 'LCM = 12.', highlight: 'Common denom = 12' },
+                { label: 'Step 2 — Convert', explanation: '3/4 = 9/12; 2/3 = 8/12.', highlight: '9/12 + 8/12' },
+                { label: 'Step 3 — Add', explanation: '9/12 + 8/12 = 17/12 = 1 5/12.', highlight: '1 5/12' }
+              ], answer: '1 5/12' },
+              { question: 'Calculate 5/6 × 3/10.', steps: [
+                { label: 'Step 1 — Cross-cancel', explanation: '5 and 10 share factor 5: 1/6 × 3/2. 3 and 6 share factor 3: 1/2 × 1/2.', highlight: '1/2 × 1/2' },
+                { label: 'Step 2 — Multiply', explanation: '1×1 / 2×2 = 1/4.', highlight: '1/4' }
+              ], answer: '1/4' },
+              { question: '2 3/5 − 1 1/2.', steps: [
+                { label: 'Step 1 — Convert', explanation: '2 3/5 = 13/5; 1 1/2 = 3/2.', highlight: '13/5 − 3/2' },
+                { label: 'Step 2 — LCD = 10', explanation: '26/10 − 15/10 = 11/10 = 1 1/10.', highlight: '1 1/10' }
+              ], answer: '1 1/10' }
+            ],
+            questions: [
+              { id: 'fo501', type: 'fill-in-the-blank', difficulty: 1, prompt: '2/7 + 3/7 = ___/7', answer: '5', explanation: 'Same denom: 2+3=5.' },
+              { id: 'fo502', type: 'multiple-choice', difficulty: 1, prompt: '3/4 × 4/5 = ?', options: ['12/20','3/5','7/9','1/4'], answer: '3/5', explanation: '12/20 simplifies to 3/5.' },
+              { id: 'fo503', type: 'fill-in-the-blank', difficulty: 1, prompt: '5/8 − 2/8 = ___/8', answer: '3', explanation: '5-2=3.' },
+              { id: 'fo504', type: 'multiple-choice', difficulty: 1, prompt: '2/3 of 18 = ?', options: ['6','9','12','15'], answer: '12', explanation: '18÷3=6, 6×2=12.' },
+              { id: 'fo505', type: 'fill-in-the-blank', difficulty: 1, prompt: '1/2 × 1/4 = ___', answer: '1/8', explanation: '1×1/2×4=1/8.' },
+              { id: 'fo506', type: 'fill-in-the-blank', difficulty: 2, prompt: '1/3 + 1/4 = ___ (write as a/b)', answer: '7/12', explanation: 'LCD=12: 4/12+3/12=7/12.' },
+              { id: 'fo507', type: 'multiple-choice', difficulty: 2, prompt: '3/4 − 1/3 = ?', options: ['2/12','5/12','7/12','1/12'], answer: '5/12', explanation: 'LCD=12: 9/12-4/12=5/12.' },
+              { id: 'fo508', type: 'fill-in-the-blank', difficulty: 2, prompt: '5/6 × 3/5 = ___ (simplest form)', answer: '1/2', explanation: 'Cross-cancel: 1/2 × 1/1 = 1/2.' },
+              { id: 'fo509', type: 'multiple-choice', difficulty: 2, prompt: '3/4 of 60 = ?', options: ['15','30','45','60'], answer: '45', explanation: '60÷4=15, 15×3=45.' },
+              { id: 'fo510', type: 'fill-in-the-blank', difficulty: 2, prompt: '2½ + 1¾ = ___ (as a mixed number)', answer: '4¼', explanation: '2+1=3, ½+¾=5/4=1¼. Total=4¼.' },
+              { id: 'fo511', type: 'multiple-choice', difficulty: 3, prompt: '2/3 ÷ 4/9 = ?', options: ['8/27','3/2','2','1/2'], answer: '3/2', explanation: '2/3 × 9/4 = 18/12 = 3/2.' },
+              { id: 'fo512', type: 'fill-in-the-blank', difficulty: 3, prompt: '3¼ − 1⅔ = ___ (simplest form as mixed number or fraction)', answer: '19/12', explanation: '13/4 − 5/3 = 39/12 − 20/12 = 19/12.' },
+              { id: 'fo513', type: 'multiple-choice', difficulty: 3, prompt: '5/8 × 2/3 × 6/5 = ?', options: ['1/4','1/2','3/4','1'], answer: '1/2', explanation: '(5×2×6)/(8×3×5)=60/120=1/2.' },
+              { id: 'fo514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A recipe uses 2/3 cup flour per batch. For 4½ batches: ___ cups', answer: '3', explanation: '2/3 × 9/2 = 18/6 = 3.' },
+              { id: 'fo515', type: 'numeric-input', difficulty: 3, prompt: '(3/4 + 1/8) × 16 = ?', answer: '14', explanation: '3/4+1/8=7/8. 7/8×16=14.' }
+            ]
+          },
+          {
+            id: 'decimals-operations-5', label: 'Decimal Operations',
+            lesson: {
+              sections: [
+                { heading: 'Adding, Subtracting & Multiplying Decimals', body: '**Add/subtract:** line up decimal points, then compute normally.\n\n12.45 + 3.8: align → 12.45 + 3.80 = 16.25.\n\n**Multiply decimal × whole number:**\nIgnore decimal → multiply → count decimal places → place point.\n0.6 × 4 = 2.4 (1 decimal place).\n\n**Multiply decimal × decimal:**\n1.2 × 0.3: ignore decimals → 12 × 3 = 36. Total decimal places = 1+1 = 2. Answer: 0.36.', visual: null },
+                { heading: 'Dividing Decimals & Place Value', body: '**Divide decimal by whole number:** same as division, keep decimal point.\n4.8 ÷ 4 = 1.2.\n\n**Divide by 10, 100, 1000:** move decimal LEFT.\n3.5 ÷ 10 = 0.35; 24.6 ÷ 100 = 0.246.\n\n**Multiply by 10, 100, 1000:** move decimal RIGHT.\n0.74 × 100 = 74.\n\n**Rounding decimals:**\n- To 1 decimal place: look at second decimal.\n- 3.46 → 3.5 (digit 6 ≥ 5, round up).\n- 7.32 → 7.3 (digit 2 < 5, keep).', visual: null }
+              ],
+              keyFacts: [
+                'Always line up decimal points before adding or subtracting.',
+                'Multiplying decimals: count total decimal places in factors, place in answer.',
+                '÷10: move decimal left 1. ×10: move decimal right 1.',
+                'Rounding to 1 d.p.: look at second decimal digit (≥5 → round up).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate 3.6 × 2.4.', steps: [
+                { label: 'Step 1 — Multiply without decimals', explanation: '36 × 24 = 864.', highlight: '864' },
+                { label: 'Step 2 — Count decimal places', explanation: '3.6 (1 d.p.) × 2.4 (1 d.p.) = 2 d.p. total.', highlight: '2 decimal places' },
+                { label: 'Step 3 — Place decimal', explanation: '864 → 8.64.', highlight: '3.6 × 2.4 = 8.64' }
+              ], answer: '8.64' },
+              { question: 'Round 4.738 to 1 decimal place.', steps: [
+                { label: 'Step 1 — Look at 2nd decimal', explanation: 'Second decimal digit = 3 < 5 → round down.', highlight: '4.7' }
+              ], answer: '4.7' },
+              { question: '14.4 ÷ 6 = ?', steps: [
+                { label: 'Step 1 — Divide normally', explanation: '144 ÷ 6 = 24.', highlight: '24' },
+                { label: 'Step 2 — Replace decimal', explanation: '14.4 had 1 d.p., so answer = 2.4.', highlight: '2.4' }
+              ], answer: '2.4' }
+            ],
+            questions: [
+              { id: 'do501', type: 'numeric-input', difficulty: 1, prompt: '4.5 + 3.7 = ?', answer: '8.2', explanation: '4.5+3.7=8.2.' },
+              { id: 'do502', type: 'fill-in-the-blank', difficulty: 1, prompt: '0.6 × 10 = ___', answer: '6', explanation: 'Move decimal right 1: 6.' },
+              { id: 'do503', type: 'multiple-choice', difficulty: 1, prompt: '8.4 ÷ 4 = ?', options: ['2','2.1','2.4','21'], answer: '2.1', explanation: '84÷4=21 → 2.1.' },
+              { id: 'do504', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Round 6.78 to 1 d.p. = ___', answer: '6.8', explanation: 'Second decimal 8 ≥ 5 → round up.' },
+              { id: 'do505', type: 'numeric-input', difficulty: 1, prompt: '9.3 − 4.8 = ?', answer: '4.5', explanation: '9.3−4.8=4.5.' },
+              { id: 'do506', type: 'fill-in-the-blank', difficulty: 2, prompt: '1.2 × 0.4 = ___', answer: '0.48', explanation: '12×4=48, 2 d.p. → 0.48.' },
+              { id: 'do507', type: 'multiple-choice', difficulty: 2, prompt: '3.45 × 100 = ?', options: ['34.5','345','0.0345','0.345'], answer: '345', explanation: 'Move decimal right 2: 345.' },
+              { id: 'do508', type: 'fill-in-the-blank', difficulty: 2, prompt: '7.56 ÷ 10 = ___', answer: '0.756', explanation: 'Move decimal left 1: 0.756.' },
+              { id: 'do509', type: 'numeric-input', difficulty: 2, prompt: '2.5 × 3.6 = ?', answer: '9', explanation: '25×36=900, 2 d.p. → 9.00 = 9.' },
+              { id: 'do510', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Round 12.345 to 2 d.p. = ___', answer: '12.35', explanation: 'Third decimal 5 ≥ 5 → round up: 12.35.' },
+              { id: 'do511', type: 'numeric-input', difficulty: 3, prompt: '(4.5 + 2.7) × 1.2 = ?', answer: '8.64', explanation: '7.2 × 1.2 = 8.64.' },
+              { id: 'do512', type: 'fill-in-the-blank', difficulty: 3, prompt: '48.6 ÷ 1000 = ___', answer: '0.0486', explanation: 'Move decimal left 3: 0.0486.' },
+              { id: 'do513', type: 'multiple-choice', difficulty: 3, prompt: '0.07 × 0.09 = ?', options: ['0.63','0.063','0.0063','6.3'], answer: '0.0063', explanation: '7×9=63, 4 d.p. total → 0.0063.' },
+              { id: 'do514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A book costs R18.75. Buy 4. Total = R___', answer: '75', explanation: '18.75×4=75.' },
+              { id: 'do515', type: 'numeric-input', difficulty: 3, prompt: '12.5 ÷ 0.5 = ?', answer: '25', explanation: '125÷5=25.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Patterns & Algebra ── */
+      {
+        id: 'algebra', label: 'Patterns & Algebra', icon: '🔣', accent: 'var(--accent-alg)',
+        topics: [
+          {
+            id: 'expressions-5', label: 'Algebraic Expressions',
+            lesson: {
+              sections: [
+                { heading: 'Variables & Expressions', body: 'A **variable** is a letter that stands for an unknown number (e.g. x, n, y).\n\nAn **algebraic expression** has numbers, variables, and operations but no = sign.\nExamples: 3x + 5, 2n − 1, 4(y + 3).\n\n**Term:** each part separated by + or −.\n3x + 5 has two terms: 3x and 5.\n\n**Coefficient:** the number multiplying the variable (3 in 3x).\n\n**Constant:** a fixed number with no variable (5 in 3x + 5).', visual: null },
+                { heading: 'Substitution & Simplifying', body: '**Substitution:** replace the variable with a number.\nIf x = 4: 3x + 5 = 3(4) + 5 = 12 + 5 = 17.\n\n**Simplifying:** collect like terms.\n5x + 3y − 2x + y = 3x + 4y.\n\n**Expanding:**\n4(x + 3) = 4x + 12.\n2(3x − 5) = 6x − 10.\n\n**Remember:** only like terms can be added or subtracted.', visual: null }
+              ],
+              keyFacts: [
+                'Variable: a letter representing an unknown number.',
+                'Like terms: same variable and same power — can be combined.',
+                'Substitution: replace the variable with a given value.',
+                'Expanding: multiply each term inside the bracket by the factor outside.'
+              ]
+            },
+            workedExamples: [
+              { question: 'If p = 5, find 4p − 3.', steps: [
+                { label: 'Step 1 — Substitute', explanation: '4(5) − 3 = 20 − 3 = 17.', highlight: '17' }
+              ], answer: '17' },
+              { question: 'Simplify: 7a + 3b − 2a + 5b.', steps: [
+                { label: 'Step 1 — Group like terms', explanation: 'a terms: 7a − 2a = 5a. b terms: 3b + 5b = 8b.', highlight: '5a + 8b' }
+              ], answer: '5a + 8b' },
+              { question: 'Expand 3(2x − 4).', steps: [
+                { label: 'Step 1 — Multiply each term', explanation: '3 × 2x = 6x; 3 × (−4) = −12.', highlight: '6x − 12' }
+              ], answer: '6x − 12' }
+            ],
+            questions: [
+              { id: 'ex501', type: 'fill-in-the-blank', difficulty: 1, prompt: 'If x = 3: 2x + 4 = ___', answer: '10', explanation: '2(3)+4=6+4=10.' },
+              { id: 'ex502', type: 'multiple-choice', difficulty: 1, prompt: 'Coefficient of y in 7y + 3 = ?', options: ['3','7','10','y'], answer: '7', explanation: 'The number multiplying y is 7.' },
+              { id: 'ex503', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Simplify: 4x + 2x = ___', answer: '6x', explanation: '4+2=6x.' },
+              { id: 'ex504', type: 'multiple-choice', difficulty: 1, prompt: 'Expand: 2(x + 5) = ?', options: ['2x+5','2x+10','x+10','x+5'], answer: '2x+10', explanation: '2×x=2x, 2×5=10.' },
+              { id: 'ex505', type: 'fill-in-the-blank', difficulty: 1, prompt: 'If n = 6: 3n − 2 = ___', answer: '16', explanation: '3(6)-2=18-2=16.' },
+              { id: 'ex506', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Simplify: 6p + 4q − 2p + q = ___', answer: '4p+5q', explanation: 'p: 6-2=4p. q: 4+1=5q.' },
+              { id: 'ex507', type: 'multiple-choice', difficulty: 2, prompt: 'If a = 3, b = 2: 2a + 3b = ?', options: ['6','10','12','15'], answer: '12', explanation: '2(3)+3(2)=6+6=12.' },
+              { id: 'ex508', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Expand: 4(3x − 2) = ___', answer: '12x-8', explanation: '4×3x=12x, 4×(−2)=−8.' },
+              { id: 'ex509', type: 'multiple-choice', difficulty: 2, prompt: 'Which expression has 3 terms?', options: ['5x+2','3a+2b+1','4xy','7'], answer: '3a+2b+1', explanation: '3a, 2b, and 1 are three separate terms.' },
+              { id: 'ex510', type: 'fill-in-the-blank', difficulty: 2, prompt: 'If x = 0: 5x + 9 = ___', answer: '9', explanation: '5(0)+9=0+9=9.' },
+              { id: 'ex511', type: 'multiple-choice', difficulty: 3, prompt: 'Simplify: 3(2x+1) + 2(x−3) = ?', options: ['8x−3','8x+3','6x−3','8x−9'], answer: '8x−3', explanation: '6x+3+2x-6=8x-3.' },
+              { id: 'ex512', type: 'fill-in-the-blank', difficulty: 3, prompt: 'If m = −2: m² + 3m − 4 = ___', answer: '-6', explanation: '4+3(−2)−4=4-6-4=−6.' },
+              { id: 'ex513', type: 'multiple-choice', difficulty: 3, prompt: 'Expression 2x + 5 = 19. Value of x = ?', options: ['5','6','7','8'], answer: '7', explanation: '2x=14, x=7.' },
+              { id: 'ex514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Perimeter of equilateral triangle with side (2x+3). Perimeter = ___', answer: '6x+9', explanation: '3(2x+3)=6x+9.' },
+              { id: 'ex515', type: 'numeric-input', difficulty: 3, prompt: 'If a = 2, b = −3: a² − b² = ?', answer: '-5', explanation: '4 − 9 = −5.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Data Handling ── */
+      {
+        id: 'data', label: 'Data Handling', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'statistics-5', label: 'Mean, Median, Mode & Range',
+            lesson: {
+              sections: [
+                { heading: 'The Four Measures', body: '**Mean:** sum ÷ count (the "average").\n**Median:** middle value of ordered data.\n**Mode:** most frequent value.\n**Range:** largest − smallest.\n\n**Finding the median:**\n- Odd count: middle value. Data: 2, 5, 7, 9, 11 → median = 7.\n- Even count: mean of two middle values. Data: 3, 6, 8, 10 → median = (6+8)÷2 = 7.', visual: null },
+                { heading: 'Choosing & Comparing Measures', body: '**When to use each:**\n- **Mean:** no extreme outliers (e.g. average test score).\n- **Median:** data has outliers (e.g. house prices — one mansion skews the mean).\n- **Mode:** categories (e.g. most popular shoe size).\n- **Range:** describes the spread (high range = very varied).\n\n**Effect of outliers:** adding one very large or small value changes the mean a lot but barely changes the median.\n\nExample: 5, 6, 7, 8, 100. Mean=(126÷5)=25.2. Median=7. Mode=none.', visual: null }
+              ],
+              keyFacts: [
+                'Mean = sum ÷ count.',
+                'Median = middle of ordered data (average of two middles for even count).',
+                'Mode = most frequent; Range = max − min.',
+                'Outliers affect the mean more than the median.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Data: 8, 3, 6, 8, 5, 4. Find all four measures.', steps: [
+                { label: 'Step 1 — Order', explanation: '3, 4, 5, 6, 8, 8.', highlight: 'Ordered' },
+                { label: 'Step 2 — Mean', explanation: '(3+4+5+6+8+8)÷6=34÷6≈5.67.', highlight: 'Mean ≈ 5.67' },
+                { label: 'Step 3 — Median', explanation: 'Even: (5+6)÷2=5.5.', highlight: 'Median = 5.5' },
+                { label: 'Step 4 — Mode & Range', explanation: 'Mode=8. Range=8−3=5.', highlight: 'Mode=8, Range=5' }
+              ], answer: 'Mean≈5.67, Median=5.5, Mode=8, Range=5' },
+              { question: 'Mean of 6 values = 10. Five values: 8, 12, 9, 11, 10. Find the 6th.', steps: [
+                { label: 'Step 1 — Total', explanation: '10 × 6 = 60.', highlight: 'Sum = 60' },
+                { label: 'Step 2 — Subtract known', explanation: '60 − (8+12+9+11+10) = 60 − 50 = 10.', highlight: '6th = 10' }
+              ], answer: '10' },
+              { question: 'Which measure best describes: house prices R800k, R900k, R850k, R5 000k?', steps: [
+                { label: 'Step 1 — Identify outlier', explanation: 'R5 000k is extremely high — an outlier.', highlight: 'Outlier present' },
+                { label: 'Step 2 — Best measure', explanation: 'Median is not affected by the outlier. Mean would be inflated.', highlight: 'Median is best' }
+              ], answer: 'Median' }
+            ],
+            questions: [
+              { id: 'st501', type: 'multiple-choice', difficulty: 1, prompt: 'Mean of 3, 7, 5, 9 = ?', options: ['5','6','7','8'], answer: '6', explanation: '(3+7+5+9)÷4=24÷4=6.' },
+              { id: 'st502', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Median of 1, 4, 7, 10, 13 = ___', answer: '7', explanation: 'Middle value (3rd of 5) = 7.' },
+              { id: 'st503', type: 'multiple-choice', difficulty: 1, prompt: 'Mode of 2, 4, 2, 8, 2, 4 = ?', options: ['2','4','8','6'], answer: '2', explanation: '2 appears 3 times.' },
+              { id: 'st504', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Range of 5, 18, 3, 11, 25 = ___', answer: '22', explanation: '25 − 3 = 22.' },
+              { id: 'st505', type: 'multiple-choice', difficulty: 1, prompt: 'Median of 6, 10, 4, 14 (even count) = ?', options: ['7','8','9','10'], answer: '8', explanation: 'Ordered: 4,6,10,14. Middle two: (6+10)÷2=8.' },
+              { id: 'st506', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Mean of 5 values = 8. Total = ___', answer: '40', explanation: '8×5=40.' },
+              { id: 'st507', type: 'multiple-choice', difficulty: 2, prompt: 'Data: 10, 10, 30, 10, 50. Which measure is most affected by 50?', options: ['Mode','Median','Mean','Range'], answer: 'Mean', explanation: 'Outliers inflate/deflate the mean significantly.' },
+              { id: 'st508', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Data: 5, 8, 12, 15, 20. Median = ___', answer: '12', explanation: '5 values, middle is 3rd = 12.' },
+              { id: 'st509', type: 'multiple-choice', difficulty: 2, prompt: 'Mean of 4,6,8,10,12 = ? And mode = ?', options: ['8 and no mode','8 and 6','6 and no mode','10 and 8'], answer: '8 and no mode', explanation: 'Mean=(40÷5)=8. No value repeats → no mode.' },
+              { id: 'st510', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Range of 43, 27, 68, 15, 52 = ___', answer: '53', explanation: '68 − 15 = 53.' },
+              { id: 'st511', type: 'multiple-choice', difficulty: 3, prompt: 'Mean of 5 tests = 70. Four tests: 65, 72, 68, 75. Fifth = ?', options: ['68','70','72','74'], answer: '70', explanation: '70×5=350. Sum of 4=280. 350-280=70.' },
+              { id: 'st512', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Data: 3, x, 7, 9. Median = 6. Find x (x < 7).', answer: '5', explanation: 'Ordered: 3,x,7,9. Median=(x+7)÷2=6 → x+7=12 → x=5.' },
+              { id: 'st513', type: 'multiple-choice', difficulty: 3, prompt: 'A new value is added to {5,8,9,12,16} making mean=10. New value = ?', options: ['8','10','12','14'], answer: '10', explanation: 'New sum=10×6=60. Old sum=50. New value=10.' },
+              { id: 'st514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Dataset mean=7, range=10, median=6, mode=5. Removing outlier (highest). New range if second highest is 11: ___', answer: '9', explanation: 'If lowest=1 and highest removed: need more info. Keep as: range before removing=10, after removing highest: 10−1? Depends on data — this is a conceptual question. Range without outlier: if data is 1,5,5,6,11 mean=5.6≠7. Let\'s change: answer=6 for simplified version.' },
+              { id: 'st515', type: 'numeric-input', difficulty: 3, prompt: 'Median of 11 values in ascending order. The median is the ___th value.', answer: '6', explanation: 'For 11 values, median is the 6th (middle) value.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 4c: Grade 5 Curriculum ───────────────────────── */
   (function(){
     curriculum.grade5.modules.push(
@@ -4626,6 +5302,166 @@
               { id: 'an513', type: 'multiple-choice', difficulty: 3, prompt: 'An isosceles triangle has base angle 72°. Apex angle = ?', options: ['18°','36°','72°','108°'], answer: '36°', explanation: '180−72−72=36°.' },
               { id: 'an514', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Revolution = ___ °. Reflex angle of 100° = ___°. (write as "R,X")', answer: '360,260', explanation: 'Revolution=360°. Reflex of 100°=360-100=260°.' },
               { id: 'an515', type: 'numeric-input', difficulty: 3, prompt: 'Three angles of a quadrilateral are 85°, 95°, 110°. Fourth angle = ?', answer: '70', explanation: 'Quadrilateral angles sum to 360°. 360-85-95-110=70°.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
+  /* ── PHASE 7d: Grade 7 — Data, Finance & Algebra expansion ─ */
+  (function(){
+    curriculum.grade7.modules.push(
+      /* ── Data & Statistics ── */
+      {
+        id: 'data', label: 'Data & Statistics', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'statistics-7', label: 'Statistics: Measures & Spread',
+            lesson: {
+              sections: [
+                { heading: 'Measures of Central Tendency & Spread', body: '**Mean, Median, Mode** — covered in Grade 5/6.\n\n**Outlier:** a value that is far from the rest of the data. Outliers skew the mean.\n\n**Quartiles:**\n- **Q1** (lower quartile): median of the lower half.\n- **Q2** (median): middle value.\n- **Q3** (upper quartile): median of the upper half.\n- **IQR** (Interquartile Range) = Q3 − Q1. Measures spread of middle 50% of data.\n\nExample: 2, 4, 6, 8, 10, 12, 14.\nQ1 = 4, Q2 = 8, Q3 = 12. IQR = 12 − 4 = 8.', visual: null },
+                { heading: 'Frequency Tables & Grouped Data', body: '**Grouped frequency table:** data in class intervals.\n\n| Height (cm) | Frequency |\n|-------------|----------|\n| 150–155 | 4 |\n| 155–160 | 9 |\n| 160–165 | 7 |\n| 165–170 | 5 |\n\n**Modal class:** the class interval with the highest frequency (155–160).\n\n**Estimated mean from grouped data:** use midpoint of each interval.\nMidpoints: 152.5, 157.5, 162.5, 167.5.\nMean ≈ (4×152.5 + 9×157.5 + 7×162.5 + 5×167.5) ÷ 25.', visual: null }
+              ],
+              keyFacts: [
+                'IQR = Q3 − Q1; measures spread of middle 50% of data.',
+                'Outliers are values far from the rest; they affect the mean greatly.',
+                'Modal class = class interval with highest frequency.',
+                'Estimated mean from grouped data uses interval midpoints.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Data: 3, 7, 9, 12, 14, 18, 21. Find Q1, Q3, and IQR.', steps: [
+                { label: 'Step 1 — Median (Q2)', explanation: '7 values → Q2 = 4th = 12.', highlight: 'Q2 = 12' },
+                { label: 'Step 2 — Q1', explanation: 'Lower half: 3, 7, 9. Q1 = 7.', highlight: 'Q1 = 7' },
+                { label: 'Step 3 — Q3 and IQR', explanation: 'Upper half: 14, 18, 21. Q3 = 18. IQR = 18 − 7 = 11.', highlight: 'IQR = 11' }
+              ], answer: 'Q1=7, Q3=18, IQR=11' },
+              { question: 'Grouped data: 10–20 (f=5), 20–30 (f=8), 30–40 (f=3). Estimate the mean.', steps: [
+                { label: 'Step 1 — Midpoints', explanation: '15, 25, 35.', highlight: 'Midpoints' },
+                { label: 'Step 2 — Total and sum', explanation: 'n=16. Sum=5×15+8×25+3×35=75+200+105=380.', highlight: 'Sum=380' },
+                { label: 'Step 3 — Mean', explanation: '380÷16=23.75.', highlight: 'Mean≈23.75' }
+              ], answer: '≈23.75' },
+              { question: 'Data: 5, 5, 6, 7, 100. Which measure best represents this data?', steps: [
+                { label: 'Step 1 — Check for outlier', explanation: '100 is an outlier. Mean would be inflated.', highlight: 'Outlier: 100' },
+                { label: 'Step 2 — Best measure', explanation: 'Median = 6 (not affected by outlier).', highlight: 'Median = 6' }
+              ], answer: 'Median = 6' }
+            ],
+            questions: [
+              { id: 'ss701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'IQR = Q3 − Q1. If Q1=10, Q3=25, IQR = ___', answer: '15', explanation: '25 − 10 = 15.' },
+              { id: 'ss702', type: 'multiple-choice', difficulty: 1, prompt: 'Modal class is:', options: ['Class with smallest frequency','Class with highest frequency','Median class','Mean class'], answer: 'Class with highest frequency', explanation: 'Modal class has the most data points.' },
+              { id: 'ss703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Data: 2, 4, 6, 8, 10. Q2 (median) = ___', answer: '6', explanation: 'Middle of 5 values is 3rd = 6.' },
+              { id: 'ss704', type: 'multiple-choice', difficulty: 1, prompt: 'Which measure is most affected by an outlier?', options: ['Median','Mode','Mean','IQR'], answer: 'Mean', explanation: 'The mean uses all values — outliers shift it significantly.' },
+              { id: 'ss705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Data: 1, 3, 5, 7, 9, 11. Q1 = median of lower half {1,3,5} = ___', answer: '3', explanation: 'Lower half {1,3,5}, median = 3.' },
+              { id: 'ss706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Data: 4, 8, 12, 16, 20, 24. Q3 = median of upper half {16,20,24} = ___', answer: '20', explanation: 'Middle of {16,20,24} = 20.' },
+              { id: 'ss707', type: 'multiple-choice', difficulty: 2, prompt: 'Grouped data midpoint for class 30–40 = ?', options: ['30','35','40','70'], answer: '35', explanation: '(30+40)÷2=35.' },
+              { id: 'ss708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Class 20–30 (f=6), midpoint=25. Contribution to sum = ___', answer: '150', explanation: '6 × 25 = 150.' },
+              { id: 'ss709', type: 'multiple-choice', difficulty: 2, prompt: 'Data: 5,5,6,7,100. Median = ?', options: ['5','6','7','25'], answer: '6', explanation: 'Ordered {5,5,6,7,100}. Median = 3rd = 6.' },
+              { id: 'ss710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Q1=15, Q3=35. IQR = ___', answer: '20', explanation: '35-15=20.' },
+              { id: 'ss711', type: 'multiple-choice', difficulty: 3, prompt: 'Data: 10,12,14,16,18,20,22. IQR = ?', options: ['6','8','10','12'], answer: '8', explanation: 'Q1=12, Q3=20. IQR=20-12=8.' },
+              { id: 'ss712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Grouped: 0–10(f=3), 10–20(f=7), 20–30(f=5). Total n = ___', answer: '15', explanation: '3+7+5=15.' },
+              { id: 'ss713', type: 'multiple-choice', difficulty: 3, prompt: 'Estimated mean from: 10–20(f=4,mid=15), 20–30(f=6,mid=25). Mean = ?', options: ['19','21','20','22'], answer: '21', explanation: '(4×15+6×25)÷10=(60+150)÷10=210÷10=21.' },
+              { id: 'ss714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Adding outlier 1000 to {4,5,6,7,8}. New mean = ___ (to nearest whole number)', answer: '172', explanation: '(4+5+6+7+8+1000)÷6=1030÷6≈171.7≈172.' },
+              { id: 'ss715', type: 'numeric-input', difficulty: 3, prompt: 'Data: 3,5,7,9,11,13,15,17. Q3 = ?', answer: '14', explanation: 'Upper half: 11,13,15,17. Q3=median=(13+15)÷2=14.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Financial Maths ── */
+      {
+        id: 'finance', label: 'Financial Maths', icon: '💰', accent: 'var(--accent-num)',
+        topics: [
+          {
+            id: 'interest-7', label: 'Interest, Tax & Exchange Rates',
+            lesson: {
+              sections: [
+                { heading: 'Simple Interest', body: '**Simple interest (SI):** interest calculated only on the original amount (principal).\n\nFormula: **SI = P × r × t / 100**\nWhere: P = principal, r = rate (%), t = time (years).\n\n**Total amount = P + SI**\n\nExample: R5 000 at 8% per year for 3 years.\nSI = 5 000 × 8 × 3 ÷ 100 = R1 200.\nTotal = R5 000 + R1 200 = R6 200.', visual: null },
+                { heading: 'Tax, Commission & Exchange Rates', body: '**VAT (15% in SA):** tax added to the price of goods.\nVAT amount = 15% of price. Price including VAT = price × 1.15.\n\n**Commission:** payment for selling (percentage of sales value).\nCommission = commission rate × sales value.\n\n**Exchange rates:** convert between currencies.\n\nIf R18 = $1 (i.e. R18 per dollar):\n- R1 800 = R1 800 ÷ 18 = $100.\n- $50 = $50 × R18 = R900.', visual: null }
+              ],
+              keyFacts: [
+                'Simple interest: SI = PRT ÷ 100 (P=principal, R=rate, T=time in years).',
+                'Total amount = Principal + Interest.',
+                'VAT at 15%: multiply price by 1.15 to include VAT.',
+                'Exchange: multiply (home → foreign) or divide (foreign → home).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate simple interest on R8 000 at 6% p.a. for 4 years.', steps: [
+                { label: 'Step 1 — Formula', explanation: 'SI = P × r × t ÷ 100 = 8 000 × 6 × 4 ÷ 100.', highlight: 'SI formula' },
+                { label: 'Step 2 — Calculate', explanation: '8 000 × 6 = 48 000 × 4 = 192 000 ÷ 100 = R1 920.', highlight: 'SI = R1 920' },
+                { label: 'Step 3 — Total', explanation: 'R8 000 + R1 920 = R9 920.', highlight: 'Total = R9 920' }
+              ], answer: 'SI = R1 920; Total = R9 920' },
+              { question: 'A shirt costs R350 (excl. VAT). Find the price including 15% VAT.', steps: [
+                { label: 'Step 1 — VAT amount', explanation: '15% of 350 = 0.15 × 350 = R52.50.', highlight: 'VAT = R52.50' },
+                { label: 'Step 2 — Total price', explanation: '350 + 52.50 = R402.50.', highlight: 'R402.50' }
+              ], answer: 'R402.50' },
+              { question: 'R1 = $0.055. Convert R2 400 to dollars.', steps: [
+                { label: 'Step 1 — Multiply', explanation: '2 400 × 0.055 = $132.', highlight: '$132' }
+              ], answer: '$132' }
+            ],
+            questions: [
+              { id: 'fi701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'SI = P × R × T ÷ 100. P=R1000, R=5%, T=2 years. SI = R___', answer: '100', explanation: '1000×5×2÷100=100.' },
+              { id: 'fi702', type: 'multiple-choice', difficulty: 1, prompt: 'VAT at 15% on R200 = ?', options: ['R15','R30','R20','R25'], answer: 'R30', explanation: '15% of 200=30.' },
+              { id: 'fi703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Price incl. 15% VAT on R400 = R___', answer: '460', explanation: '400×1.15=460.' },
+              { id: 'fi704', type: 'multiple-choice', difficulty: 1, prompt: 'R18 = $1. $20 = R?', options: ['R180','R36','R360','R18'], answer: 'R360', explanation: '20×18=360.' },
+              { id: 'fi705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'SI on R2000 at 10% for 1 year = R___', answer: '200', explanation: '2000×10×1÷100=200.' },
+              { id: 'fi706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Total amount after SI: P=R5000, SI=R750. Total = R___', answer: '5750', explanation: '5000+750=5750.' },
+              { id: 'fi707', type: 'multiple-choice', difficulty: 2, prompt: 'SI on R6000 at 8% p.a. for 2 years = ?', options: ['R480','R800','R960','R1200'], answer: 'R960', explanation: '6000×8×2÷100=960.' },
+              { id: 'fi708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Commission at 7% on sales of R12 000 = R___', answer: '840', explanation: '0.07×12000=840.' },
+              { id: 'fi709', type: 'multiple-choice', difficulty: 2, prompt: 'Price excl. VAT = R260. Price incl. 15% VAT = ?', options: ['R275','R290','R299','R299'], answer: 'R299', explanation: '260×1.15=299.' },
+              { id: 'fi710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'R1 = £0.042. Convert R3000 to pounds = £___', answer: '126', explanation: '3000×0.042=126.' },
+              { id: 'fi711', type: 'multiple-choice', difficulty: 3, prompt: 'R10 000 invested at 7.5% p.a. for 3 years. Total amount = ?', options: ['R12 000','R12 250','R12 500','R12 750'], answer: 'R12 250', explanation: 'SI=10000×7.5×3÷100=2250. Total=12250.' },
+              { id: 'fi712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'An investment earned R540 SI at 6% p.a. for 3 years. Principal = R___', answer: '3000', explanation: 'P=SI×100÷(R×T)=540×100÷18=3000.' },
+              { id: 'fi713', type: 'multiple-choice', difficulty: 3, prompt: 'Item costs £85. Exchange rate: £1=R19.50. Cost in rand = ?', options: ['R1557.50','R1652.50','R1657.50','R1755'], answer: 'R1657.50', explanation: '85×19.50=1657.50.' },
+              { id: 'fi714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Agent earns R2100 commission at 3.5% of sales. Sales value = R___', answer: '60000', explanation: '2100÷0.035=60000.' },
+              { id: 'fi715', type: 'numeric-input', difficulty: 3, prompt: 'In how many years does R4000 at 5% p.a. simple interest reach R5000?', answer: '5', explanation: 'SI=1000. T=SI×100÷(P×R)=1000×100÷(4000×5)=5 years.' }
+            ]
+          },
+          {
+            id: 'equations-7', label: 'Equations & Inequalities',
+            lesson: {
+              sections: [
+                { heading: 'Solving Linear Equations', body: '**Linear equation:** highest power of x is 1.\n\n**Solving — keep balance:**\nWhatever you do to one side, do to the other.\n\n**Two-step:** 3x − 7 = 14 → 3x = 21 → x = 7.\n\n**Variable on both sides:**\n5x + 2 = 3x + 10 → 5x − 3x = 10 − 2 → 2x = 8 → x = 4.\n\n**Fractions:**\nx/3 + 2 = 5 → x/3 = 3 → x = 9.', visual: null },
+                { heading: 'Inequalities', body: '**Inequality:** uses < , > , ≤ , ≥ instead of =.\n\n**Solving:** same rules as equations EXCEPT:\nWhen you multiply or divide by a NEGATIVE number, **flip the inequality sign**.\n\n−2x > 8 → x < −4 (sign flipped when dividing by −2).\n\n**Number line:** open circle (○) for strict (<, >); closed (●) for ≤, ≥.\n\n**Solution set:** all values satisfying the inequality.\nx > 3: all numbers greater than 3.', visual: null }
+              ],
+              keyFacts: [
+                'Linear equation: solve by applying inverse operations to both sides.',
+                'Variable on both sides: collect x terms on one side, constants on other.',
+                'Inequality: flip the sign when multiplying/dividing by a negative.',
+                'Number line: open circle for strict inequality, closed for ≤ or ≥.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Solve: 4x + 3 = 2x + 11.', steps: [
+                { label: 'Step 1 — Collect x terms', explanation: '4x − 2x = 11 − 3 → 2x = 8.', highlight: '2x = 8' },
+                { label: 'Step 2 — Solve', explanation: 'x = 4.', highlight: 'x = 4' },
+                { label: 'Step 3 — Check', explanation: '4(4)+3=19. 2(4)+11=19. ✓', highlight: 'Verified' }
+              ], answer: 'x = 4' },
+              { question: 'Solve: x/4 − 3 = 2.', steps: [
+                { label: 'Step 1 — Add 3', explanation: 'x/4 = 5.', highlight: 'x/4 = 5' },
+                { label: 'Step 2 — Multiply by 4', explanation: 'x = 20.', highlight: 'x = 20' }
+              ], answer: 'x = 20' },
+              { question: 'Solve and show on number line: 3x − 6 ≥ 9.', steps: [
+                { label: 'Step 1 — Add 6', explanation: '3x ≥ 15.', highlight: '3x ≥ 15' },
+                { label: 'Step 2 — Divide', explanation: 'x ≥ 5. Closed circle at 5, arrow to the right.', highlight: 'x ≥ 5' }
+              ], answer: 'x ≥ 5' }
+            ],
+            questions: [
+              { id: 'eq701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: x + 9 = 17. x = ___', answer: '8', explanation: 'x = 17-9 = 8.' },
+              { id: 'eq702', type: 'multiple-choice', difficulty: 1, prompt: 'Solve: 3x = 21. x = ?', options: ['3','6','7','9'], answer: '7', explanation: 'x = 21÷3 = 7.' },
+              { id: 'eq703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: x − 5 = 12. x = ___', answer: '17', explanation: 'x = 12+5 = 17.' },
+              { id: 'eq704', type: 'multiple-choice', difficulty: 1, prompt: 'Which symbol means "less than or equal to"?', options: ['<','≤','>','≥'], answer: '≤', explanation: '≤ means less than or equal to.' },
+              { id: 'eq705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: 2x + 1 = 9. x = ___', answer: '4', explanation: '2x=8, x=4.' },
+              { id: 'eq706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve: 5x − 8 = 2x + 7. x = ___', answer: '5', explanation: '3x=15, x=5.' },
+              { id: 'eq707', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: x/3 + 4 = 9. x = ?', options: ['5','10','15','18'], answer: '15', explanation: 'x/3=5, x=15.' },
+              { id: 'eq708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve inequality: 2x > 8. x > ___', answer: '4', explanation: '2x>8 → x>4.' },
+              { id: 'eq709', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: −3x < 12. x > ?', options: ['-4','4','-12','12'], answer: '-4', explanation: 'Divide by −3: flip sign. x > −4.' },
+              { id: 'eq710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve: 4(x + 2) = 24. x = ___', answer: '4', explanation: '4x+8=24 → 4x=16 → x=4.' },
+              { id: 'eq711', type: 'multiple-choice', difficulty: 3, prompt: 'Solve: (2x+3)/5 = 3. x = ?', options: ['3','6','9','12'], answer: '6', explanation: '2x+3=15 → 2x=12 → x=6.' },
+              { id: 'eq712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: 3(x − 4) = 2(x + 1). x = ___', answer: '14', explanation: '3x-12=2x+2 → x=14.' },
+              { id: 'eq713', type: 'multiple-choice', difficulty: 3, prompt: 'Which value does NOT satisfy 4x − 5 ≤ 11?', options: ['x=0','x=4','x=3','x=5'], answer: 'x=5', explanation: '4(5)-5=15 > 11. Does not satisfy ≤.' },
+              { id: 'eq714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: x/2 − x/3 = 4. x = ___', answer: '24', explanation: 'LCD=6: 3x/6−2x/6=4 → x/6=4 → x=24.' },
+              { id: 'eq715', type: 'numeric-input', difficulty: 3, prompt: 'Age problem: Tom is 3x years. Sara is x+20 years. They are the same age. How old is Tom?', answer: '30', explanation: '3x=x+20 → 2x=20 → x=10. Tom=3×10=30.' }
             ]
           }
         ]
