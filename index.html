@@ -5193,6 +5193,166 @@
     );
   })();
 
+  /* ── PHASE 7d: Grade 7 — Data, Finance & Algebra expansion ─ */
+  (function(){
+    curriculum.grade7.modules.push(
+      /* ── Data & Statistics ── */
+      {
+        id: 'data', label: 'Data & Statistics', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'statistics-7', label: 'Statistics: Measures & Spread',
+            lesson: {
+              sections: [
+                { heading: 'Measures of Central Tendency & Spread', body: '**Mean, Median, Mode** — covered in Grade 5/6.\n\n**Outlier:** a value that is far from the rest of the data. Outliers skew the mean.\n\n**Quartiles:**\n- **Q1** (lower quartile): median of the lower half.\n- **Q2** (median): middle value.\n- **Q3** (upper quartile): median of the upper half.\n- **IQR** (Interquartile Range) = Q3 − Q1. Measures spread of middle 50% of data.\n\nExample: 2, 4, 6, 8, 10, 12, 14.\nQ1 = 4, Q2 = 8, Q3 = 12. IQR = 12 − 4 = 8.', visual: null },
+                { heading: 'Frequency Tables & Grouped Data', body: '**Grouped frequency table:** data in class intervals.\n\n| Height (cm) | Frequency |\n|-------------|----------|\n| 150–155 | 4 |\n| 155–160 | 9 |\n| 160–165 | 7 |\n| 165–170 | 5 |\n\n**Modal class:** the class interval with the highest frequency (155–160).\n\n**Estimated mean from grouped data:** use midpoint of each interval.\nMidpoints: 152.5, 157.5, 162.5, 167.5.\nMean ≈ (4×152.5 + 9×157.5 + 7×162.5 + 5×167.5) ÷ 25.', visual: null }
+              ],
+              keyFacts: [
+                'IQR = Q3 − Q1; measures spread of middle 50% of data.',
+                'Outliers are values far from the rest; they affect the mean greatly.',
+                'Modal class = class interval with highest frequency.',
+                'Estimated mean from grouped data uses interval midpoints.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Data: 3, 7, 9, 12, 14, 18, 21. Find Q1, Q3, and IQR.', steps: [
+                { label: 'Step 1 — Median (Q2)', explanation: '7 values → Q2 = 4th = 12.', highlight: 'Q2 = 12' },
+                { label: 'Step 2 — Q1', explanation: 'Lower half: 3, 7, 9. Q1 = 7.', highlight: 'Q1 = 7' },
+                { label: 'Step 3 — Q3 and IQR', explanation: 'Upper half: 14, 18, 21. Q3 = 18. IQR = 18 − 7 = 11.', highlight: 'IQR = 11' }
+              ], answer: 'Q1=7, Q3=18, IQR=11' },
+              { question: 'Grouped data: 10–20 (f=5), 20–30 (f=8), 30–40 (f=3). Estimate the mean.', steps: [
+                { label: 'Step 1 — Midpoints', explanation: '15, 25, 35.', highlight: 'Midpoints' },
+                { label: 'Step 2 — Total and sum', explanation: 'n=16. Sum=5×15+8×25+3×35=75+200+105=380.', highlight: 'Sum=380' },
+                { label: 'Step 3 — Mean', explanation: '380÷16=23.75.', highlight: 'Mean≈23.75' }
+              ], answer: '≈23.75' },
+              { question: 'Data: 5, 5, 6, 7, 100. Which measure best represents this data?', steps: [
+                { label: 'Step 1 — Check for outlier', explanation: '100 is an outlier. Mean would be inflated.', highlight: 'Outlier: 100' },
+                { label: 'Step 2 — Best measure', explanation: 'Median = 6 (not affected by outlier).', highlight: 'Median = 6' }
+              ], answer: 'Median = 6' }
+            ],
+            questions: [
+              { id: 'ss701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'IQR = Q3 − Q1. If Q1=10, Q3=25, IQR = ___', answer: '15', explanation: '25 − 10 = 15.' },
+              { id: 'ss702', type: 'multiple-choice', difficulty: 1, prompt: 'Modal class is:', options: ['Class with smallest frequency','Class with highest frequency','Median class','Mean class'], answer: 'Class with highest frequency', explanation: 'Modal class has the most data points.' },
+              { id: 'ss703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Data: 2, 4, 6, 8, 10. Q2 (median) = ___', answer: '6', explanation: 'Middle of 5 values is 3rd = 6.' },
+              { id: 'ss704', type: 'multiple-choice', difficulty: 1, prompt: 'Which measure is most affected by an outlier?', options: ['Median','Mode','Mean','IQR'], answer: 'Mean', explanation: 'The mean uses all values — outliers shift it significantly.' },
+              { id: 'ss705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Data: 1, 3, 5, 7, 9, 11. Q1 = median of lower half {1,3,5} = ___', answer: '3', explanation: 'Lower half {1,3,5}, median = 3.' },
+              { id: 'ss706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Data: 4, 8, 12, 16, 20, 24. Q3 = median of upper half {16,20,24} = ___', answer: '20', explanation: 'Middle of {16,20,24} = 20.' },
+              { id: 'ss707', type: 'multiple-choice', difficulty: 2, prompt: 'Grouped data midpoint for class 30–40 = ?', options: ['30','35','40','70'], answer: '35', explanation: '(30+40)÷2=35.' },
+              { id: 'ss708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Class 20–30 (f=6), midpoint=25. Contribution to sum = ___', answer: '150', explanation: '6 × 25 = 150.' },
+              { id: 'ss709', type: 'multiple-choice', difficulty: 2, prompt: 'Data: 5,5,6,7,100. Median = ?', options: ['5','6','7','25'], answer: '6', explanation: 'Ordered {5,5,6,7,100}. Median = 3rd = 6.' },
+              { id: 'ss710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Q1=15, Q3=35. IQR = ___', answer: '20', explanation: '35-15=20.' },
+              { id: 'ss711', type: 'multiple-choice', difficulty: 3, prompt: 'Data: 10,12,14,16,18,20,22. IQR = ?', options: ['6','8','10','12'], answer: '8', explanation: 'Q1=12, Q3=20. IQR=20-12=8.' },
+              { id: 'ss712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Grouped: 0–10(f=3), 10–20(f=7), 20–30(f=5). Total n = ___', answer: '15', explanation: '3+7+5=15.' },
+              { id: 'ss713', type: 'multiple-choice', difficulty: 3, prompt: 'Estimated mean from: 10–20(f=4,mid=15), 20–30(f=6,mid=25). Mean = ?', options: ['19','21','20','22'], answer: '21', explanation: '(4×15+6×25)÷10=(60+150)÷10=210÷10=21.' },
+              { id: 'ss714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Adding outlier 1000 to {4,5,6,7,8}. New mean = ___ (to nearest whole number)', answer: '172', explanation: '(4+5+6+7+8+1000)÷6=1030÷6≈171.7≈172.' },
+              { id: 'ss715', type: 'numeric-input', difficulty: 3, prompt: 'Data: 3,5,7,9,11,13,15,17. Q3 = ?', answer: '14', explanation: 'Upper half: 11,13,15,17. Q3=median=(13+15)÷2=14.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Financial Maths ── */
+      {
+        id: 'finance', label: 'Financial Maths', icon: '💰', accent: 'var(--accent-num)',
+        topics: [
+          {
+            id: 'interest-7', label: 'Interest, Tax & Exchange Rates',
+            lesson: {
+              sections: [
+                { heading: 'Simple Interest', body: '**Simple interest (SI):** interest calculated only on the original amount (principal).\n\nFormula: **SI = P × r × t / 100**\nWhere: P = principal, r = rate (%), t = time (years).\n\n**Total amount = P + SI**\n\nExample: R5 000 at 8% per year for 3 years.\nSI = 5 000 × 8 × 3 ÷ 100 = R1 200.\nTotal = R5 000 + R1 200 = R6 200.', visual: null },
+                { heading: 'Tax, Commission & Exchange Rates', body: '**VAT (15% in SA):** tax added to the price of goods.\nVAT amount = 15% of price. Price including VAT = price × 1.15.\n\n**Commission:** payment for selling (percentage of sales value).\nCommission = commission rate × sales value.\n\n**Exchange rates:** convert between currencies.\n\nIf R18 = $1 (i.e. R18 per dollar):\n- R1 800 = R1 800 ÷ 18 = $100.\n- $50 = $50 × R18 = R900.', visual: null }
+              ],
+              keyFacts: [
+                'Simple interest: SI = PRT ÷ 100 (P=principal, R=rate, T=time in years).',
+                'Total amount = Principal + Interest.',
+                'VAT at 15%: multiply price by 1.15 to include VAT.',
+                'Exchange: multiply (home → foreign) or divide (foreign → home).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Calculate simple interest on R8 000 at 6% p.a. for 4 years.', steps: [
+                { label: 'Step 1 — Formula', explanation: 'SI = P × r × t ÷ 100 = 8 000 × 6 × 4 ÷ 100.', highlight: 'SI formula' },
+                { label: 'Step 2 — Calculate', explanation: '8 000 × 6 = 48 000 × 4 = 192 000 ÷ 100 = R1 920.', highlight: 'SI = R1 920' },
+                { label: 'Step 3 — Total', explanation: 'R8 000 + R1 920 = R9 920.', highlight: 'Total = R9 920' }
+              ], answer: 'SI = R1 920; Total = R9 920' },
+              { question: 'A shirt costs R350 (excl. VAT). Find the price including 15% VAT.', steps: [
+                { label: 'Step 1 — VAT amount', explanation: '15% of 350 = 0.15 × 350 = R52.50.', highlight: 'VAT = R52.50' },
+                { label: 'Step 2 — Total price', explanation: '350 + 52.50 = R402.50.', highlight: 'R402.50' }
+              ], answer: 'R402.50' },
+              { question: 'R1 = $0.055. Convert R2 400 to dollars.', steps: [
+                { label: 'Step 1 — Multiply', explanation: '2 400 × 0.055 = $132.', highlight: '$132' }
+              ], answer: '$132' }
+            ],
+            questions: [
+              { id: 'fi701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'SI = P × R × T ÷ 100. P=R1000, R=5%, T=2 years. SI = R___', answer: '100', explanation: '1000×5×2÷100=100.' },
+              { id: 'fi702', type: 'multiple-choice', difficulty: 1, prompt: 'VAT at 15% on R200 = ?', options: ['R15','R30','R20','R25'], answer: 'R30', explanation: '15% of 200=30.' },
+              { id: 'fi703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Price incl. 15% VAT on R400 = R___', answer: '460', explanation: '400×1.15=460.' },
+              { id: 'fi704', type: 'multiple-choice', difficulty: 1, prompt: 'R18 = $1. $20 = R?', options: ['R180','R36','R360','R18'], answer: 'R360', explanation: '20×18=360.' },
+              { id: 'fi705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'SI on R2000 at 10% for 1 year = R___', answer: '200', explanation: '2000×10×1÷100=200.' },
+              { id: 'fi706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Total amount after SI: P=R5000, SI=R750. Total = R___', answer: '5750', explanation: '5000+750=5750.' },
+              { id: 'fi707', type: 'multiple-choice', difficulty: 2, prompt: 'SI on R6000 at 8% p.a. for 2 years = ?', options: ['R480','R800','R960','R1200'], answer: 'R960', explanation: '6000×8×2÷100=960.' },
+              { id: 'fi708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Commission at 7% on sales of R12 000 = R___', answer: '840', explanation: '0.07×12000=840.' },
+              { id: 'fi709', type: 'multiple-choice', difficulty: 2, prompt: 'Price excl. VAT = R260. Price incl. 15% VAT = ?', options: ['R275','R290','R299','R299'], answer: 'R299', explanation: '260×1.15=299.' },
+              { id: 'fi710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'R1 = £0.042. Convert R3000 to pounds = £___', answer: '126', explanation: '3000×0.042=126.' },
+              { id: 'fi711', type: 'multiple-choice', difficulty: 3, prompt: 'R10 000 invested at 7.5% p.a. for 3 years. Total amount = ?', options: ['R12 000','R12 250','R12 500','R12 750'], answer: 'R12 250', explanation: 'SI=10000×7.5×3÷100=2250. Total=12250.' },
+              { id: 'fi712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'An investment earned R540 SI at 6% p.a. for 3 years. Principal = R___', answer: '3000', explanation: 'P=SI×100÷(R×T)=540×100÷18=3000.' },
+              { id: 'fi713', type: 'multiple-choice', difficulty: 3, prompt: 'Item costs £85. Exchange rate: £1=R19.50. Cost in rand = ?', options: ['R1557.50','R1652.50','R1657.50','R1755'], answer: 'R1657.50', explanation: '85×19.50=1657.50.' },
+              { id: 'fi714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Agent earns R2100 commission at 3.5% of sales. Sales value = R___', answer: '60000', explanation: '2100÷0.035=60000.' },
+              { id: 'fi715', type: 'numeric-input', difficulty: 3, prompt: 'In how many years does R4000 at 5% p.a. simple interest reach R5000?', answer: '5', explanation: 'SI=1000. T=SI×100÷(P×R)=1000×100÷(4000×5)=5 years.' }
+            ]
+          },
+          {
+            id: 'equations-7', label: 'Equations & Inequalities',
+            lesson: {
+              sections: [
+                { heading: 'Solving Linear Equations', body: '**Linear equation:** highest power of x is 1.\n\n**Solving — keep balance:**\nWhatever you do to one side, do to the other.\n\n**Two-step:** 3x − 7 = 14 → 3x = 21 → x = 7.\n\n**Variable on both sides:**\n5x + 2 = 3x + 10 → 5x − 3x = 10 − 2 → 2x = 8 → x = 4.\n\n**Fractions:**\nx/3 + 2 = 5 → x/3 = 3 → x = 9.', visual: null },
+                { heading: 'Inequalities', body: '**Inequality:** uses < , > , ≤ , ≥ instead of =.\n\n**Solving:** same rules as equations EXCEPT:\nWhen you multiply or divide by a NEGATIVE number, **flip the inequality sign**.\n\n−2x > 8 → x < −4 (sign flipped when dividing by −2).\n\n**Number line:** open circle (○) for strict (<, >); closed (●) for ≤, ≥.\n\n**Solution set:** all values satisfying the inequality.\nx > 3: all numbers greater than 3.', visual: null }
+              ],
+              keyFacts: [
+                'Linear equation: solve by applying inverse operations to both sides.',
+                'Variable on both sides: collect x terms on one side, constants on other.',
+                'Inequality: flip the sign when multiplying/dividing by a negative.',
+                'Number line: open circle for strict inequality, closed for ≤ or ≥.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Solve: 4x + 3 = 2x + 11.', steps: [
+                { label: 'Step 1 — Collect x terms', explanation: '4x − 2x = 11 − 3 → 2x = 8.', highlight: '2x = 8' },
+                { label: 'Step 2 — Solve', explanation: 'x = 4.', highlight: 'x = 4' },
+                { label: 'Step 3 — Check', explanation: '4(4)+3=19. 2(4)+11=19. ✓', highlight: 'Verified' }
+              ], answer: 'x = 4' },
+              { question: 'Solve: x/4 − 3 = 2.', steps: [
+                { label: 'Step 1 — Add 3', explanation: 'x/4 = 5.', highlight: 'x/4 = 5' },
+                { label: 'Step 2 — Multiply by 4', explanation: 'x = 20.', highlight: 'x = 20' }
+              ], answer: 'x = 20' },
+              { question: 'Solve and show on number line: 3x − 6 ≥ 9.', steps: [
+                { label: 'Step 1 — Add 6', explanation: '3x ≥ 15.', highlight: '3x ≥ 15' },
+                { label: 'Step 2 — Divide', explanation: 'x ≥ 5. Closed circle at 5, arrow to the right.', highlight: 'x ≥ 5' }
+              ], answer: 'x ≥ 5' }
+            ],
+            questions: [
+              { id: 'eq701', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: x + 9 = 17. x = ___', answer: '8', explanation: 'x = 17-9 = 8.' },
+              { id: 'eq702', type: 'multiple-choice', difficulty: 1, prompt: 'Solve: 3x = 21. x = ?', options: ['3','6','7','9'], answer: '7', explanation: 'x = 21÷3 = 7.' },
+              { id: 'eq703', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: x − 5 = 12. x = ___', answer: '17', explanation: 'x = 12+5 = 17.' },
+              { id: 'eq704', type: 'multiple-choice', difficulty: 1, prompt: 'Which symbol means "less than or equal to"?', options: ['<','≤','>','≥'], answer: '≤', explanation: '≤ means less than or equal to.' },
+              { id: 'eq705', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Solve: 2x + 1 = 9. x = ___', answer: '4', explanation: '2x=8, x=4.' },
+              { id: 'eq706', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve: 5x − 8 = 2x + 7. x = ___', answer: '5', explanation: '3x=15, x=5.' },
+              { id: 'eq707', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: x/3 + 4 = 9. x = ?', options: ['5','10','15','18'], answer: '15', explanation: 'x/3=5, x=15.' },
+              { id: 'eq708', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve inequality: 2x > 8. x > ___', answer: '4', explanation: '2x>8 → x>4.' },
+              { id: 'eq709', type: 'multiple-choice', difficulty: 2, prompt: 'Solve: −3x < 12. x > ?', options: ['-4','4','-12','12'], answer: '-4', explanation: 'Divide by −3: flip sign. x > −4.' },
+              { id: 'eq710', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Solve: 4(x + 2) = 24. x = ___', answer: '4', explanation: '4x+8=24 → 4x=16 → x=4.' },
+              { id: 'eq711', type: 'multiple-choice', difficulty: 3, prompt: 'Solve: (2x+3)/5 = 3. x = ?', options: ['3','6','9','12'], answer: '6', explanation: '2x+3=15 → 2x=12 → x=6.' },
+              { id: 'eq712', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: 3(x − 4) = 2(x + 1). x = ___', answer: '14', explanation: '3x-12=2x+2 → x=14.' },
+              { id: 'eq713', type: 'multiple-choice', difficulty: 3, prompt: 'Which value does NOT satisfy 4x − 5 ≤ 11?', options: ['x=0','x=4','x=3','x=5'], answer: 'x=5', explanation: '4(5)-5=15 > 11. Does not satisfy ≤.' },
+              { id: 'eq714', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Solve: x/2 − x/3 = 4. x = ___', answer: '24', explanation: 'LCD=6: 3x/6−2x/6=4 → x/6=4 → x=24.' },
+              { id: 'eq715', type: 'numeric-input', difficulty: 3, prompt: 'Age problem: Tom is 3x years. Sara is x+20 years. They are the same age. How old is Tom?', answer: '30', explanation: '3x=x+20 → 2x=20 → x=10. Tom=3×10=30.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 4d: Grade 7 Curriculum ───────────────────────── */
   (function(){
     curriculum.grade7.modules.push(
