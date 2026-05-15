@@ -3959,6 +3959,203 @@
     ]
   });
 
+  /* ── PHASE 7a: Grade 3 — Fractions & Data expansion ─────── */
+  (function(){
+    curriculum.grade3.modules.push(
+      /* ── Basic Fractions ── */
+      {
+        id: 'fractions', label: 'Fractions', icon: '🍕', accent: 'var(--accent-frac)',
+        topics: [
+          {
+            id: 'fraction-concepts', label: 'Understanding Fractions',
+            lesson: {
+              sections: [
+                { heading: 'What is a Fraction?', body: 'A **fraction** shows equal parts of a whole.\n\n**Numerator** (top) = how many parts we have.\n**Denominator** (bottom) = how many equal parts in the whole.\n\n**Common fractions:** ½ (one half), ¼ (one quarter), ⅓ (one third), ¾ (three quarters).\n\nIf a pizza is cut into 4 equal slices and you eat 1 slice → you ate **1/4** of the pizza.\n\n**Fractions on a number line:** place between 0 and 1.\n0 ……… ¼ ……… ½ ……… ¾ ……… 1', visual: null },
+                { heading: 'Equal Parts', body: 'For a fraction to be valid, the parts **must be equal in size**.\n\n- Cut a rectangle into 2 equal parts → each is **½**.\n- Cut into 3 equal parts → each is **⅓**.\n- Cut into 4 equal parts → each is **¼**.\n\n**Comparing simple fractions (same denominator):**\n¾ > ¼ because 3 parts > 1 part (same size pieces).\n\n**Whole = all parts:** 4/4 = 1 whole, 2/2 = 1 whole.', visual: null }
+              ],
+              keyFacts: [
+                'Numerator = parts we have (top number).',
+                'Denominator = total equal parts (bottom number).',
+                '½ = one half, ¼ = one quarter, ⅓ = one third.',
+                'To compare fractions with the same denominator, compare numerators.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A chocolate bar is broken into 8 equal pieces. Sam eats 3 pieces. What fraction did Sam eat?', steps: [
+                { label: 'Step 1 — Denominator', explanation: '8 equal pieces in total → denominator = 8.', highlight: 'Denom = 8' },
+                { label: 'Step 2 — Numerator', explanation: 'Sam eats 3 → numerator = 3.', highlight: 'Fraction = 3/8' }
+              ], answer: '3/8' },
+              { question: 'Which is greater: 5/8 or 3/8?', steps: [
+                { label: 'Step 1 — Same denominator', explanation: 'Both have 8 pieces, so compare numerators.', highlight: '5 vs 3' },
+                { label: 'Step 2 — Compare', explanation: '5 > 3, so 5/8 > 3/8.', highlight: '5/8 is greater' }
+              ], answer: '5/8 > 3/8' },
+              { question: 'Shade 3/4 of a shape divided into 4 equal parts. How many parts are shaded?', steps: [
+                { label: 'Step 1 — Read the fraction', explanation: '3/4 means 3 out of 4 equal parts.', highlight: '3 parts' }
+              ], answer: '3 parts shaded' }
+            ],
+            questions: [
+              { id: 'fc301', type: 'multiple-choice', difficulty: 1, prompt: 'What is the numerator in 3/5?', options: ['5','3','2','8'], answer: '3', explanation: 'The numerator is the top number.' },
+              { id: 'fc302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A pizza cut into 6 equal slices. You eat 2 slices. Fraction eaten = ___/6', answer: '2', explanation: '2 out of 6 slices = 2/6.' },
+              { id: 'fc303', type: 'multiple-choice', difficulty: 1, prompt: 'Which fraction means "one half"?', options: ['1/4','2/4','1/2','2/2'], answer: '1/2', explanation: 'One half is written as 1/2.' },
+              { id: 'fc304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Denominator of 7/10 = ___', answer: '10', explanation: 'Denominator is the bottom number.' },
+              { id: 'fc305', type: 'multiple-choice', difficulty: 1, prompt: 'A ribbon cut into 4 equal pieces. 1 piece = ?', options: ['1/3','1/4','1/5','1/2'], answer: '1/4', explanation: '1 out of 4 equal pieces = 1/4.' },
+              { id: 'fc306', type: 'fill-in-the-blank', difficulty: 2, prompt: '3 equal parts of a whole: each part = 1/___', answer: '3', explanation: '1 of 3 equal parts = 1/3.' },
+              { id: 'fc307', type: 'multiple-choice', difficulty: 2, prompt: 'Which is greater: 3/7 or 5/7?', options: ['3/7','5/7','Equal','Cannot tell'], answer: '5/7', explanation: 'Same denominator: 5 > 3, so 5/7 > 3/7.' },
+              { id: 'fc308', type: 'fill-in-the-blank', difficulty: 2, prompt: '4/4 = ___ (whole number)', answer: '1', explanation: '4 out of 4 = 1 whole.' },
+              { id: 'fc309', type: 'multiple-choice', difficulty: 2, prompt: 'A class of 20 children. 1/4 are absent. How many absent?', options: ['4','5','6','10'], answer: '5', explanation: '1/4 of 20 = 20÷4 = 5.' },
+              { id: 'fc310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Order from smallest: 1/5, 3/5, 2/5 → ___, ___, ___ (write as "a/b,c/d,e/f")', answer: '1/5,2/5,3/5', explanation: 'Same denominator: 1 < 2 < 3.' },
+              { id: 'fc311', type: 'multiple-choice', difficulty: 3, prompt: '½ of 24 = ?', options: ['6','8','12','24'], answer: '12', explanation: '24 ÷ 2 = 12.' },
+              { id: 'fc312', type: 'fill-in-the-blank', difficulty: 3, prompt: '¾ of 20 = ___', answer: '15', explanation: '20÷4=5, 5×3=15.' },
+              { id: 'fc313', type: 'multiple-choice', difficulty: 3, prompt: 'A bag has 12 sweets. 2/3 are red. How many are red?', options: ['4','6','8','9'], answer: '8', explanation: '12÷3=4, 4×2=8.' },
+              { id: 'fc314', type: 'fill-in-the-blank', difficulty: 3, prompt: '5/8 + 2/8 = ___/8', answer: '7', explanation: 'Same denominator: 5+2=7/8.' },
+              { id: 'fc315', type: 'multiple-choice', difficulty: 3, prompt: 'Which fraction equals one whole?', options: ['3/4','5/6','8/8','7/8'], answer: '8/8', explanation: '8/8 = 1 whole (numerator = denominator).' }
+            ]
+          },
+          {
+            id: 'fraction-counting', label: 'Counting in Fractions',
+            lesson: {
+              sections: [
+                { heading: 'Counting in Halves, Quarters & Thirds', body: '**Counting in halves (½):** 0, ½, 1, 1½, 2, 2½, 3 …\nEach jump adds ½ (half a unit).\n\n**Counting in quarters (¼):** 0, ¼, ½, ¾, 1, 1¼, 1½, 1¾, 2 …\n4 quarters = 1 whole.\n\n**Counting in thirds (⅓):** 0, ⅓, ⅔, 1, 1⅓, 1⅔, 2 …\n3 thirds = 1 whole.\n\n**Mixed numbers:** a whole number + a fraction (e.g. 1½ = 1 + ½).', visual: null },
+                { heading: 'Fractions on a Number Line', body: '**Number line from 0 to 2 in halves:**\n0 — ½ — 1 — 1½ — 2\n\n**Number line from 0 to 2 in quarters:**\n0 — ¼ — ½ — ¾ — 1 — 1¼ — 1½ — 1¾ — 2\n\nTo place a fraction on a number line:\n1. Count how many equal parts between each whole.\n2. Count from 0 the required number of parts.\n\n**Converting:** 1½ = 3/2 (improper fraction). 2¼ = 9/4.', visual: null }
+              ],
+              keyFacts: [
+                'Count in halves: add ½ each time. 2 halves = 1 whole.',
+                'Count in quarters: add ¼ each time. 4 quarters = 1 whole.',
+                'Count in thirds: add ⅓ each time. 3 thirds = 1 whole.',
+                'A mixed number has a whole part and a fraction part (e.g. 2¾).'
+              ]
+            },
+            workedExamples: [
+              { question: 'Continue the pattern: 0, ¼, ½, ¾, ___, ___', steps: [
+                { label: 'Step 1 — Identify step', explanation: 'Adding ¼ each time.', highlight: 'Rule: +¼' },
+                { label: 'Step 2 — Continue', explanation: '¾ + ¼ = 4/4 = 1. Then 1 + ¼ = 1¼.', highlight: '1, 1¼' }
+              ], answer: '1, 1¼' },
+              { question: 'A measuring jug is filled to 1½ litres. Shade the correct level on a scale marked in halves from 0 to 3.', steps: [
+                { label: 'Step 1 — Find 1½', explanation: '1½ is halfway between 1 and 2.', highlight: 'Between 1 and 2' }
+              ], answer: 'Halfway between 1 and 2' },
+              { question: 'How many thirds are in 2 wholes?', steps: [
+                { label: 'Step 1 — Think in thirds', explanation: '1 whole = 3 thirds. 2 wholes = 2 × 3 = 6 thirds.', highlight: '6 thirds' }
+              ], answer: '6/3 = 6 thirds' }
+            ],
+            questions: [
+              { id: 'cc301', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Continue: ½, 1, 1½, ___', answer: '2', explanation: 'Add ½ each time: 1½ + ½ = 2.' },
+              { id: 'cc302', type: 'multiple-choice', difficulty: 1, prompt: 'How many halves make 1 whole?', options: ['1','2','3','4'], answer: '2', explanation: '1/2 + 1/2 = 2/2 = 1.' },
+              { id: 'cc303', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Continue: 0, ¼, ½, ¾, ___', answer: '1', explanation: '¾ + ¼ = 4/4 = 1.' },
+              { id: 'cc304', type: 'multiple-choice', difficulty: 1, prompt: 'How many quarters make 1 whole?', options: ['2','3','4','8'], answer: '4', explanation: '4 quarters = 4/4 = 1.' },
+              { id: 'cc305', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The mixed number 1½ = ___/2 (improper fraction)', answer: '3', explanation: '1 whole = 2/2. Plus ½ = 3/2.' },
+              { id: 'cc306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Continue: 1⅓, 1⅔, ___', answer: '2', explanation: 'Add ⅓: 1⅔ + ⅓ = 2.' },
+              { id: 'cc307', type: 'multiple-choice', difficulty: 2, prompt: 'How many thirds are in 3 wholes?', options: ['3','6','9','12'], answer: '9', explanation: '3 wholes × 3 thirds = 9 thirds.' },
+              { id: 'cc308', type: 'fill-in-the-blank', difficulty: 2, prompt: '2¾ as a number-line position: between ___ and ___ (whole numbers)', answer: '2,3', explanation: '2¾ lies between 2 and 3.' },
+              { id: 'cc309', type: 'multiple-choice', difficulty: 2, prompt: 'Continue: 3, 2½, 2, 1½, ___', options: ['1','½','2','0'], answer: '1', explanation: 'Counting back in halves: 1½ − ½ = 1.' },
+              { id: 'cc310', type: 'fill-in-the-blank', difficulty: 2, prompt: '5 halves = ___ (as a mixed number)', answer: '2½', explanation: '4 halves = 2, plus 1 half = 2½.' },
+              { id: 'cc311', type: 'multiple-choice', difficulty: 3, prompt: '7/4 as a mixed number = ?', options: ['1¼','1¾','2¼','3¼'], answer: '1¾', explanation: '4/4=1 remainder 3/4. So 1¾.' },
+              { id: 'cc312', type: 'fill-in-the-blank', difficulty: 3, prompt: '3½ as an improper fraction = ___/2', answer: '7', explanation: '3×2+1=7. So 7/2.' },
+              { id: 'cc313', type: 'multiple-choice', difficulty: 3, prompt: 'Which mixed number lies between 2 and 3?', options: ['1½','2⅔','3¼','4⅓'], answer: '2⅔', explanation: '2 < 2⅔ < 3.' },
+              { id: 'cc314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'How many quarters in 3½? (write a number)', answer: '14', explanation: '3½ = 7/2 = 14/4. So 14 quarters.' },
+              { id: 'cc315', type: 'multiple-choice', difficulty: 3, prompt: 'Count on from 1¾ in steps of ¼. What is the 5th number in the sequence?', options: ['2¾','3','3¼','2½'], answer: '3', explanation: '1¾→2→2¼→2½→2¾→3. 5th step = 3.' }
+            ]
+          }
+        ]
+      },
+
+      /* ── Data Handling ── */
+      {
+        id: 'data', label: 'Data Handling', icon: '📊', accent: 'var(--accent-data)',
+        topics: [
+          {
+            id: 'pictographs', label: 'Pictographs & Bar Graphs',
+            lesson: {
+              sections: [
+                { heading: 'Pictographs', body: 'A **pictograph** uses pictures (symbols) to represent data.\n\nEach picture represents a certain number of items — shown in a **key**.\n\n**Example:** 🐟 = 5 fish.\n- Monday: 🐟🐟🐟 = 15 fish.\n- Tuesday: 🐟🐟 = 10 fish.\n\n**Reading:** multiply the number of symbols by the key value.\n**Drawing:** divide the frequency by the key value to find how many symbols.', visual: null },
+                { heading: 'Bar Graphs', body: 'A **bar graph** uses rectangular bars to show data.\n\n**Key parts:**\n- Title (what the graph is about)\n- x-axis (categories)\n- y-axis (numbers with a scale)\n- Bars (equal width, equal gaps)\n\n**Reading:** read the height of each bar on the y-axis.\n**Drawing steps:**\n1. Choose a scale (e.g. count in 5s).\n2. Draw and label axes.\n3. Draw bars of equal width.\n4. Title the graph.', visual: null }
+              ],
+              keyFacts: [
+                'Pictograph key tells you what each symbol represents.',
+                'Bar graph: bars must be equal width with equal gaps between them.',
+                'Always label both axes and give the graph a title.',
+                'To find total: add all bar values (or symbol counts) together.'
+              ]
+            },
+            workedExamples: [
+              { question: 'A pictograph shows favourite fruits. Key: ★ = 4 children. Apples: ★★★, Bananas: ★★, Oranges: ★★★★. How many children prefer apples?', steps: [
+                { label: 'Step 1 — Count symbols', explanation: 'Apples has 3 stars.', highlight: '3 stars' },
+                { label: 'Step 2 — Multiply by key', explanation: '3 × 4 = 12 children.', highlight: '12 children' }
+              ], answer: '12 children' },
+              { question: 'Bar graph: Mon=10, Tue=15, Wed=5, Thu=20. What is the total and which day had the most?', steps: [
+                { label: 'Step 1 — Total', explanation: '10+15+5+20=50.', highlight: 'Total = 50' },
+                { label: 'Step 2 — Highest bar', explanation: 'Thursday with 20.', highlight: 'Thursday' }
+              ], answer: 'Total = 50, Thursday' },
+              { question: 'A pictograph uses ☀️ = 3. City A has 5 suns. How many days of sunshine?', steps: [
+                { label: 'Step 1 — Multiply', explanation: '5 × 3 = 15 days.', highlight: '15 sunny days' }
+              ], answer: '15 days' }
+            ],
+            questions: [
+              { id: 'pg301', type: 'multiple-choice', difficulty: 1, prompt: 'Key: ★ = 5. A row has 3 stars. Total = ?', options: ['3','5','10','15'], answer: '15', explanation: '3 × 5 = 15.' },
+              { id: 'pg302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'A bar graph shows 20 books read. The bar reaches the number ___ on the y-axis.', answer: '20', explanation: 'Bar height = the value it represents.' },
+              { id: 'pg303', type: 'multiple-choice', difficulty: 1, prompt: 'Pictograph key: ☀️ = 2. Monday has 4 suns. Days of sunshine = ?', options: ['2','4','6','8'], answer: '8', explanation: '4 × 2 = 8 days.' },
+              { id: 'pg304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Bar graph: Cats=8, Dogs=12, Fish=6. Most popular pet = ___', answer: 'Dogs', explanation: 'Highest bar = 12 = Dogs.' },
+              { id: 'pg305', type: 'multiple-choice', difficulty: 1, prompt: 'Which of these is a key feature of a bar graph?', options: ['Pictures','Equal-width bars','Pie slices','Dot plots'], answer: 'Equal-width bars', explanation: 'Bar graphs use equal-width bars.' },
+              { id: 'pg306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Key: ★ = 10. Category needs 35 items. Draw ___ full stars and ___ half star(s). (write as "full,half")', answer: '3,1', explanation: '3×10=30, remaining 5 = half a star.' },
+              { id: 'pg307', type: 'multiple-choice', difficulty: 2, prompt: 'Bar graph: Spring=15, Summer=30, Autumn=20, Winter=10. Total = ?', options: ['65','75','70','80'], answer: '75', explanation: '15+30+20+10=75.' },
+              { id: 'pg308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Bar graph with scale in 5s. A bar that reaches between 25 and 30 represents approximately ___ (halfway)', answer: '27.5', explanation: 'Halfway between 25 and 30 = 27.5.' },
+              { id: 'pg309', type: 'multiple-choice', difficulty: 2, prompt: 'Pictograph: School A has 4★, B has 6★, C has 3★. Key ★=5. Which school has 30 items?', options: ['A','B','C','None'], answer: 'B', explanation: '6 × 5 = 30.' },
+              { id: 'pg310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Bar graph shows 40 red and 25 blue crayons. Difference = ___', answer: '15', explanation: '40 − 25 = 15.' },
+              { id: 'pg311', type: 'multiple-choice', difficulty: 3, prompt: 'Pictograph: Mon ★★★★, Tue ★★, Wed ★★★, Thu ★. Key ★ = 6. Average per day = ?', options: ['12','15','18','21'], answer: '15', explanation: '(24+12+18+6)÷4=60÷4=15.' },
+              { id: 'pg312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Bar graph: total = 60. Three bars show 15, 20, 10. Fourth bar = ___', answer: '15', explanation: '60-15-20-10=15.' },
+              { id: 'pg313', type: 'multiple-choice', difficulty: 3, prompt: 'A bar graph scale goes up in 4s. A bar between the 5th and 6th line represents a value between ? and ?', options: ['16 and 20','20 and 24','18 and 22','4 and 8'], answer: '20 and 24', explanation: '5th line=20, 6th line=24.' },
+              { id: 'pg314', type: 'fill-in-the-blank', difficulty: 3, prompt: 'Key: 1 symbol = 3. How many symbols to represent 21 items? ___', answer: '7', explanation: '21 ÷ 3 = 7 symbols.' },
+              { id: 'pg315', type: 'multiple-choice', difficulty: 3, prompt: 'Bar graph: Gr3=45, Gr4=60, Gr5=30. Gr3 is what fraction of total?', options: ['1/3','1/4','3/9','1/2'], answer: '1/3', explanation: 'Total=135. 45/135=1/3.' }
+            ]
+          },
+          {
+            id: 'sorting-grouping', label: 'Sorting & Grouping Data',
+            lesson: {
+              sections: [
+                { heading: 'Collecting & Sorting Data', body: '**Data** is information we collect to answer questions.\n\n**Tallying:** use tally marks to count quickly.\n||||  = 5 (four upright + one diagonal).\n\n**Sorting:** organising data into groups.\n\n**Categories:** groups of similar things.\nExample: sort animals into: Farm animals | Wild animals | Pets.\n\n**Frequency:** how many times something appears in a data set.\n\n**Frequency table:**\n| Colour | Tally | Frequency |\n|--------|-------|------|\n| Red | |||| | 4 |\n| Blue | ||| | 3 |', visual: null },
+                { heading: 'Mode and Most/Least Common', body: '**Mode:** the item that appears most often in a data set.\n\nExample: colours recorded — R, B, R, G, R, B, R.\nMode = Red (appears 4 times).\n\n**Most common** = highest frequency (mode).\n**Least common** = lowest frequency.\n\n**Venn diagram:** two overlapping circles showing items that belong to one category, both, or neither.\n\nCircle A = can swim. Circle B = can fly.\nOverlap = duck (can do both!)', visual: null }
+              ],
+              keyFacts: [
+                'Tally marks: groups of 5 (four upright, one diagonal cross).',
+                'Frequency = how many times an item appears.',
+                'Mode = the most frequent value or category.',
+                'A frequency table organises tallied data clearly.'
+              ]
+            },
+            workedExamples: [
+              { question: 'Favourite sports: soccer×6, rugby×4, cricket×4, netball×7. Find the mode.', steps: [
+                { label: 'Step 1 — Find highest frequency', explanation: 'Netball has 7 — the highest.', highlight: 'Mode = Netball' }
+              ], answer: 'Netball (7 votes)' },
+              { question: 'Tally: |||| |||| || . How many?', steps: [
+                { label: 'Step 1 — Count groups', explanation: '|||| = 5, |||| = 5, || = 2. Total = 5+5+2 = 12.', highlight: '12' }
+              ], answer: '12' },
+              { question: 'Data: 3, 5, 3, 7, 3, 5, 7, 3. What is the mode?', steps: [
+                { label: 'Step 1 — Count each value', explanation: '3 appears 4 times, 5 appears 2 times, 7 appears 2 times.', highlight: '3 most frequent' },
+                { label: 'Step 2 — Mode', explanation: 'Mode = 3.', highlight: 'Mode = 3' }
+              ], answer: 'Mode = 3' }
+            ],
+            questions: [
+              { id: 'sg301', type: 'multiple-choice', difficulty: 1, prompt: 'Tally |||| = ?', options: ['3','4','5','6'], answer: '5', explanation: '4 upright + 1 diagonal cross = 5.' },
+              { id: 'sg302', type: 'fill-in-the-blank', difficulty: 1, prompt: 'The item that appears most often is called the ___', answer: 'mode', explanation: 'Mode = most frequent value.' },
+              { id: 'sg303', type: 'multiple-choice', difficulty: 1, prompt: 'Data: cat, dog, cat, fish, cat. Mode = ?', options: ['dog','fish','cat','none'], answer: 'cat', explanation: 'Cat appears 3 times — most frequent.' },
+              { id: 'sg304', type: 'fill-in-the-blank', difficulty: 1, prompt: 'Tally |||| |||| | = ___', answer: '11', explanation: '5+5+1=11.' },
+              { id: 'sg305', type: 'multiple-choice', difficulty: 1, prompt: 'A frequency table shows Red=4, Blue=7, Green=3. Least common = ?', options: ['Red','Blue','Green','All equal'], answer: 'Green', explanation: 'Green has frequency 3 — lowest.' },
+              { id: 'sg306', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Colours: R,B,R,G,B,R,G,R. Frequency of R = ___', answer: '4', explanation: 'R appears 4 times.' },
+              { id: 'sg307', type: 'multiple-choice', difficulty: 2, prompt: 'Tally |||| |||| |||| || = ?', options: ['12','14','15','17'], answer: '17', explanation: '5+5+5+2=17.' },
+              { id: 'sg308', type: 'fill-in-the-blank', difficulty: 2, prompt: 'Frequency table: A=5, B=8, C=5, D=8. Mode(s) = ___ (write as "X,Y" or "X")', answer: 'B,D', explanation: 'B and D both have frequency 8 — highest.' },
+              { id: 'sg309', type: 'multiple-choice', difficulty: 2, prompt: 'A class collects data on favourite colours. 30 students respond. Red=10, Blue=12, Green=?', options: ['6','7','8','10'], answer: '8', explanation: '30-10-12=8.' },
+              { id: 'sg310', type: 'fill-in-the-blank', difficulty: 2, prompt: 'How many tally marks represent 23? (write as "X groups of 5 + Y")', answer: '4 groups of 5 + 3', explanation: '4×5=20, then 3 more marks.' },
+              { id: 'sg311', type: 'multiple-choice', difficulty: 3, prompt: 'Data: 4,4,7,4,7,4,9,7. Mode=4. True statement?', options: ['7 is the mode','4 appears most','9 appears most','All equal'], answer: '4 appears most', explanation: '4 appears 4 times, 7 appears 3 times, 9 once.' },
+              { id: 'sg312', type: 'fill-in-the-blank', difficulty: 3, prompt: 'A Venn diagram: circle A (can swim)=8, circle B (can fly)=6, overlap=2. Only swim = ___', answer: '6', explanation: '8 total in A, 2 in overlap. Only A = 8-2=6.' },
+              { id: 'sg313', type: 'multiple-choice', difficulty: 3, prompt: 'Frequency table total = 50. Red=18, Blue=14, Green=?. Mode = Red. Is this consistent?', options: ['Yes, Green=18','Yes, Green=18 and ties Red','Yes, Green=18 < Red','No'], answer: 'Yes, Green=18 < Red', explanation: 'Green=50-18-14=18. Red=18. So they tie — Red is NOT strictly mode. But if Red=18 and Green=18 there are two modes.' },
+              { id: 'sg314', type: 'fill-in-the-blank', difficulty: 3, prompt: '12 tally marks in a frequency table. Bar height on a graph with scale 1cm=4 = ___ cm', answer: '3', explanation: '12÷4=3 cm.' },
+              { id: 'sg315', type: 'multiple-choice', difficulty: 3, prompt: 'Data collected on 40 students. Represented in a pictograph with key ★ = 5. How many symbols total?', options: ['5','8','40','200'], answer: '8', explanation: '40÷5=8 symbols total.' }
+            ]
+          }
+        ]
+      }
+    );
+  })();
+
   /* ── PHASE 4a: Grade 3 Curriculum ───────────────────────── */
   (function(){
     curriculum.grade3.modules.push(
